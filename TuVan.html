@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Yume Academy | Tư Vấn</title>
+    <link rel="icon" href="IMG/LOGOYUME2.jpg" type="image/x-icon" />
+    <link rel="stylesheet" href="CSS/index.css" />
+    <link rel="stylesheet" href="CSS/TuVan.css" />  
+  </head>
+<body>
+     <header class="main-header">
+   <div class="logo-section">
+  <a href="index.html" class="logo-link">
+    <img src="IMG/LOGOYUME2.jpg" alt="Logo" class="logo-img" />
+    <span class="logo-text">Nhật Ngữ Biên Hòa</span>
+  </a>
+</div> 
+
+      <nav class="nav-menu">
+        <a href="index.html">Trang Chủ</a>
+        <a href="GioiThieu.html">Giới Thiệu</a>
+        <a href="KhoaHoc.html">Khóa Học</a>
+        <a href="TinTuc.html">Tin tức</a>
+        <a href="TuVan.html">Tư Vấn</a>
+      </nav>
+
+      <div id="sakura-container"></div>
+    </header>
+
+<!-- Form Tư Vấn Khách Hàng -->
+<section class="contact-section">
+  <h2>Tư Vấn Khách Hàng</h2>
+  <form id="contactForm" class="contact-form">
+    <div class="form-group">
+      <label for="name">Họ và tên</label>
+      <input type="text" id="name" name="name" placeholder="Nhập họ tên của bạn" required>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" placeholder="Nhập email của bạn" required>
+    </div>
+
+    <div class="form-group">
+      <label for="message">Nội dung</label>
+      <textarea id="message" name="message" placeholder="Bạn muốn được tư vấn gì?" rows="5" required></textarea>
+    </div>
+
+    <button type="submit" class="submit-btn">Gửi tư vấn</button>
+  </form>
+
+  <!-- Thông báo -->
+  <p id="formStatus" class="status-msg"></p>
+
+ <div class="branches">
+    <div id="goiY">Gợi ý</div>
+    <div class="branch"><b>Tư vấn khóa học ? </b></div>
+    <div class="branch"><b>Tư vấn tuyển dụng ?</b></div>
+    <div class="branch"><b>Tư vấn lộ trình ?</b></div>
+  </div>
+</section>
+<script src="JS/TuVan.js"></script>
+<script src="JS/main.js"></script>
+</body>
+<footer class="main-footer">
+  <div class="footer-container">
+    <!-- Logo + Giới thiệu -->
+    <div class="footer-about">
+      <img src="IMG/LOGOYUME2.jpg" alt="Yume Academy" class="footer-logo">
+      <p>
+        Yume Academy – Trung tâm Nhật ngữ tại Trấn Biên, 
+        cam kết mang đến chương trình học tập chất lượng, 
+        hiện đại và thân thiện cho học viên ở mọi độ tuổi.
+      </p>
+    </div>
+
+    <!-- Điều hướng nhanh -->
+    <div class="footer-links">
+      <h3>Liên kết nhanh</h3>
+      <ul>
+        <li><a href="index.html">Trang Chủ</a></li>
+        <li><a href="GioiThieu.html">Giới thiệu</a></li>
+        <li><a href="KhoaHoc.html">Khóa học</a></li>
+        <li><a href="TinTuc.html">Tin Tức</a></li>
+        <li><a href="TuVan.html">Tư Vấn</a></li>
+      </ul>
+    </div>
+
+    <!-- Liên hệ -->
+    <div class="footer-contact">
+      <h3>Liên hệ</h3>
+     <p>📍 56-58 đường N3, khu phố 7, Phường Trấn Biên </p>
+      <p>📞 0393732535</p>
+      <p>✉️ yumeacademy.bienhoa@gmail.com</p>
+      <div class="social-icons">
+        <a href="https://www.facebook.com/share/16DhMzh3qw/"><img src="IMG/facebook-logo.png" alt="Facebook"></a>
+        <a href="#"><img src="IMG/zalo-logo.png" alt="Zalo"></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>© 2025 Yume Academy. All rights reserved.</p>
+  </div>
+</footer>
+</html>

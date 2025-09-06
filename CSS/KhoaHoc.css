@@ -1,0 +1,40 @@
+.course-section {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #fdfdfd;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.08);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.course-section h2 {
+  text-align: center;
+  color: #1a3c6e;
+  margin-bottom: 30px;
+  font-size: 26px;
+}
+
+.course-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.course-table th,
+.course-table td {
+  border: 1px solid #ccc;
+  padding: 10px 14px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.course-table th {
+  background-color: #e6f0ff;
+  color: #333;
+  font-weight: 600;
+}
+
+.course-table tr:nth-child(even) {
+  background-color: #f9fcff;
+}
