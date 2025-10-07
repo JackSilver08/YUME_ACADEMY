@@ -654,3 +654,205 @@ a.why-card-link:hover {
   transform: translateY(-50%) scale(1.08);
   box-shadow: 0 6px 18px rgba(0,0,0,0.25);
 }
+
+/* ================= MOBILE RESPONSIVE ================= */
+@media (max-width: 480px) {
+  /* ===== Header ===== */
+  .main-header {
+    flex-direction: column;
+    height: auto;
+    padding: 15px;
+    text-align: center;
+  }
+
+  .logo-img {
+    width: 50px;
+    height: 50px;
+  }
+
+  .logo-text {
+    font-size: 18px;
+  }
+
+  .nav-menu {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    transform: none;
+    margin-top: 8px;
+  }
+
+  .nav-menu a {
+    font-size: 16px;
+  }
+
+  /* ===== Banner Slider ===== */
+  #banner-slider {
+    height: auto;
+  }
+
+  #banner-slider img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+
+  #banner-dots {
+    margin-top: 5px;
+  }
+
+  .banner-dot {
+    width: 10px;
+    height: 10px;
+  }
+
+  /* ===== Why Choose ===== */
+  .why-choose {
+    padding: 30px 10px;
+  }
+
+  .why-choose h2 {
+    font-size: 1.6rem;
+  }
+
+  .why-choose p {
+    font-size: 0.9rem;
+  }
+
+  .why-card {
+    padding: 15px;
+  }
+
+  .why-card h3 {
+    font-size: 1.1rem;
+  }
+
+  .why-card p {
+    font-size: 0.9rem;
+  }
+
+  /* ===== Curriculum Section ===== */
+  .curriculum-wrapper {
+    flex-direction: column;
+    gap: 20px;
+    text-align: center;
+    padding: 10px;
+  }
+
+  .curriculum {
+    padding: 18px;
+  }
+
+  .curriculum h2 {
+    font-size: 22px;
+  }
+
+  .curriculum p {
+    font-size: 0.9rem;
+  }
+
+  .curriculum-image img {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .toggle-btn {
+    padding: 8px 14px;
+    font-size: 14px;
+  }
+
+  /* ===== Giáo viên ===== */
+  .Doingugiaovien {
+    padding: 20px;
+  }
+
+  .teacher-card {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .teacher-img {
+    width: 100%;
+    height: auto;
+  }
+
+  .teacher-info h2 {
+    font-size: 20px;
+  }
+
+  .teacher-info p {
+    font-size: 0.9rem;
+  }
+
+  .grTeacheriMG {
+    display: none; /* ẩn ảnh nền phụ trên mobile */
+  }
+
+  /* ===== Môi trường học tập ===== */
+  .moitruong {
+    height: auto;
+    margin-top: 0;
+  }
+
+  .background-img,
+  .overlay {
+    position: relative;
+    height: auto;
+    top: 0;
+  }
+
+  .content h2 {
+    font-size: 1.8rem;
+  }
+
+  .content p {
+    font-size: 1rem;
+  }
+
+  /* ===== Lộ trình ===== */
+  #LoTrinh,
+  .LTH {
+    width: 95%;
+    margin: 10px auto;
+  }
+
+  .btn-tu-van {
+    position: static;
+    display: block;
+    margin: 15px auto 0;
+    transform: none;
+    font-size: 14px;
+    padding: 10px 18px;
+  }
+
+  /* ===== Footer ===== */
+  .main-footer {
+    padding: 25px 10px;
+  }
+
+  .footer-container {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .footer-about img.footer-logo {
+    margin: 0 auto 10px;
+  }
+
+  .footer-links h3,
+  .footer-contact h3 {
+    font-size: 15px;
+  }
+
+  .footer-links ul li a {
+    font-size: 14px;
+  }
+
+  .social-icons a img {
+    width: 24px;
+  }
+
+  .footer-bottom {
+    font-size: 12px;
+  }
+}

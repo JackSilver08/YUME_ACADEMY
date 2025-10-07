@@ -38,3 +38,60 @@
 .course-table tr:nth-child(even) {
   background-color: #f9fcff;
 }
+
+/* ===============================
+   📱 RESPONSIVE DESIGN
+================================== */
+
+/* Tablet (dưới 992px) */
+@media (max-width: 992px) {
+  .course-section {
+    padding: 20px;
+    margin: 30px 15px;
+  }
+
+  .course-section h2 {
+    font-size: 24px;
+  }
+
+  .course-table th,
+  .course-table td {
+    font-size: 13px;
+    padding: 8px 10px;
+  }
+}
+
+/* Mobile (dưới 600px) */
+@media (max-width: 600px) {
+  .course-section {
+    padding: 20px 10px;
+    margin: 20px 10px;
+  }
+
+  .course-section h2 {
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+
+  /* Cho phép cuộn ngang nếu bảng quá rộng */
+  .course-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    font-size: 12.5px;
+  }
+
+  .course-table th,
+  .course-table td {
+    padding: 8px 8px;
+  }
+
+  .course-table th {
+    background-color: #dbe9ff;
+  }
+
+  /* Cải thiện hiển thị trên mobile */
+  .course-table tr {
+    display: table-row;
+  }
+}

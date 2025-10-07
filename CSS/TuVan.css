@@ -148,3 +148,81 @@ body {
   .status-error {
     color: red;
   }
+
+  /* ===============================
+📱 RESPONSIVE DESIGN
+================================== */
+
+/* Tablet (≤992px) */
+@media (max-width: 992px) {
+  .contact-section {
+    width: 80%;
+    max-width: 400px;
+    padding: 20px;
+  }
+
+  .branches {
+    left: 100%;
+    transform: translateY(-50%) translateX(10px);
+  }
+
+  .branch {
+    font-size: 13px;
+    padding: 10px 14px;
+  }
+}
+
+/* Mobile (≤600px) */
+@media (max-width: 600px) {
+  body {
+    background-attachment: scroll;
+  }
+
+  .contact-section {
+    width: 90%;
+    padding: 20px 15px;
+    margin: 30px auto;
+  }
+
+  /* Gợi ý hiển thị bên dưới thay vì bên phải */
+  .branches {
+    position: static;
+    opacity: 1;
+    transform: none;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 15px;
+    pointer-events: auto;
+  }
+
+  .branch::before {
+    display: none;
+  }
+
+  .branch {
+    width: 100%;
+    text-align: center;
+  }
+
+  #goiY {
+    display: block;
+    text-align: center;
+    padding: 10px;
+    width: 100%;
+  }
+
+  .contact-section h2 {
+    font-size: 20px;
+  }
+
+  .contact-form input,
+  .contact-form textarea {
+    font-size: 13px;
+    padding: 10px;
+  }
+
+  .submit-btn {
+    font-size: 15px;
+    padding: 12px;
+  }
+}
