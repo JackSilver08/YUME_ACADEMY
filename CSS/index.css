@@ -657,33 +657,132 @@ a.why-card-link:hover {
 
 /* ================= MOBILE RESPONSIVE ================= */
 @media (max-width: 480px) {
-  /* ===== Header ===== */
+  /* ===== Header Mobile với Menu Hamburger ===== */
   .main-header {
-    flex-direction: column;
-    height: auto;
-    padding: 15px;
-    text-align: center;
+    flex-direction: row;
+    height: 70px;
+    padding: 0 15px;
+    text-align: left;
+    justify-content: space-between;
+    position: relative;
+  }
+
+  .logo-link {
+    margin-bottom: 0;
+    z-index: 1001;
   }
 
   .logo-img {
-    width: 50px;
-    height: 50px;
+    width: 45px;
+    height: 45px;
   }
 
   .logo-text {
-    font-size: 18px;
+    font-size: 16px;
   }
 
+  /* ===== Menu Hamburger ===== */
   .nav-menu {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 80%;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(10px);
     flex-direction: column;
-    align-items: center;
-    gap: 12px;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 80px 30px 30px;
+    gap: 0;
     transform: none;
-    margin-top: 8px;
+    margin-top: 0;
+    transition: left 0.3s ease;
+    z-index: 1000;
+    box-shadow: 5px 0 25px rgba(0, 70, 88, 0.15);
+  }
+
+  .nav-menu.active {
+    left: 0;
   }
 
   .nav-menu a {
-    font-size: 16px;
+    font-size: 18px;
+    padding: 15px 0;
+    width: 100%;
+    border-bottom: 1px solid rgba(0, 70, 88, 0.1);
+    color: #004658;
+    font-weight: 500;
+  }
+
+  .nav-menu a:last-child {
+    border-bottom: none;
+  }
+
+  .nav-menu a::after {
+    display: none;
+  }
+
+  .nav-menu a:hover {
+    color: #007a9c;
+    background: rgba(0, 70, 88, 0.05);
+    padding-left: 10px;
+    border-radius: 5px;
+  }
+
+  /* ===== Hamburger Icon ===== */
+  .hamburger-menu {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    z-index: 1001;
+    position: relative;
+  }
+
+  .hamburger-menu span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background: #004658;
+    margin: 3px 0;
+    transition: all 0.3s ease;
+    border-radius: 2px;
+  }
+
+  .hamburger-menu.active span:nth-child(1) {
+    transform: rotate(45deg) translate(6px, 6px);
+  }
+
+  .hamburger-menu.active span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .hamburger-menu.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
+  }
+
+  /* ===== Overlay khi menu mở ===== */
+  .menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 70, 88, 0.3);
+    backdrop-filter: blur(2px);
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .menu-overlay.active {
+    opacity: 1;
+    visibility: visible;
   }
 
   /* ===== Banner Slider ===== */
@@ -854,5 +953,18 @@ a.why-card-link:hover {
 
   .footer-bottom {
     font-size: 12px;
+  }
+}
+
+/* Ẩn hamburger menu trên desktop */
+.hamburger-menu,
+.menu-overlay {
+  display: none;
+}
+
+@media (max-width: 480px) {
+  .hamburger-menu,
+  .menu-overlay {
+    display: flex;
   }
 }
