@@ -91,3 +91,23 @@ function showBanner(index) {
   showBanner(current);
   intervalId = setInterval(nextBanner, 5000);
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    const hamburger = document.querySelector('.hamburger-menu');
+    const navMenu = document.querySelector('.nav-menu');
+    const menuOverlay = document.querySelector('.menu-overlay');
+    
+    hamburger.addEventListener('click', function() {
+        this.classList.toggle('active');
+        navMenu.classList.toggle('active');
+        menuOverlay.classList.toggle('active');
+        document.body.style.overflow = navMenu.classList.contains('active') ? 'hidden' : '';
+    });
+    
+    menuOverlay.addEventListener('click', function() {
+        hamburger.classList.remove('active');
+        navMenu.classList.remove('active');
+        this.classList.remove('active');
+        document.body.style.overflow = '';
+    });
+});
