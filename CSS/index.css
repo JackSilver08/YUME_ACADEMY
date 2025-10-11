@@ -4,6 +4,7 @@
   padding: 0;
   box-sizing: border-box;
 }
+/* Body tổng thể */
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
@@ -15,23 +16,28 @@ body {
       transparent 1px
     ),
     linear-gradient(to bottom, rgba(5, 71, 137, 0.1) 2px, transparent 1px);
-  background-size: 30px 30px; /* Kích thước ô to hơn */
+  background-size: 30px 30px;
   background-repeat: repeat;
+  background-attachment: fixed; /* nền cố định */
   color: #000;
   min-height: 100vh;
+  position: relative;
+  overflow-x: hidden; /* 🔥 chặn thanh cuộn ngang */
 }
 
 /* ================= Header tổng thể ================= */
 .main-header {
   position: relative;
   height: 80px;
-  background: whitesmoke;
+  background: rgb(255, 255, 255);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 40px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
   animation: slideDown 0.8s ease-out;
+
+
 }
 
 @keyframes slideDown {
@@ -166,6 +172,7 @@ body {
 }
 
 #banner-slider {
+  background-color: #ccc;
   position: relative;
   width: 100vw;
   max-width: 100vw;
@@ -173,6 +180,7 @@ body {
   overflow: hidden;
   margin: 0;
   padding: 0;
+  border-radius: 0 0 40px 40px; /* chỉ bo tròn ở dưới */
 }
 
 #banner-slider img {
