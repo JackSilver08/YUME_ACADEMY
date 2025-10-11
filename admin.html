@@ -6,26 +6,55 @@
     <title>Yume Academy </title>
     <link rel="icon" href="IMG/LOGOYUME2.jpg" type="image/x-icon" />
     <link rel="stylesheet" href="CSS/index.css" />
+   <link rel="stylesheet" href="CSS/admin.css" />
   </head>
 <body>
-  <h2>📰 Đăng bài tin tức mới</h2>
 
-  <form id="newsForm">
-    <input type="text" id="title" placeholder="Tiêu đề bài viết" required />
-    <textarea id="content" rows="6" placeholder="Nội dung bài viết..." required></textarea>
-    <input type="file" id="media" accept="image/*,video/*" />
-    <button type="submit">Đăng bài</button>
-  </form>
+  <!-- Popup đăng nhập -->
+  <div id="loginPopup">
+    <div id="loginBox">
+      <h2>Đăng nhập quản trị</h2>
+      <input type="text" id="username" placeholder="Tên đăng nhập" />
+      <input type="password" id="password" placeholder="Mật khẩu" />
+      <button onclick="checkLogin()">Đăng nhập</button>
+      <div id="errorMsg"></div>
+    </div>
+  </div>
 
-  <h3>📚 Danh sách bài viết</h3>
-  <div id="newsList"></div>
+  <!-- Nội dung quản trị -->
+  <div id="adminPage" style="display:none;">
+    <h2>📰 Đăng bài tin tức mới</h2>
+
+    <form id="newsForm">
+      <input type="text" id="title" placeholder="Tiêu đề bài viết" required />
+      <textarea id="content" rows="6" placeholder="Nội dung bài viết..." required></textarea>
+      <input type="file" id="media" accept="image/*,video/*" />
+      <button type="submit">Đăng bài</button>
+    </form>
+
+    <!-- Popup chỉnh sửa bài viết -->
+    <div id="editPopup" class="popup" style="display:none;">
+      <div class="popup-content">
+        <h3>✏️ Chỉnh sửa bài viết</h3>
+        <input type="text" id="editTitle" placeholder="Tiêu đề mới" />
+        <textarea id="editContent" rows="5" placeholder="Nội dung mới..."></textarea>
+        <div class="popup-actions">
+          <button id="saveEdit">💾 Lưu</button>
+          <button id="cancelEdit">❌ Hủy</button>
+        </div>
+      </div>
+    </div>
+
+    <h3>📚 Danh sách bài viết</h3>
+    <div id="newsList"></div>
+  </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
     import { getDatabase, ref, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
     import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-storage.js";
 
-    // 🔥 Cấu hình Firebase của bạn
+    // 🔥 Firebase config
     const firebaseConfig = {
       apiKey: "AIzaSyDgAKED74NUFIO7VVAsyFBOjK3gr2__yvE",
       authDomain: "yumeacademy-e263c.firebaseapp.com",
@@ -37,15 +66,24 @@
       measurementId: "G-R6HDJXFTHG"
     };
 
-    // 🚀 Khởi tạo Firebase
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
     const storage = getStorage(app);
 
     const form = document.getElementById("newsForm");
     const newsList = document.getElementById("newsList");
+    const editPopup = document.getElementById("editPopup");
+    let editId = null;
 
-    // 📝 Khi nhấn "Đăng bài"
+    // 🧠 Ghi nhớ đăng nhập
+    window.onload = () => {
+      if (localStorage.getItem("isLoggedIn") === "true") {
+        document.getElementById("loginPopup").style.display = "none";
+        document.getElementById("adminPage").style.display = "block";
+      }
+    };
+
+    // 📝 Đăng bài
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
       const title = document.getElementById("title").value.trim();
@@ -73,7 +111,7 @@
       alert("✅ Đăng bài thành công!");
     });
 
-    // 📖 Hiển thị danh sách bài viết
+    // 📖 Hiển thị danh sách
     const newsRef = ref(db, "news");
     onValue(newsRef, (snapshot) => {
       newsList.innerHTML = "";
@@ -92,7 +130,7 @@
             : ""}
           <small>🕓 ${data.date}</small>
           <div class="actions">
-            <button class="edit-btn" data-id="${id}">✏️ Sửa</button>
+            <button class="edit-btn" data-id="${id}" data-title="${data.title}" data-content="${data.content}">✏️ Sửa</button>
             <button class="delete-btn" data-id="${id}">🗑️ Xóa</button>
           </div>
         `;
@@ -100,25 +138,52 @@
       });
     });
 
-    // 🧹 Xóa bài viết
+    // 🧹 Xóa + Sửa bài viết
     newsList.addEventListener("click", (e) => {
       if (e.target.classList.contains("delete-btn")) {
         const id = e.target.dataset.id;
-        if (confirm("Bạn có chắc muốn xóa bài này không?")) {
-          remove(ref(db, "news/" + id));
-        }
+        if (confirm("Bạn có chắc muốn xóa bài này không?")) remove(ref(db, "news/" + id));
       }
 
-      // ✏️ Sửa bài
       if (e.target.classList.contains("edit-btn")) {
-        const id = e.target.dataset.id;
-        const title = prompt("Nhập tiêu đề mới:");
-        const content = prompt("Nhập nội dung mới:");
-        if (title && content) {
-          update(ref(db, "news/" + id), { title, content });
-          alert("✅ Đã cập nhật bài viết!");
-        }
+        editId = e.target.dataset.id;
+        document.getElementById("editTitle").value = e.target.dataset.title;
+        document.getElementById("editContent").value = e.target.dataset.content;
+        editPopup.style.display = "flex";
       }
+    });
+
+    document.getElementById("saveEdit").onclick = () => {
+      const newTitle = document.getElementById("editTitle").value.trim();
+      const newContent = document.getElementById("editContent").value.trim();
+      if (newTitle && newContent) {
+        update(ref(db, "news/" + editId), { title: newTitle, content: newContent });
+        editPopup.style.display = "none";
+      }
+    };
+
+    document.getElementById("cancelEdit").onclick = () => {
+      editPopup.style.display = "none";
+    };
+
+    // 🔐 Đăng nhập
+    window.checkLogin = function() {
+      const user = document.getElementById("username").value;
+      const pass = document.getElementById("password").value;
+      const error = document.getElementById("errorMsg");
+
+      if (user === "ThuTam" && pass === "Tam1234") {
+        localStorage.setItem("isLoggedIn", "true");
+        document.getElementById("loginPopup").style.display = "none";
+        document.getElementById("adminPage").style.display = "block";
+      } else {
+        error.textContent = "Sai tên đăng nhập hoặc mật khẩu!";
+      }
+    };
+
+    // 🔒 Ngăn Dev Tools
+    document.addEventListener("keydown", function(e) {
+      if (e.key === "F12" || (e.ctrlKey && e.shiftKey && e.key === "I")) e.preventDefault();
     });
   </script>
 </body>
