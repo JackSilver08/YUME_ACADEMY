@@ -381,12 +381,17 @@ a.why-card-link:hover {
 .curriculum-image img {
   width: 100%;
   max-width: 480px; /* Giới hạn chiều rộng tối đa */
-  height: auto;
+  height: 371px;
   border-radius: 12px;
   box-shadow: 0 6px 16px rgba(0,0,0,0.12);
   background: #fff;
   object-fit: contain;
 }
+
+#Maru {
+  height: 300px;
+}
+
 
 /* Responsive */
 @media (max-width: 900px) {
