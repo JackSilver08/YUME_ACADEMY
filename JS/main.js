@@ -111,3 +111,13 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.style.overflow = '';
     });
 });
+
+window.addEventListener("load", function() {
+  const loadingScreen = document.getElementById("loading-screen");
+  setTimeout(() => {
+    loadingScreen.classList.add("hidden");
+    setTimeout(() => {
+      loadingScreen.style.display = "none";
+    }, 500);
+  }, 2000);
+});
