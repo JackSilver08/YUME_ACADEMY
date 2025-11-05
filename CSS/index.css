@@ -4,6 +4,93 @@
   padding: 0;
   box-sizing: border-box;
 }
+
+#loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  overflow: hidden;
+  transition: opacity 0.5s ease;
+}
+
+#loading-screen.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#loading-screen p {
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  color: #333;
+  margin-top: 15px;
+}
+
+/* Logo + sóng âm */
+.logo-container {
+  position: relative;
+  width: 150px;
+  height: 150px;
+}
+
+.loading-logo {
+  width: 100%;
+  height: auto;
+  border-radius: 50%;
+  position: relative;
+  z-index: 2;
+}
+
+/* Sóng âm dạng vòng tròn mở rộng */
+.wave {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 150px;
+  height: 150px;
+  border: 2px solid #ff5e99;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 0.6;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Tạo các sóng với thời gian khác nhau */
+.wave:nth-child(2) {
+  animation-delay: 0.3s;
+  border-color: #ff9ec6;
+  opacity: 0.4;
+}
+
+.wave:nth-child(3) {
+  animation-delay: 0.6s;
+  border-color: #ff3377;
+  opacity: 0.5;
+}
+
+@keyframes pulse {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.5);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.6;
+  }
+}
+
+
 /* Body tổng thể */
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
