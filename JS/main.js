@@ -29,6 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 document.addEventListener("DOMContentLoaded", function () {
   const banners = [
+    { img: "IMG/3.png", link: "https://www.facebook.com/YumeAcademyBienHoa/" },
     { img: "IMG/1.png", link: "https://www.facebook.com/share/p/1AxwjfadFs/" },
     { img: "IMG/2.png", link: "https://www.facebook.com/share/p/173ZDBBh56/" },
     // Thêm ảnh và link khác nếu muốn
