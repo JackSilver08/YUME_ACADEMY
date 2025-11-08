@@ -30,7 +30,6 @@ document.addEventListener("DOMContentLoaded", function () {
 document.addEventListener("DOMContentLoaded", function () {
   const banners = [
     { img: "IMG/3.png", link: "https://www.facebook.com/YumeAcademyBienHoa/" },
-    { img: "IMG/1.png", link: "https://www.facebook.com/share/p/1AxwjfadFs/" },
     { img: "IMG/2.png", link: "https://www.facebook.com/share/p/173ZDBBh56/" },
     // Thêm ảnh và link khác nếu muốn
   ];
@@ -122,3 +121,50 @@ window.addEventListener("load", function() {
     }, 500);
   }, 2000);
 });
+
+   // Dữ liệu chi tiết cho các chương trình
+        const programDetails = [
+            {
+                title: "Hành trình giao tiếp tiếng nhật-kết nối sự tự tin (A1-B1)",
+                subtitle: "自信につながる日本語コミュニケーションの旅",
+                description: "Học để hiểu - Học để nói - Học để kết nối. Mỗi buổi học là 1 trải nghiệm giao tiếp thật, nơi bạn tự tin nói tiếng Nhật bằng chính cảm xúc của mình"
+            },
+            {
+                title: "Hành trình chinh phục JLPT (N5-N2)",
+                subtitle: "日本語能力試験合格への挑戦の旅",
+                description: "Dành cho những ai muốn nắm vững kiến thức nền và chạm đến mục tiêu thi đỗ JLPT quốc tế. Giúp bạn rèn luyện toàn diện 4 kỹ năng: Nghe, Nói, Đọc, Viết và hình thành tư duy tiếng Nhật chuẩn xác"
+            },
+            {
+                title: "Hành trình tiếng Nhật ứng dụng trong doanh nghiệp",
+                subtitle: "ビジネスで活きる日本語の旅",
+                description: "Rèn luyện tiếng Nhật thực tế qua tình huống báo cáo, trao đổi, hội thoại tại xưởng và văn phòng. Tích hợp: Business manner, HORENSO, giao tiếp văn hóa doanh nghiệp Nhật Bản"
+            }
+        ];
+
+        // Hiển thị popup chi tiết
+        function showDetail(index) {
+            const detail = programDetails[index];
+            document.getElementById('popupTitle').textContent = detail.title;
+            document.getElementById('popupSubtitle').textContent = detail.subtitle;
+            document.getElementById('popupDescription').textContent = detail.description;
+            document.getElementById('popupOverlay').style.display = 'flex';
+        }
+
+        // Đóng popup
+        function closePopup() {
+            document.getElementById('popupOverlay').style.display = 'none';
+        }
+
+        // Đóng popup khi click bên ngoài nội dung
+        document.getElementById('popupOverlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closePopup();
+            }
+        });
+
+        // Đóng popup bằng phím ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closePopup();
+            }
+        });
