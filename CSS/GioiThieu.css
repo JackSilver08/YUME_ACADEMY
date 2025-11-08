@@ -38,6 +38,27 @@ h2 {
   flex: 1;
   min-width: 300px;
 }
+/* === TIÊU ĐỀ === */
+.intro-section h1 {
+  text-align: center; /* giữ tiêu đề căn giữa */
+}
+
+/* === NỘI DUNG GIỚI THIỆU === */
+.intro-content p {
+  text-align: justify; /* căn đều 2 bên */
+  line-height: 1.6;    /* giữ khoảng cách dòng thoải mái */
+}
+
+.intro-content blockquote {
+  text-align: justify; /* blockquote cũng căn đều */
+  margin: 20px 0;
+  padding-left: 15px;
+  border-left: 4px solid #004658;
+  color: #555;
+  max-width: 700px;
+  display: inline-block; /* nếu muốn blockquote không chiếm toàn bộ chiều ngang */
+}
+
 .intro-section img {
   width: 100%;
   max-width: 480px;
@@ -95,56 +116,6 @@ blockquote {
   background: #003a4e;
 }
 
-/* === SỨ MỆNH & TẦM NHÌN === */
-.mission-section {
-  max-width: 1200px;
-  margin: 80px auto;
-  text-align: center;
-}
-.mission-section h2 {
-  font-size: 50px;
-  margin-bottom: 40px;
-  font-weight: 700;
-}
-.mission-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 30px;
-}
-.mission-box {
-  flex: 1 1 450px;
-  background: #fff;
-  border-radius: 15px;
-  padding: 30px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-  text-align: left;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-.mission-box:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.12);
-}
-.mission-box h3 {
-  color:#004658;
-  font-size: 1.5rem;
-  margin-bottom: 15px;
-  text-align: center;
-}
-.mission-box p {
-  font-size: 1rem;
-  line-height: 1.6;
-  color: #333;
-  margin-bottom: 15px;
-}
-.mission-box blockquote {
-  font-style: italic;
-  background: #f9f9f9;
-  border-left: 4px solid #004658;
-  padding: 15px 20px;
-  color: #555;
-  border-radius: 8px;
-}
 
 /* === KÊU GỌI HÀNH ĐỘNG === */
 .cta-section {
