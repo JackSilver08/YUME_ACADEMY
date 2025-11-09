@@ -1,97 +1,247 @@
-.course-section {
-  max-width: 1200px;
-  margin: 40px auto;
-  padding: 30px;
-  background-color: #fdfdfd;
-  border-radius: 12px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.08);
-  font-family: 'Segoe UI', sans-serif;
+/* === BODY & FONT === */
+body {
+  font-family: "Roboto", "Noto Sans JP", sans-serif;
+  color: #2c2c2c;
+  background: #f8f9fc;
+  margin: 0;
+  line-height: 1.65;
 }
 
-.course-section h2 {
+/* === SECTION INTRO === */
+.course-intro {
   text-align: center;
-  color: #1a3c6e;
-  margin-bottom: 30px;
-  font-size: 26px;
+  padding: 60px 20px 40px;
+}
+.course-intro h2 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #004658;
+}
+.course-intro p {
+  font-size: 1rem;
+  color: #555;
+  max-width: 700px;
+  margin: 0 auto 30px;
 }
 
-.course-table {
+/* === COURSE CARDS === */
+.course-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: center;
+}
+.course-card {
+  background: #fff;
+  padding: 30px 25px;
+  border-radius: 18px;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.08);
+  transition: transform 0.35s, box-shadow 0.35s;
+  width: 280px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.course-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 18px 40px rgba(0,0,0,0.15);
+}
+.course-card h3 {
+  margin: 0;
+  font-size: 1.35rem;
+  color:#004658;
+}
+.course-card p {
+  font-size: 0.95rem;
+  color: #555;
+  margin: 15px 0;
+  line-height: 1.4;
+}
+.course-card .btn-detail {
+  padding: 10px 20px;
+  background: #0070f3;
+  color: #fff;
+  font-weight: 500;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+.course-card .btn-detail:hover {
+  background: #005ac1;
+  transform: translateY(-2px);
+}
+
+/* === MODAL (responsive cải tiến) === */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  overflow-y: auto;
+  background-color: rgba(0,0,0,0.65);
+  padding: 50px 20px;
+}
+
+.modal-content {
+  background: #fff;
+  margin: auto;
+  padding: 35px 30px;
+  border-radius: 20px;
+  max-width: 1000px;
+  position: relative;
+  box-shadow: 0 10px 35px rgba(0,0,0,0.12);
+  animation: fadeIn 0.35s ease;
+}
+
+.modal-content h3 {
+  margin-top: 0;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #004658;
+}
+
+.modal-content p {
+  margin: 10px 0 20px;
+  font-size: 1rem;
+  color: #555;
+}
+
+.close {
+  position: absolute;
+  top: 20px;
+  right: 25px;
+  font-size: 28px;
+  font-weight: 700;
+  color: #555;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+.close:hover {
+  color: #0070f3;
+}
+
+/* === TABLES === */
+.modal table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 14px;
+  margin-top: 20px;
+  font-size: 0.95rem;
 }
 
-.course-table th,
-.course-table td {
-  border: 1px solid #ccc;
-  padding: 10px 14px;
-  text-align: left;
-  vertical-align: top;
+.modal table th, .modal table td {
+  border: 1px solid #e1e1e1;
+  padding: 10px 8px;
+  text-align: center;
+  word-wrap: break-word; /* tránh tràn chữ */
 }
 
-.course-table th {
-  background-color: #e6f0ff;
-  color: #333;
+.modal table th {
+  background: #0070f3;
+  color: #fff;
   font-weight: 600;
 }
 
-.course-table tr:nth-child(even) {
-  background-color: #f9fcff;
+.modal table tbody tr:hover {
+  background: #f3f7ff;
 }
 
-/* ===============================
-   📱 RESPONSIVE DESIGN
-================================== */
+/* === H4 cho Hình thức học === */
+.modal h4 {
+  margin-top: 30px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+}
 
-/* Tablet (dưới 992px) */
-@media (max-width: 992px) {
-  .course-section {
-    padding: 20px;
-    margin: 30px 15px;
-  }
-
-  .course-section h2 {
-    font-size: 24px;
-  }
-
-  .course-table th,
-  .course-table td {
-    font-size: 13px;
-    padding: 8px 10px;
+/* === RESPONSIVE === */
+@media (max-width: 1024px) {
+  .modal-content {
+    padding: 30px 20px;
   }
 }
 
-/* Mobile (dưới 600px) */
-@media (max-width: 600px) {
-  .course-section {
-    padding: 20px 10px;
-    margin: 20px 10px;
+@media (max-width: 768px) {
+  .modal-content {
+    padding: 25px 15px;
   }
 
-  .course-section h2 {
-    font-size: 20px;
-    margin-bottom: 20px;
-  }
-
-  /* Cho phép cuộn ngang nếu bảng quá rộng */
-  .course-table {
+  .modal table {
     display: block;
-    overflow-x: auto;
+    overflow-x: auto; /* scroll ngang cho bảng */
     white-space: nowrap;
-    font-size: 12.5px;
   }
 
-  .course-table th,
-  .course-table td {
-    padding: 8px 8px;
+  .modal table th, .modal table td {
+    font-size: 0.85rem;
+    padding: 8px 6px;
   }
 
-  .course-table th {
-    background-color: #dbe9ff;
+  .modal-content h3 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-content h3 {
+    font-size: 1.3rem;
   }
 
-  /* Cải thiện hiển thị trên mobile */
-  .course-table tr {
-    display: table-row;
+  .modal-content p {
+    font-size: 0.9rem;
   }
+
+  .modal table th, .modal table td {
+    font-size: 0.8rem;
+    padding: 6px 4px;
+  }
+}
+
+
+/* === RESPONSIVE === */
+@media (max-width: 1024px) {
+  .course-cards {
+    gap: 20px;
+  }
+}
+@media (max-width: 768px) {
+  .course-cards {
+    flex-direction: column;
+    align-items: center;
+  }
+  .course-card {
+    width: 90%;
+    padding: 25px 20px;
+  }
+  .modal-content {
+    padding: 25px 20px;
+  }
+  .modal table th, .modal table td {
+    font-size: 0.85rem;
+    padding: 8px;
+  }
+  .modal-content h3 {
+    font-size: 1.5rem;
+  }
+}
+@media (max-width: 480px) {
+  .course-intro h2 {
+    font-size: 1.8rem;
+  }
+  .course-card h3 {
+    font-size: 1.25rem;
+  }
+  .course-card p {
+    font-size: 0.9rem;
+  }
+}
+
+/* === ANIMATION === */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px);}
+  to { opacity: 1; transform: translateY(0);}
 }

@@ -13,7 +13,7 @@
    <div class="logo-section">
   <a href="index.html" class="logo-link">
     <img src="IMG/LOGOYUME2.jpg" alt="Logo" class="logo-img" />
-    <span class="logo-text">Nhật Ngữ Biên Hòa</span>
+    <span class="logo-text">Trung Tâm Nhật Ngữ </span>
   </a>
 </div> 
 
@@ -32,69 +32,34 @@
 <div class="menu-overlay"></div>
       <div id="sakura-container"></div>
     </header>
-      <h1>Tin tức mới nhất</h1>
-  <div id="newsContainer">Đang tải...</div>
+  <main class="news-page">
+  <!-- Banner -->
+  <section class="news-banner">
+    <img src="IMG/TINTUC_YUME.jpg" alt="Yume Academy Banner" />
+  </section>
+
+  <!-- Video giới thiệu -->
+  <section class="news-intro-video">
+    <h2>Giới thiệu trung tâm Yume Academy</h2>
+    <video controls>
+      <source src="IMG/VIDEO_YUME.mp4" type="video/mp4" />
+      Trình duyệt của bạn không hỗ trợ video.
+    </video>
+  </section>
 
 
-    <script type="module">
-  // Import Firebase qua CDN
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-  import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+</main>
 
-  // ✅ Cấu hình Firebase
-  const firebaseConfig = {
-    apiKey: "AIzaSyDgAKED74NUFIO7VVAsyFBOjK3gr2__yvE",
-    authDomain: "yumeacademy-e263c.firebaseapp.com",
-    databaseURL: "https://yumeacademy-e263c-default-rtdb.firebaseio.com",
-    projectId: "yumeacademy-e263c",
-    storageBucket: "yumeacademy-e263c.firebasestorage.app",
-    messagingSenderId: "951909389829",
-    appId: "1:951909389829:web:cfc688ee61f43e7b446e6c",
-    measurementId: "G-R6HDJXFTHG"
-  };
-
-  // 🚀 Khởi tạo Firebase
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
-
-  // 📰 Lấy danh sách bài viết
-  const newsContainer = document.getElementById("newsContainer");
-  const newsRef = ref(db, "news");
-
-  onValue(newsRef, (snapshot) => {
-    const data = snapshot.val();
-    newsContainer.innerHTML = ""; // Xóa nội dung cũ
-
-    if (!data) {
-      newsContainer.innerHTML = "<p>Chưa có bài viết nào.</p>";
-      return;
-    }
-
-    // Duyệt qua từng bài viết và hiển thị
-    Object.entries(data).reverse().forEach(([id, post]) => {
-      const article = document.createElement("div");
-      article.classList.add("news-item");
-      article.innerHTML = `
-        <h2>${post.title}</h2>
-        <p class="date">📅 ${post.date || "Không rõ thời gian"}</p>
-        ${post.imageUrl ? `<img src="${post.imageUrl}" alt="Ảnh bài viết" class="news-image" />` : ""}
-        <p>${post.content}</p>
-        ${post.videoUrl ? `<video src="${post.videoUrl}" controls class="news-video"></video>` : ""}
-        <hr/>
-      `;
-      newsContainer.appendChild(article);
-    });
-  });
-</script>
+ 
 
 </body>
 <footer class="main-footer">
   <div class="footer-container">
     <!-- Logo + Giới thiệu -->
     <div class="footer-about">
-       <img src="IMG/YUME_LOGO_KONEN.png" alt="Yume Academy" class="footer-logo">
+        <img src="IMG/YUME_LOGO_KONEN.png" alt="Yume Academy" class="footer-logo">
       <p>
-        Yume Academy – Trung tâm Nhật ngữ tại Trấn Biên, 
+        Yume Academy-Trung Tâm Nhật Ngữ  tại tp Biên Hòa, 
         cam kết mang đến chương trình học tập chất lượng, 
         hiện đại và thân thiện cho học viên ở mọi độ tuổi.
       </p>
@@ -115,8 +80,8 @@
     <!-- Liên hệ -->
     <div class="footer-contact">
       <h3>Liên hệ</h3>
-     <p>📍 56-58 đường N3, khu phố 7, Phường Trấn Biên </p>
-      <p>📞 0393732535</p>
+      <p>📍 56-58 Đường N3, KP 7-Phường Trấn Biên-Tỉnh Đồng Nai  </p>
+      <p>📞 0908 593 016</p>
       <p>✉️ yumeacademy.bienhoa@gmail.com</p>
       <div class="social-icons">
         <a href="https://www.facebook.com/share/16DhMzh3qw/"><img src="IMG/facebook-logo.png" alt="Facebook"></a>
