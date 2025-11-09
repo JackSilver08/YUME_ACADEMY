@@ -1,3 +1,11 @@
+/* === FONT CHỮ TOÀN TRANG === */
+body {
+  font-family: "Roboto", "Noto Sans JP", sans-serif;
+  color: #333;
+  line-height: 1.6;
+  font-size: 16px;
+}
+
 /* === BỐ CỤC CHÍNH === */
 .intro-section,
 .philosophy-section,
@@ -158,6 +166,100 @@ blockquote {
   text-align: left;
   max-width: 700px;
 }
+/* === CAM KẾT ĐÀO TẠO === */
+.commit-section {
+  text-align: left;
+  width: 100%;      /* chiếm toàn bộ chiều ngang */
+  padding: 60px 5%; /* hoặc 0 nếu muốn sát lề hoàn toàn */
+  background: #f9fcfd;
+  border-radius: 12px;
+  box-shadow: 0 4px 18px rgba(0, 70, 88, 0.05);
+}
+
+
+.commit-section h2 {
+  text-align: center;
+  color: #004658;
+  font-weight: 700;
+  font-size: 1.8em;
+  margin-bottom: 35px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* === MỖI KHỐI CAM KẾT === */
+.commit-item {
+  background: #ffffff;
+  border-left: 5px solid #004658;
+  border-radius: 10px;
+  padding: 20px 25px;
+  width: 100%;
+  margin-bottom: 25px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.commit-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+/* === TIÊU ĐỀ MỖI CAM KẾT === */
+.commit-item h3 {
+  color: #004658;
+  font-size: 1.15em;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.commit-item h3::before {
+  content: "✔";
+  background: #004658;
+  color: #fff;
+  font-size: 0.8em;
+  padding: 4px 8px;
+  border-radius: 5px;
+}
+
+/* === NỘI DUNG === */
+.commit-item p {
+  color: #333;
+  line-height: 1.7;
+  margin: 10px 0;
+  text-align: justify;
+}
+
+.commit-item ul {
+  list-style: none;
+  padding-left: 20px;
+  margin: 10px 0 10px 10px;
+}
+
+.commit-item ul li {
+  position: relative;
+  padding-left: 20px;
+  margin-bottom: 8px;
+}
+
+.commit-item ul li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #004658;
+  font-weight: bold;
+}
+
+/* === PHẦN CHÂM NGÔN === */
+.commit-section .motto {
+  text-align: center;
+  font-size: 1.1em;
+  color: #004658;
+  margin-top: 40px;
+  line-height: 1.6;
+}
+
 /* === RESPONSIVE MOBILE & TABLET === */
 @media (max-width: 1024px) {
   .intro-section {
