@@ -98,3 +98,62 @@ body {
     font-size: 1.2rem;
   }
 }
+
+/* === ẢNH BÀI HỌC === */
+.lesson-images {
+  padding: 50px 10%;
+  background-color: #fffdfc;
+}
+
+.lesson-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.lesson-grid img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 10px;
+  transition: transform 0.3s ease;
+}
+
+.lesson-grid img:hover {
+  transform: scale(1.03);
+}
+
+/* === RESPONSIVE === */
+
+/* Tablet (màn hình <= 768px) */
+@media (max-width: 768px) {
+  .lesson-images {
+    padding: 40px 6%;
+  }
+
+  .lesson-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+
+  .lesson-grid img {
+    height: 180px;
+  }
+}
+
+/* Mobile (màn hình <= 480px) */
+@media (max-width: 480px) {
+  .lesson-images {
+    padding: 30px 4%;
+  }
+
+  .lesson-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .lesson-grid img {
+    height: auto; /* để ảnh giữ tỉ lệ gốc trên màn nhỏ */
+    border-radius: 8px;
+  }
+}
