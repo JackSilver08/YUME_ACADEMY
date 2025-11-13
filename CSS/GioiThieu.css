@@ -1,10 +1,3 @@
-/* === FONT CHỮ TOÀN TRANG === */
-body {
-  font-family: "Roboto", "Noto Sans JP", sans-serif;
-  color: #333;
-  line-height: 1.6;
-  font-size: 16px;
-}
 
 /* === BỐ CỤC CHÍNH === */
 .intro-section,
@@ -22,9 +15,11 @@ body {
 /* === TIÊU ĐỀ CHUNG === */
 h1, h2, h3 {
   color: #004658;
-  font-weight: 600;
+  font-weight: 700; /* đậm đều toàn trang */
   margin-bottom: 20px;
+  text-transform: none;
 }
+
 h2 {
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -176,17 +171,6 @@ blockquote {
   box-shadow: 0 4px 18px rgba(0, 70, 88, 0.05);
 }
 
-
-.commit-section h2 {
-  text-align: center;
-  color: #004658;
-  font-weight: 700;
-  font-size: 1.8em;
-  margin-bottom: 35px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
 /* === MỖI KHỐI CAM KẾT === */
 .commit-item {
   background: #ffffff;
@@ -259,6 +243,7 @@ blockquote {
   margin-top: 40px;
   line-height: 1.6;
 }
+.philosophy-section ul { list-style-type: none; padding-left: 0; }
 
 /* === RESPONSIVE MOBILE & TABLET === */
 @media (max-width: 1024px) {
