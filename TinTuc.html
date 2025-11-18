@@ -33,21 +33,26 @@
 <div class="menu-overlay"></div>
       <div id="sakura-container"></div>
     </header>
-<div id="posts"></div>
+
+<div id="posts">
+  <p>Đang tải bài viết...</p>
+</div>
+
 <script>
 const repo = "JackSilver08/YUME_ACADEMY";
 const folder = "posts";
-const token = ""; // Nếu repo private, dán token ở đây, còn public thì để trống
+// Nếu repo private, khách nhập token khi mở trang, public thì để trống
+let token = prompt("Nếu repo private, hãy nhập GitHub token, bỏ qua nếu public:") || "";
 
 async function loadPosts() {
   try {
     const res = await fetch(`https://api.github.com/repos/${repo}/contents/${folder}?ref=main`, {
       headers: token ? { Authorization: `Bearer ${token}` } : {}
     });
-    if(!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+    if(!res.ok) throw new Error(`GitHub API error: ${res.status} ${res.statusText}`);
     const files = await res.json();
-    const posts = [];
 
+    const posts = [];
     for(const file of files) {
       if(file.name.endsWith(".json")) {
         const r = await fetch(file.download_url);
@@ -56,18 +61,21 @@ async function loadPosts() {
       }
     }
 
-    // Sắp xếp bài theo date mới nhất
     posts.sort((a,b) => new Date(b.date) - new Date(a.date));
 
-    // Render
     const container = document.getElementById("posts");
+    if(posts.length === 0){
+      container.innerHTML = "<p>Chưa có bài viết nào.</p>";
+      return;
+    }
+
     container.innerHTML = "";
     posts.forEach(p => {
       container.innerHTML += `
         <div class="post">
           <h2>${p.title}</h2>
-          <p>${new Date(p.date).toLocaleDateString()}</p>
-          ${p.thumbnail ? `<img src="${p.thumbnail}" width="200">` : ''}
+          <p><em>${new Date(p.date).toLocaleDateString()}</em></p>
+          ${p.thumbnail ? `<img src="${p.thumbnail}" alt="${p.title}">` : ''}
           ${p.video ? `<iframe width="560" height="315" src="${p.video}" frameborder="0" allowfullscreen></iframe>` : ''}
           <div>${p.body}</div>
         </div>
@@ -76,7 +84,10 @@ async function loadPosts() {
 
   } catch(err) {
     console.error(err);
-    document.getElementById("posts").innerHTML = "<p>Không thể load bài viết. Kiểm tra token hoặc repo public/private.</p>";
+    document.getElementById("posts").innerHTML = `
+      <p>Không thể tải bài viết. Kiểm tra token hoặc repo public/private.</p>
+      <p>Lỗi: ${err.message}</p>
+    `;
   }
 }
 
