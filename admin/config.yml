@@ -2,8 +2,10 @@ backend:
   name: github
   repo: JackSilver08/YUME_ACADEMY
   branch: main
+  auth_scope: repo
+  app_id: Ov23li8j2hAaFTEZHKDm
 
-media_folder: "assets/uploads"
+media_folder: "assets/uploads" # nơi lưu ảnh trong repo
 public_folder: "/assets/uploads"
 
 collections:
