@@ -37,29 +37,52 @@
 <script>
 const repo = "JackSilver08/YUME_ACADEMY";
 const folder = "posts";
-fetch(`https://api.github.com/repos/${repo}/contents/${folder}?ref=main`)
-  .then(res=>res.json())
-  .then(files=>{
-    files.sort((a,b)=> new Date(b.name.split("-")[0]) - new Date(a.name.split("-")[0])); // sắp xếp theo ngày
-    files.forEach(file=>{
-      if(file.name.endsWith(".json")){
-        fetch(file.download_url)
-          .then(r=>r.json())
-          .then(post=>{
-            document.getElementById("posts").innerHTML += `
-              <div class="post">
-                <h2>${post.title}</h2>
-                <p>${new Date(post.date).toLocaleDateString()}</p>
-                ${post.thumbnail ? `<img src="${post.thumbnail}" width="200">` : ''}
-                ${post.video ? `<iframe width="560" height="315" src="${post.video}" frameborder="0" allowfullscreen></iframe>` : ''}
-                <div>${post.body}</div>
-              </div>
-            `;
-          })
+const token = ""; // Nếu repo private, dán token ở đây, còn public thì để trống
+
+async function loadPosts() {
+  try {
+    const res = await fetch(`https://api.github.com/repos/${repo}/contents/${folder}?ref=main`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {}
+    });
+    if(!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+    const files = await res.json();
+    const posts = [];
+
+    for(const file of files) {
+      if(file.name.endsWith(".json")) {
+        const r = await fetch(file.download_url);
+        const post = await r.json();
+        posts.push(post);
       }
-    })
-  })
+    }
+
+    // Sắp xếp bài theo date mới nhất
+    posts.sort((a,b) => new Date(b.date) - new Date(a.date));
+
+    // Render
+    const container = document.getElementById("posts");
+    container.innerHTML = "";
+    posts.forEach(p => {
+      container.innerHTML += `
+        <div class="post">
+          <h2>${p.title}</h2>
+          <p>${new Date(p.date).toLocaleDateString()}</p>
+          ${p.thumbnail ? `<img src="${p.thumbnail}" width="200">` : ''}
+          ${p.video ? `<iframe width="560" height="315" src="${p.video}" frameborder="0" allowfullscreen></iframe>` : ''}
+          <div>${p.body}</div>
+        </div>
+      `;
+    });
+
+  } catch(err) {
+    console.error(err);
+    document.getElementById("posts").innerHTML = "<p>Không thể load bài viết. Kiểm tra token hoặc repo public/private.</p>";
+  }
+}
+
+loadPosts();
 </script>
+
 
 </body>
 <footer class="main-footer">
