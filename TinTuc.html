@@ -33,28 +33,29 @@
 <div class="menu-overlay"></div>
       <div id="sakura-container"></div>
     </header>
-<<<<<<< HEAD
-
 <div id="posts">
   <p>Đang tải bài viết...</p>
 </div>
 
 <script>
+const repo = "JackSilver08/YUME_ACADEMY";
+const folder = "posts";
+const branch = "main";
 
-// Nếu repo private, khách nhập token khi mở trang, public thì để trống
-let token = prompt("Nếu repo private, hãy nhập GitHub token, bỏ qua nếu public:") || "";
+// Nếu repo private, khách hàng nhập token, nếu public bỏ trống
+let token = prompt("Nếu repo private, nhập GitHub token (bỏ trống nếu public)") || "";
 
 async function loadPosts() {
   try {
-    const res = await fetch(`https://api.github.com/repos/${repo}/contents/${folder}?ref=main`, {
+    const res = await fetch(`https://api.github.com/repos/${repo}/contents/${folder}?ref=${branch}`, {
       headers: token ? { Authorization: `Bearer ${token}` } : {}
     });
     if(!res.ok) throw new Error(`GitHub API error: ${res.status} ${res.statusText}`);
     const files = await res.json();
 
     const posts = [];
-    for(const file of files) {
-      if(file.name.endsWith(".json")) {
+    for(const file of files){
+      if(file.name.endsWith(".json")){
         const r = await fetch(file.download_url);
         const post = await r.json();
         posts.push(post);
@@ -95,36 +96,6 @@ loadPosts();
 </script>
 
 
-=======
-<div id="posts"></div>
-<script>
-const repo = "JackSilver08/YUME_ACADEMY";
-const folder = "posts";
-fetch(`https://api.github.com/repos/${repo}/contents/${folder}?ref=main`)
-  .then(res=>res.json())
-  .then(files=>{
-    files.sort((a,b)=> new Date(b.name.split("-")[0]) - new Date(a.name.split("-")[0])); // sắp xếp theo ngày
-    files.forEach(file=>{
-      if(file.name.endsWith(".json")){
-        fetch(file.download_url)
-          .then(r=>r.json())
-          .then(post=>{
-            document.getElementById("posts").innerHTML += `
-              <div class="post">
-                <h2>${post.title}</h2>
-                <p>${new Date(post.date).toLocaleDateString()}</p>
-                ${post.thumbnail ? `<img src="${post.thumbnail}" width="200">` : ''}
-                ${post.video ? `<iframe width="560" height="315" src="${post.video}" frameborder="0" allowfullscreen></iframe>` : ''}
-                <div>${post.body}</div>
-              </div>
-            `;
-          })
-      }
-    })
-  })
-</script>
-
->>>>>>> 382a76e68d788ac1e739add5024d2129fd59c440
 </body>
 <footer class="main-footer">
   <div class="footer-container">
