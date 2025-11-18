@@ -33,13 +33,33 @@
 <div class="menu-overlay"></div>
       <div id="sakura-container"></div>
     </header>
-  <main class="news-page">
- 
-
-
-</main>
-
- 
+<div id="posts"></div>
+<script>
+const repo = "JackSilver08/YUME_ACADEMY";
+const folder = "posts";
+fetch(`https://api.github.com/repos/${repo}/contents/${folder}?ref=main`)
+  .then(res=>res.json())
+  .then(files=>{
+    files.sort((a,b)=> new Date(b.name.split("-")[0]) - new Date(a.name.split("-")[0])); // sắp xếp theo ngày
+    files.forEach(file=>{
+      if(file.name.endsWith(".json")){
+        fetch(file.download_url)
+          .then(r=>r.json())
+          .then(post=>{
+            document.getElementById("posts").innerHTML += `
+              <div class="post">
+                <h2>${post.title}</h2>
+                <p>${new Date(post.date).toLocaleDateString()}</p>
+                ${post.thumbnail ? `<img src="${post.thumbnail}" width="200">` : ''}
+                ${post.video ? `<iframe width="560" height="315" src="${post.video}" frameborder="0" allowfullscreen></iframe>` : ''}
+                <div>${post.body}</div>
+              </div>
+            `;
+          })
+      }
+    })
+  })
+</script>
 
 </body>
 <footer class="main-footer">
