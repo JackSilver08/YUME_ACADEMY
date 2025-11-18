@@ -1,5 +1,4 @@
-
-/* === BỐ CỤC CHÍNH === */
+/* === BỐ CỤC CHÍNH NÂNG CẤP === */
 .intro-section,
 .philosophy-section,
 .core-values,
@@ -7,333 +6,662 @@
 .commit-section,
 .mission-section,
 .cta-section {
-  padding: 45px 8%;
-  background: #fff;
-  line-height: 1.5;
+    padding: 100px 8%;
+    background: #fff;
+    line-height: 1.7;
+    position: relative;
+    overflow: hidden;
 }
 
-/* === TIÊU ĐỀ CHUNG === */
+.philosophy-section,
+.people-section {
+    background: linear-gradient(135deg, #f8fcff 0%, #f0f9ff 100%);
+}
+
+/* Hiệu ứng nền động */
+.philosophy-section::before,
+.people-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(0, 70, 88, 0.03) 0%, transparent 70%);
+    border-radius: 50%;
+    z-index: 0;
+}
+
+/* === TIÊU ĐỀ CHUNG NÂNG CẤP === */
 h1, h2, h3 {
-  color: #004658;
-  font-weight: 700; /* đậm đều toàn trang */
-  margin-bottom: 20px;
-  text-transform: none;
+    color: #004658;
+    font-weight: 800;
+    margin-bottom: 30px;
+    line-height: 1.2;
+    position: relative;
+}
+
+h1 {
+    font-size: 3.2em;
+    text-align: center;
+    margin-bottom: 50px;
+    background: linear-gradient(135deg, #004658, #00a8cc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 h2 {
-  text-transform: uppercase;
-  letter-spacing: 1px;
+    font-size: 2.5em;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-align: center;
+    position: relative;
+    padding-bottom: 20px;
 }
+
+h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, #004658, #00a8cc);
+    border-radius: 2px;
+}
+
+h3 {
+    font-size: 1.6em;
+    margin-top: 15px;
+}
+
 .philosophy-section h3,
 .mission-section h3 {
-  margin-top: 10px;
+    margin-top: 10px;
+    text-align: center;
 }
 
-/* === GIỚI THIỆU === */
+/* === GIỚI THIỆU NÂNG CẤP === */
 .intro-section {
-  display: flex;
-  gap: 40px;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-}
-.intro-content {
-  flex: 1;
-  min-width: 300px;
-}
-/* === TIÊU ĐỀ === */
-.intro-section h1 {
-  text-align: center; /* giữ tiêu đề căn giữa */
+    display: flex;
+    gap: 60px;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding-top: 120px;
 }
 
-/* === NỘI DUNG GIỚI THIỆU === */
+.intro-content {
+    flex: 1;
+    min-width: 300px;
+    position: relative;
+    z-index: 1;
+}
+
+.intro-section h1 {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+/* === NỘI DUNG GIỚI THIỆU NÂNG CẤP === */
 .intro-content p {
-  text-align: justify; /* căn đều 2 bên */
-  line-height: 1.6;    /* giữ khoảng cách dòng thoải mái */
+    text-align: justify;
+    line-height: 1.8;
+    font-size: 1.1em;
+    color: #2c3e50;
+    margin-bottom: 25px;
 }
 
 .intro-content blockquote {
-  text-align: justify; /* blockquote cũng căn đều */
-  margin: 20px 0;
-  padding-left: 15px;
-  border-left: 4px solid #004658;
-  color: #555;
-  max-width: 700px;
-  display: inline-block; /* nếu muốn blockquote không chiếm toàn bộ chiều ngang */
+    text-align: justify;
+    margin: 30px 0;
+    padding: 25px 30px;
+    border-left: 5px solid #00a8cc;
+    color: #555;
+    max-width: 700px;
+    display: inline-block;
+    background: linear-gradient(135deg, #f8fcff, #f0f9ff);
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0, 70, 88, 0.08);
+    font-size: 1.1em;
+    line-height: 1.6;
+    position: relative;
+    overflow: hidden;
+}
+
+.intro-content blockquote::before {
+    content: '"';
+    position: absolute;
+    top: 10px;
+    left: 20px;
+    font-size: 4em;
+    color: rgba(0, 168, 204, 0.1);
+    font-family: serif;
+    line-height: 1;
+}
+
+.intro-image {
+    flex: 1;
+    min-width: 300px;
+    position: relative;
 }
 
 .intro-section img {
-  width: 100%;
-  max-width: 480px;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    transition: all 0.5s ease;
+    position: relative;
+    z-index: 2;
 }
 
-/* === CHỮ NHẬT BẢN === */
+.intro-image::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 3px solid #00a8cc;
+    border-radius: 25px;
+    top: 20px;
+    left: 20px;
+    z-index: 1;
+    transition: all 0.5s ease;
+}
+
+.intro-image:hover::before {
+    top: 15px;
+    left: 15px;
+}
+
+.intro-section img:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
+}
+
+/* === CHỮ NHẬT BẢN NÂNG CẤP === */
 .jp-text {
-  font-family: "Noto Sans JP", sans-serif;
-  display: block;
-  font-size: 1.1em;
-  color: #444;
+    font-family: "Noto Sans JP", sans-serif;
+    display: block;
+    font-size: 1.2em;
+    color: #00a8cc;
+    margin-top: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
 }
 
-/* === BẢNG GIÁ TRỊ CỐT LÕI === */
+/* === BẢNG GIÁ TRỊ CỐT LÕI NÂNG CẤP === */
 .values-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-  font-size: 0.95em;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 30px;
+    font-size: 1em;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 70, 88, 0.1);
 }
+
 .values-table th,
 .values-table td {
-  border: 1px solid #ccc;
-  padding: 10px 15px;
-  text-align: left;
+    border: none;
+    padding: 20px 25px;
+    text-align: left;
+    transition: all 0.3s ease;
 }
+
 .values-table th {
-  background-color: #f5f5f5;
-  color: #222;
+    background: linear-gradient(135deg, #004658, #00a8cc);
+    color: white;
+    font-weight: 700;
+    font-size: 1.1em;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
-/* === BLOCKQUOTE === */
+.values-table tr:nth-child(even) {
+    background-color: #f8fcff;
+}
+
+.values-table tr:nth-child(odd) {
+    background-color: white;
+}
+
+.values-table tr:hover td {
+    background-color: #f0f9ff;
+    transform: translateX(5px);
+}
+
+.values-table td:first-child {
+    font-weight: 600;
+    color: #004658;
+    border-right: 2px solid #f0f0f0;
+}
+
+/* === BLOCKQUOTE NÂNG CẤP === */
 blockquote {
-  font-style: italic;
-  border-left: 4px solid #004658;
-  padding-left: 15px;
-  margin: 20px 0;
-  color: #555;
+    font-style: italic;
+    border-left: 5px solid #00a8cc;
+    padding: 25px 30px;
+    margin: 30px auto;
+    color: #555;
+    background: linear-gradient(135deg, #f8fcff, #f0f9ff);
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0, 70, 88, 0.08);
+    max-width: 800px;
+    display: inline-block;
+    text-align: left;
+    position: relative;
+    overflow: hidden;
+    font-size: 1.1em;
+    line-height: 1.6;
 }
 
-/* === NÚT === */
+blockquote::before {
+    content: '"';
+    position: absolute;
+    top: 10px;
+    left: 20px;
+    font-size: 4em;
+    color: rgba(0, 168, 204, 0.1);
+    font-family: serif;
+    line-height: 1;
+}
+
+/* === NÚT NÂNG CẤP === */
 .btn-about {
-  display: inline-block;
-  background: #004658;
-  color: #fff;
-  padding: 12px 30px;
-  border-radius: 8px;
-  text-decoration: none;
-  transition: 0.3s;
-  margin-top: 20px;
+    display: inline-block;
+    background: linear-gradient(135deg, #004658, #00a8cc);
+    color: #fff;
+    padding: 16px 40px;
+    border-radius: 50px;
+    text-decoration: none;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    margin-top: 30px;
+    font-weight: 600;
+    font-size: 1.1em;
+    letter-spacing: 0.5px;
+    box-shadow: 0 8px 25px rgba(0, 70, 88, 0.3);
+    position: relative;
+    overflow: hidden;
 }
+
+.btn-about::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+
 .btn-about:hover {
-  background: #003a4e;
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 70, 88, 0.4);
 }
 
+.btn-about:hover::before {
+    left: 100%;
+}
 
-/* === KÊU GỌI HÀNH ĐỘNG === */
+/* === KÊU GỌI HÀNH ĐỘNG NÂNG CẤP === */
 .cta-section {
-  text-align: center;
-  background: #f2fbff;
-  border-top: 2px solid #d6eef5;
-}
-.cta-section h2 {
-  margin-bottom: 15px;
-}
-.cta-section p {
-  max-width: 700px;
-  margin: 0 auto 25px auto;
-  color: #444;
+    text-align: center;
+    background: linear-gradient(135deg, #f2fbff 0%, #e8f7ff 100%);
+    border-top: 3px solid #00a8cc;
+    position: relative;
+    overflow: hidden;
 }
 
-/* === CĂN GIỮA TỪ TRIẾT LÝ GIÁO DỤC TRỞ ĐI === */
+.cta-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(0, 168, 204, 0.05) 0%, transparent 70%);
+    border-radius: 50%;
+    z-index: 0;
+}
+
+.cta-section h2 {
+    margin-bottom: 25px;
+    position: relative;
+    z-index: 1;
+}
+
+.cta-section p {
+    max-width: 700px;
+    margin: 0 auto 35px auto;
+    color: #444;
+    font-size: 1.1em;
+    line-height: 1.7;
+    position: relative;
+    z-index: 1;
+}
+
+/* === CĂN GIỮA CÁC PHẦN === */
 .philosophy-section,
 .core-values,
 .people-section,
 .commit-section,
 .mission-section,
 .cta-section {
-  text-align: center;
+    text-align: center;
 }
+
 .philosophy-section ul,
 .people-section ul,
 .commit-section ul {
-  display: inline-block;
-  text-align: left;
-  margin-top: 15px;
-}
-.core-values table {
-  margin: 20px auto;
-  text-align: left;
-  max-width: 800px;
-}
-blockquote {
-  display: inline-block;
-  text-align: left;
-  max-width: 700px;
-}
-/* === CAM KẾT ĐÀO TẠO === */
-.commit-section {
-  text-align: left;
-  width: 100%;      /* chiếm toàn bộ chiều ngang */
-  padding: 60px 5%; /* hoặc 0 nếu muốn sát lề hoàn toàn */
-  background: #f9fcfd;
-  border-radius: 12px;
-  box-shadow: 0 4px 18px rgba(0, 70, 88, 0.05);
+    display: inline-block;
+    text-align: left;
+    margin-top: 25px;
+    max-width: 800px;
 }
 
-/* === MỖI KHỐI CAM KẾT === */
+.core-values table {
+    margin: 30px auto;
+    text-align: left;
+    max-width: 1000px;
+}
+
+/* === CAM KẾT ĐÀO TẠO NÂNG CẤP === */
+.commit-section {
+    text-align: left;
+    width: 100%;
+    padding: 80px 5%;
+    background: linear-gradient(135deg, #f9fcfd 0%, #f0f9ff 100%);
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 70, 88, 0.08);
+    position: relative;
+    overflow: hidden;
+}
+
+.commit-section::before {
+    content: '';
+    position: absolute;
+    bottom: -30%;
+    left: -5%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(0, 70, 88, 0.03) 0%, transparent 70%);
+    border-radius: 50%;
+    z-index: 0;
+}
+
+/* === MỖI KHỐI CAM KẾT NÂNG CẤP === */
 .commit-item {
-  background: #ffffff;
-  border-left: 5px solid #004658;
-  border-radius: 10px;
-  padding: 20px 25px;
-  width: 100%;
-  margin-bottom: 25px;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: linear-gradient(135deg, #ffffff 0%, #f8fcff 100%);
+    border-left: 6px solid #00a8cc;
+    border-radius: 15px;
+    padding: 30px 35px;
+    width: 100%;
+    margin-bottom: 30px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.commit-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 168, 204, 0.05), transparent);
+    transition: left 0.6s;
 }
 
 .commit-item:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
 }
 
-/* === TIÊU ĐỀ MỖI CAM KẾT === */
+.commit-item:hover::before {
+    left: 100%;
+}
+
+/* === TIÊU ĐỀ MỖI CAM KẾT NÂNG CẤP === */
 .commit-item h3 {
-  color: #004658;
-  font-size: 1.15em;
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
+    color: #004658;
+    font-size: 1.3em;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    position: relative;
 }
 
 .commit-item h3::before {
-  content: "✔";
-  background: #004658;
-  color: #fff;
-  font-size: 0.8em;
-  padding: 4px 8px;
-  border-radius: 5px;
+    content: "✔";
+    background: linear-gradient(135deg, #004658, #00a8cc);
+    color: #fff;
+    font-size: 0.9em;
+    padding: 8px 12px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 70, 88, 0.3);
+    transition: all 0.3s ease;
 }
 
-/* === NỘI DUNG === */
+.commit-item:hover h3::before {
+    transform: scale(1.1) rotate(5deg);
+}
+
+/* === NỘI DUNG NÂNG CẤP === */
 .commit-item p {
-  color: #333;
-  line-height: 1.7;
-  margin: 10px 0;
-  text-align: justify;
+    color: #2c3e50;
+    line-height: 1.8;
+    margin: 15px 0;
+    text-align: justify;
+    font-size: 1.05em;
 }
 
 .commit-item ul {
-  list-style: none;
-  padding-left: 20px;
-  margin: 10px 0 10px 10px;
+    list-style: none;
+    padding-left: 25px;
+    margin: 15px 0 15px 15px;
 }
 
 .commit-item ul li {
-  position: relative;
-  padding-left: 20px;
-  margin-bottom: 8px;
+    position: relative;
+    padding-left: 25px;
+    margin-bottom: 10px;
+    line-height: 1.6;
+    color: #444;
 }
 
 .commit-item ul li::before {
-  content: "•";
-  position: absolute;
-  left: 0;
-  color: #004658;
-  font-weight: bold;
+    content: "▶";
+    position: absolute;
+    left: 0;
+    color: #00a8cc;
+    font-weight: bold;
+    font-size: 0.9em;
+    transition: all 0.3s ease;
 }
 
-/* === PHẦN CHÂM NGÔN === */
+.commit-item ul li:hover::before {
+    transform: translateX(3px);
+    color: #004658;
+}
+
+/* === PHẦN CHÂM NGÔN NÂNG CẤP === */
 .commit-section .motto {
-  text-align: center;
-  font-size: 1.1em;
-  color: #004658;
-  margin-top: 40px;
-  line-height: 1.6;
+    text-align: center;
+    font-size: 1.3em;
+    color: #004658;
+    margin-top: 50px;
+    line-height: 1.8;
+    padding: 25px;
+    background: linear-gradient(135deg, #ffffff, #f8fcff);
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 70, 88, 0.08);
+    border: 2px solid rgba(0, 168, 204, 0.1);
+    position: relative;
+    z-index: 1;
 }
-.philosophy-section ul { list-style-type: none; padding-left: 0; }
 
-/* === RESPONSIVE MOBILE & TABLET === */
+.philosophy-section ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.philosophy-section ul li {
+    padding: 15px 20px;
+    margin-bottom: 15px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 70, 88, 0.08);
+    transition: all 0.3s ease;
+    border-left: 4px solid #00a8cc;
+}
+
+.philosophy-section ul li:hover {
+    transform: translateX(10px);
+    box-shadow: 0 8px 25px rgba(0, 70, 88, 0.12);
+}
+
+/* === RESPONSIVE MOBILE & TABLET NÂNG CẤP === */
 @media (max-width: 1024px) {
-  .intro-section {
-    gap: 30px;
-    flex-wrap: wrap;
-  }
-  .intro-section img {
-    max-width: 400px;
-    margin: 0 auto;
-  }
+    .intro-section {
+        gap: 40px;
+        flex-wrap: wrap;
+    }
+    
+    .intro-section img {
+        max-width: 450px;
+        margin: 0 auto;
+    }
+    
+    h1 {
+        font-size: 2.8em;
+    }
+    
+    h2 {
+        font-size: 2.2em;
+    }
 }
 
 @media (max-width: 768px) {
-  body {
-    font-size: 15px;
-  }
-
-  .intro-section {
-    flex-direction: column;
-    text-align: center;
-  }
-  .intro-section img {
-    max-width: 90%;
-  }
-
-  .values-table th,
-  .values-table td {
-    font-size: 14px;
-    padding: 8px;
-  }
-
-  h1 {
-    font-size: 1.6em;
-  }
-  h2 {
-    font-size: 1.4em;
-  }
-  h3 {
-    font-size: 1.1em;
-  }
-
-  .btn-about {
-    padding: 10px 24px;
-    font-size: 14px;
-  }
+    .intro-section,
+    .philosophy-section,
+    .core-values,
+    .people-section,
+    .commit-section,
+    .mission-section,
+    .cta-section {
+        padding: 80px 6%;
+    }
+    
+    .intro-section {
+        flex-direction: column;
+        text-align: center;
+        gap: 40px;
+    }
+    
+    .intro-section img {
+        max-width: 90%;
+    }
+    
+    .values-table th,
+    .values-table td {
+        font-size: 14px;
+        padding: 15px 20px;
+    }
+    
+    h1 {
+        font-size: 2.2em;
+    }
+    
+    h2 {
+        font-size: 1.8em;
+    }
+    
+    h3 {
+        font-size: 1.3em;
+    }
+    
+    .btn-about {
+        padding: 14px 32px;
+        font-size: 1em;
+    }
+    
+    .commit-item {
+        padding: 25px 20px;
+    }
+    
+    .commit-item h3 {
+        font-size: 1.2em;
+    }
 }
 
 @media (max-width: 480px) {
-  .intro-section,
-  .philosophy-section,
-  .core-values,
-  .people-section,
-  .commit-section,
-  .mission-section,
-  .cta-section {
-    padding: 40px 6%;
-  }
-
-  h1 {
-    font-size: 1.3em;
-  }
-  h2 {
-    font-size: 1.2em;
-  }
-
-  .values-table {
-    font-size: 13px;
-  }
-
-  blockquote {
-    font-size: 14px;
-    border-left: 3px solid #004658;
-  }
-
-  .btn-about {
-    width: 100%;
-    text-align: center;
-    display: block;
-  }
+    .intro-section,
+    .philosophy-section,
+    .core-values,
+    .people-section,
+    .commit-section,
+    .mission-section,
+    .cta-section {
+        padding: 60px 5%;
+    }
+    
+    h1 {
+        font-size: 1.8em;
+    }
+    
+    h2 {
+        font-size: 1.5em;
+    }
+    
+    .values-table {
+        font-size: 12px;
+    }
+    
+    blockquote {
+        font-size: 1em;
+        padding: 20px 25px;
+        margin: 20px 0;
+    }
+    
+    .btn-about {
+        width: 100%;
+        text-align: center;
+        display: block;
+        padding: 16px 20px;
+    }
+    
+    .commit-item h3 {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
 }
 
-/* Hiệu ứng mờ dần */
+/* Hiệu ứng mờ dần nâng cấp */
 .fade-section {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 1s ease, transform 1s ease;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 0.8s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 
 .fade-section.show {
-  opacity: 1;
-  transform: translateY(0);
+    opacity: 1;
+    transform: translateY(0);
 }
+
+/* Animation delay cho các phần tử */
+.intro-section { transition-delay: 0.1s; }
+.philosophy-section { transition-delay: 0.2s; }
+.core-values { transition-delay: 0.3s; }
+.people-section { transition-delay: 0.4s; }
+.commit-section { transition-delay: 0.5s; }
+.cta-section { transition-delay: 0.6s; }
