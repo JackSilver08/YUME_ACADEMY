@@ -79,12 +79,12 @@
   </div>
 </footer>
 <script>
-const POSTS_JSON_URL = "https://res.cloudinary.com/dlfuhehxg/raw/upload/posts_mjgjdr.json";
+// SỬA: Dùng public_id mới
+const POSTS_JSON_URL = "https://res.cloudinary.com/dlfuhehxg/raw/upload/posts_1763961885574.json";
 
 async function loadNews() {
   const container = document.getElementById("news");
   try {
-    // Cache busting mạnh
     const url = `${POSTS_JSON_URL}?ts=${Date.now()}&rand=${Math.random().toString(36).substring(2)}`;
     
     console.log("🔄 Fetching from:", url);

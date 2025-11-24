@@ -392,18 +392,20 @@ hr {
 <h2>Danh sách bài viết</h2>
 <div id="postsList">Đang tải...</div>
 
+
 <script>
 /* CONFIG */
 const CLOUD_NAME = "dlfuhehxg";
 const UPLOAD_PRESET = "Thumbnail_YUME";
-const POSTS_JSON_URL = "https://res.cloudinary.com/dlfuhehxg/raw/upload/posts_mjgjdr.json";
+// SỬA: Dùng public_id mới đã upload thành công
+const CURRENT_POSTS_ID = "posts_1763961885574";
 let posts = [];
 
-// Hàm load posts đơn giản
+// Hàm load posts từ file mới
 async function loadPosts() {
   try {
-    // Thêm cache busting mạnh
-    const url = `${POSTS_JSON_URL}?ts=${Date.now()}&rand=${Math.random().toString(36).substring(2)}`;
+    // SỬA: Dùng public_id mới
+    const url = `https://res.cloudinary.com/dlfuhehxg/raw/upload/${CURRENT_POSTS_ID}.json?ts=${Date.now()}&rand=${Math.random().toString(36).substring(2)}`;
     
     console.log("🔄 Loading posts from:", url);
     
@@ -477,7 +479,7 @@ async function uploadToCloudinary(file) {
   return await res.json();
 }
 
-/* Upload JSON - LUÔN dùng cùng public_id */
+/* Upload JSON - LUÔN dùng public_id mới */
 async function uploadJSONToCloudinary(jsonData) {
   console.log("🚀 Bắt đầu upload JSON...");
   
@@ -485,10 +487,10 @@ async function uploadJSONToCloudinary(jsonData) {
   const jsonString = JSON.stringify(jsonData, null, 2);
   const blob = new Blob([jsonString], { type: "application/json" });
   
-  // QUAN TRỌNG: LUÔN dùng cùng public_id
+  // SỬA: LUÔN dùng public_id mới
   formData.append("file", blob);
   formData.append("upload_preset", UPLOAD_PRESET);
-  formData.append("public_id", "posts_mjgjdr");
+  formData.append("public_id", CURRENT_POSTS_ID);
   
   try {
     const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/raw/upload`, {
@@ -515,7 +517,7 @@ async function uploadJSONToCloudinary(jsonData) {
   }
 }
 
-/* Xử lý submit - ĐƠN GIẢN và HIỆU QUẢ */
+/* Xử lý submit */
 document.getElementById("postForm").onsubmit = async function(e){
   e.preventDefault();
   const title = document.getElementById("title").value.trim();
@@ -556,7 +558,7 @@ document.getElementById("postForm").onsubmit = async function(e){
     const updatedPosts = [...posts, newPost];
     console.log("3. Tổng số bài viết:", updatedPosts.length);
 
-    // 4. Upload JSON - GHI ĐÈ file cũ
+    // 4. Upload JSON - GHI ĐÈ file mới
     console.log("4. Đang upload JSON...");
     await uploadJSONToCloudinary(updatedPosts);
     
@@ -595,12 +597,34 @@ document.getElementById("thumbnail").onchange = function(){
   }
 };
 
-/* Hàm test đơn giản */
+// Hàm kiểm tra file hiện tại
+window.checkCurrentFile = async function() {
+  try {
+    const url = `https://res.cloudinary.com/dlfuhehxg/raw/upload/${CURRENT_POSTS_ID}.json?ts=${Date.now()}`;
+    console.log("🔍 Kiểm tra file:", url);
+    
+    const res = await fetch(url);
+    if (res.ok) {
+      const data = await res.json();
+      console.log("📄 Dữ liệu hiện tại:", data);
+      console.log("📊 Số bài viết:", data.length);
+      return data;
+    } else {
+      console.error("❌ Không thể tải file");
+      return null;
+    }
+  } catch (err) {
+    console.error("💥 Lỗi kiểm tra:", err);
+    return null;
+  }
+}
+
+// Hàm test với file mới
 window.testUpload = async function() {
   const testData = [
     {
       "id": 1,
-      "title": "Bài test - " + new Date().toLocaleTimeString(),
+      "title": "Bài test từ file mới - " + new Date().toLocaleTimeString(),
       "link": "https://facebook.com/YumeAcademyBienHoa",
       "thumbnail": "https://res.cloudinary.com/dlfuhehxg/image/upload/v1/IMG/YUME_FANPAGE.PNG",
       "date": new Date().toISOString()
@@ -608,7 +632,7 @@ window.testUpload = async function() {
   ];
   
   try {
-    console.log("🧪 Test upload JSON...");
+    console.log("🧪 Test upload JSON đến file mới...");
     const result = await uploadJSONToCloudinary(testData);
     console.log("✅ Test thành công:", result);
     
@@ -620,7 +644,7 @@ window.testUpload = async function() {
   }
 }
 
-// Hàm xóa tất cả bài viết (dùng khi cần reset)
+// Hàm xóa tất cả bài viết
 window.clearAllPosts = async function() {
   if (!confirm("Bạn có chắc muốn xóa TẤT CẢ bài viết?")) return;
   
@@ -637,6 +661,12 @@ window.clearAllPosts = async function() {
 
 // Khởi chạy
 loadPosts();
+
+// Test ngay sau khi load
+setTimeout(() => {
+  console.log("🧪 Tự động kiểm tra file mới...");
+  checkCurrentFile();
+}, 1000);
 </script>
 
 </body>
