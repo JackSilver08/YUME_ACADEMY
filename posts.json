@@ -5,3 +5,13 @@
   "thumbnail": "...",
   "date": current_ISO_date
 }
+
+[
+  {
+    "id": 1,
+    "title": "Giới thiệu fanpage YUME ACADEMY",
+    "link": "https://www.facebook.com/YumeAcademyBienHoa",
+    "thumbnail": "IMG/YUME_FANPAGE.png",
+    "date": "2025-11-24T12:00:00.000Z"
+  }
+]
