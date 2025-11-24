@@ -436,7 +436,7 @@ function renderPosts() {
 async function uploadToCloudinary(file) {
   const formData = new FormData();
   formData.append("file", file);
-  formData.append("upload_preset", UPLOAD_PRESET); // Unsigned preset cho ảnh
+  formData.append("upload_preset", UPLOAD_PRESET); // Thumbnail_YUME
 
   const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
     method: "POST",
@@ -447,14 +447,13 @@ async function uploadToCloudinary(file) {
   return await res.json(); // res.secure_url là URL hình ảnh
 }
 
-/* Upload JSON online lên Cloudinary (unsigned, raw) */
+/* Upload JSON online lên Cloudinary (unsigned, không overwrite) */
 async function uploadJSONToCloudinary(jsonData) {
   const formData = new FormData();
   const blob = new Blob([JSON.stringify(jsonData, null, 2)], { type: "application/json" });
   formData.append("file", blob, "posts.json");
-  formData.append("upload_preset", "unsigned_json"); // preset raw unsigned trên Cloudinary
+  formData.append("upload_preset", "unsigned_raw_json"); // preset JSON mới
 
-  // Ghi chú: Không thể dùng overwrite với unsigned preset, nên mỗi lần upload sẽ tạo file mới
   const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/raw/upload`, {
     method: "POST",
     body: formData
@@ -466,8 +465,42 @@ async function uploadJSONToCloudinary(jsonData) {
     throw new Error("Upload JSON thất bại!");
   }
 
-  return await res.json(); // trả về secure_url mới
+  return await res.json(); // res.secure_url chứa link JSON mới
 }
+
+/* Submit form */
+document.getElementById("postForm").onsubmit = async function(e){
+  e.preventDefault();
+  const title = document.getElementById("title").value.trim();
+  const link = document.getElementById("link").value.trim();
+  const file = document.getElementById("thumbnail").files[0];
+  if(!title || !link || !file) return alert("Vui lòng nhập đầy đủ thông tin và chọn ảnh!");
+
+  try {
+    // Upload thumbnail
+    const upload = await uploadToCloudinary(file);
+    const thumbnailUrl = upload.secure_url;
+
+    // Thêm bài viết mới
+    const id = posts.length===0 ? 1 : Math.max(...posts.map(p=>p.id))+1;
+    const newPost = { id, title, link, thumbnail: thumbnailUrl, date: new Date().toISOString() };
+    posts.push(newPost);
+
+    // Upload JSON online
+    const jsonUpload = await uploadJSONToCloudinary(posts);
+    console.log("JSON URL mới:", jsonUpload.secure_url);
+
+    renderPosts();
+    this.reset();
+    document.getElementById("preview").style.display="none";
+
+    alert("Đăng bài thành công! JSON online đã được upload.");
+  } catch(err) {
+    console.error(err);
+    alert("Upload thất bại!");
+  }
+};
+
 
 
 /* Submit form */
