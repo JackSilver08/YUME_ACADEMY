@@ -81,115 +81,69 @@
 <script>
 /* ===== CONFIG ===== */
 const CLOUD_NAME = "dlfuhehxg";
-const POSTS_JSON_URL = "https://res.cloudinary.com/dlfuhehxg/raw/upload/posts_1763961885574.json";
 
-/* ===== LOAD NEWS ===== */
+// Lấy file ID từ localStorage hoặc dùng mặc định
+function getCurrentPostsId() {
+  return localStorage.getItem('current_posts_id') || "posts_mjgjdr";
+}
+
 async function loadNews() {
-  console.group("📰 LOAD NEWS");
   const container = document.getElementById("news");
+  const currentFileId = getCurrentPostsId();
   
   try {
-    // URL với cache busting mạnh
-    const url = `${POSTS_JSON_URL}?ts=${Date.now()}&rand=${Math.random().toString(36).substring(2, 15)}&nocache=true`;
+    const url = `https://res.cloudinary.com/${CLOUD_NAME}/raw/upload/${currentFileId}.json?ts=${Date.now()}`;
     
-    console.log("📡 Fetching from:", url);
+    console.log("📰 Loading news from:", url);
     
-    const res = await fetch(url, {
-      method: 'GET',
-      cache: 'no-cache',
-      headers: {
-        'Cache-Control': 'no-cache, no-store, must-revalidate',
-        'Pragma': 'no-cache',
-        'Expires': '0'
-      }
-    });
-    
-    console.log("📊 Response:", res.status, res.statusText);
+    const res = await fetch(url);
     
     if (!res.ok) {
-      throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+      throw new Error(`HTTP ${res.status}`);
     }
     
     const posts = await res.json();
-    console.log("✅ Data received:", posts.length, "posts");
     
     if (!posts || !posts.length) {
       container.innerHTML = `
         <div style="text-align: center; padding: 40px; color: #666;">
           <p>📭 Hiện chưa có bài viết nào</p>
-          <small>Hãy quay lại sau để xem tin tức mới nhất</small>
+          <small>File: ${currentFileId}</small>
         </div>
       `;
       return;
     }
 
-    // Sắp xếp và render
     const sortedPosts = posts.sort((a, b) => new Date(b.date) - new Date(a.date));
     container.innerHTML = '';
     
     sortedPosts.forEach(post => {
       container.innerHTML += `
         <div class="post-card">
-          <img src="${post.thumbnail}" class="post-thumb" alt="${post.title}" 
-               onerror="this.src='https://via.placeholder.com/300x200?text=Ảnh+lỗi'">
+          <img src="${post.thumbnail}" class="post-thumb" alt="${post.title}">
           <div class="post-title">${post.title}</div>
           <div class="post-date">${new Date(post.date).toLocaleDateString("vi-VN")}</div>
-          <a class="read-more" href="${post.link}" target="_blank">📎 Xem chi tiết →</a>
+          <a class="read-more" href="${post.link}" target="_blank">Xem chi tiết →</a>
         </div>
       `;
     });
     
-    console.log("🎨 Rendered:", sortedPosts.length, "posts");
-    
   } catch(error) {
-    console.error("💥 Load news error:", error);
+    console.error("❌ Load news error:", error);
     container.innerHTML = `
-      <div style="background: #fee; padding: 20px; border-radius: 8px; border: 1px solid #fcc; text-align: center;">
-        <p style="color: #c33; margin: 0 0 10px 0;">❌ Không thể tải tin tức</p>
-        <p style="color: #666; font-size: 0.9em; margin: 0 0 15px 0;">${error.message}</p>
-        <button onclick="loadNews()" style="padding: 8px 16px; background: #e74c3c; color: white; border: none; border-radius: 4px; cursor: pointer;">
-          🔄 Thử lại
-        </button>
+      <div style="text-align: center; padding: 40px; color: #666;">
+        <p>❌ Không thể tải tin tức</p>
+        <small>File: ${currentFileId}</small>
+        <br>
+        <button onclick="loadNews()" style="margin-top: 10px; padding: 5px 10px;">Thử lại</button>
       </div>
     `;
   }
-  console.groupEnd();
 }
 
-/* ===== DEBUG ===== */
-window.debugNews = async function() {
-  console.group("🔍 DEBUG NEWS");
-  try {
-    const url = `${POSTS_JSON_URL}?ts=${Date.now()}`;
-    console.log("📡 Testing URL:", url);
-    
-    const res = await fetch(url);
-    console.log("📊 Response:", res.status, res.statusText);
-    
-    if (res.ok) {
-      const data = await res.json();
-      console.log("✅ Data:", data);
-      console.log("📊 Count:", data.length);
-    } else {
-      console.error("❌ Fetch failed");
-    }
-  } catch (error) {
-    console.error("💥 Debug error:", error);
-  }
-  console.groupEnd();
-}
-
-/* ===== INIT ===== */
-console.log("📰 News System Initializing...");
+// Khởi chạy
 loadNews();
-
-// Auto-refresh every 30 seconds
-setInterval(() => {
-  console.log("🔄 Auto-refreshing news...");
-  loadNews();
-}, 30000);
 </script>
-
 </body>
 </html>
 
