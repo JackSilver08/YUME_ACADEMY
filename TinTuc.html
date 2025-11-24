@@ -2,7 +2,6 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tin tức – Yume Academy</title>
 <style>
   body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f7f7f7; }
@@ -30,22 +29,9 @@
     max-height: 400px;
   }
 
-  .post-content {
-    padding: 15px;
-  }
-
-  .post-title {
-    font-size: 22px;
-    font-weight: bold;
-    color: #333;
-    margin: 10px 0 5px;
-  }
-
-  .post-date {
-    color: #777;
-    font-size: 14px;
-    margin-bottom: 10px;
-  }
+  .post-content { padding: 15px; }
+  .post-title { font-size: 22px; font-weight: bold; color: #333; margin: 10px 0 5px; }
+  .post-date { color: #777; font-size: 14px; margin-bottom: 10px; }
 
   a.read-more {
     display: inline-block;
@@ -68,15 +54,13 @@
 </div>
 
 <script>
-const repo = "JackSilver08/YUME_ACADEMY";
-const branch = "main";
-const postsFile = "posts.json";
+const POSTS_JSON_URL = "https://raw.githubusercontent.com/JackSilver08/YUME_ACADEMY/main/posts.json";
 
 async function loadNews() {
   const container = document.getElementById("news");
   try {
-    const res = await fetch(`https://raw.githubusercontent.com/${repo}/${branch}/${postsFile}`);
-    const posts = await res.json(); // đây là "chuỗi" JSON từ database online
+    const res = await fetch(POSTS_JSON_URL);
+    const posts = await res.json();
     if (!posts.length) { container.innerHTML = "<p>Hiện chưa có bài viết nào.</p>"; return; }
 
     posts.sort((a,b)=> new Date(b.date) - new Date(a.date));
@@ -92,15 +76,13 @@ async function loadNews() {
       `;
     });
   } catch(err) {
+    console.error(err);
     container.innerHTML = "<p>Không thể tải tin tức.</p>";
   }
 }
 
-  loadNews();
-
+loadNews();
 </script>
 
 </body>
 </html>
-
-
