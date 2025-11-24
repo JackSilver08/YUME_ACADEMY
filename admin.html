@@ -394,138 +394,201 @@ hr {
 
 
 <script>
-/* CONFIG */
+/* ===== CONFIG ===== */
 const CLOUD_NAME = "dlfuhehxg";
 const UPLOAD_PRESET = "Thumbnail_YUME";
-// SỬA: Dùng public_id mới đã upload thành công
+// DÙNG FILE MỚI ĐÃ UPLOAD THÀNH CÔNG
 const CURRENT_POSTS_ID = "posts_1763961885574";
 let posts = [];
 
-// Hàm load posts từ file mới
+/* ===== HÀM LOAD POSTS ===== */
 async function loadPosts() {
+  console.group("🔄 LOAD POSTS");
   try {
-    // SỬA: Dùng public_id mới
-    const url = `https://res.cloudinary.com/dlfuhehxg/raw/upload/${CURRENT_POSTS_ID}.json?ts=${Date.now()}&rand=${Math.random().toString(36).substring(2)}`;
+    // URL với cache busting mạnh
+    const url = `https://res.cloudinary.com/${CLOUD_NAME}/raw/upload/${CURRENT_POSTS_ID}.json?ts=${Date.now()}&rand=${Math.random().toString(36).substring(2, 15)}&force_refresh=true`;
     
-    console.log("🔄 Loading posts from:", url);
+    console.log("📡 URL:", url);
     
     const res = await fetch(url, {
-      cache: 'no-store',
+      method: 'GET',
+      cache: 'no-cache',
       headers: {
-        'Cache-Control': 'no-cache',
-        'Pragma': 'no-cache'
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
       }
     });
     
+    console.log("📊 Response Status:", res.status, res.statusText);
+    
     if (!res.ok) {
       if (res.status === 404) {
-        console.log("📄 File chưa tồn tại, tạo mảng rỗng");
+        console.warn("⚠️ File không tồn tại trên server");
         posts = [];
         renderPosts();
         return;
       }
-      throw new Error(`HTTP ${res.status}: Không thể tải danh sách`);
+      throw new Error(`HTTP ${res.status}: ${res.statusText}`);
     }
     
     const data = await res.json();
-    posts = Array.isArray(data) ? data : [];
-    console.log("✅ Loaded posts:", posts.length, "bài viết");
+    console.log("📦 Raw Data:", data);
     
+    // Validate data
+    if (!Array.isArray(data)) {
+      console.error("❌ Data không phải array:", typeof data);
+      posts = [];
+    } else {
+      posts = data;
+    }
+    
+    console.log("✅ Tải thành công:", posts.length, "bài viết");
     renderPosts();
-  } catch (e) {
-    console.error("❌ Lỗi load posts:", e);
+    
+  } catch (error) {
+    console.error("💥 Lỗi load posts:", error);
     posts = [];
-    document.getElementById("postsList").innerHTML = "<p>Chưa có bài viết nào.</p>";
+    document.getElementById("postsList").innerHTML = `
+      <div style="background: #fee; padding: 20px; border-radius: 8px; border: 1px solid #fcc;">
+        <p style="color: #c33; margin: 0;">Lỗi tải bài viết: ${error.message}</p>
+        <button onclick="loadPosts()" style="margin-top: 10px; padding: 5px 10px;">Thử lại</button>
+      </div>
+    `;
   }
+  console.groupEnd();
 }
 
-/* Render danh sách bài viết */
+/* ===== RENDER POSTS ===== */
 function renderPosts() {
   const container = document.getElementById("postsList");
+  
   if (!posts.length) {
-    container.innerHTML = "<p>Chưa có bài viết nào.</p>";
+    container.innerHTML = `
+      <div style="text-align: center; padding: 40px; color: #666;">
+        <p>📭 Chưa có bài viết nào</p>
+        <small>Hãy tạo bài viết đầu tiên bằng form bên trên</small>
+      </div>
+    `;
     return;
   }
   
   // Sắp xếp mới nhất lên đầu
-  posts.sort((a,b) => new Date(b.date) - new Date(a.date));
+  const sortedPosts = [...posts].sort((a, b) => new Date(b.date) - new Date(a.date));
   
   container.innerHTML = '';
-  posts.forEach(p => {
+  sortedPosts.forEach((post, index) => {
     const div = document.createElement("div");
     div.className = "post-item";
     div.innerHTML = `
-      <img src="${p.thumbnail}" alt="${p.title}">
-      <b>${p.title}</b><br>
-      <a href="${p.link}" target="_blank">Xem bài viết</a><br>
-      <small>${new Date(p.date).toLocaleString()}</small>
+      <div style="display: flex; gap: 15px; align-items: start;">
+        <img src="${post.thumbnail}" alt="${post.title}" 
+             style="width: 80px; height: 60px; object-fit: cover; border-radius: 4px;">
+        <div style="flex: 1;">
+          <b>${post.title}</b>
+          <div style="margin-top: 5px;">
+            <a href="${post.link}" target="_blank" style="font-size: 0.9em;">📎 Xem bài viết</a>
+          </div>
+          <small style="color: #888;">${new Date(post.date).toLocaleString('vi-VN')}</small>
+          <small style="display: block; color: #666;">ID: ${post.id}</small>
+        </div>
+      </div>
     `;
     container.appendChild(div);
   });
+  
+  console.log("🎨 Đã render:", sortedPosts.length, "bài viết");
 }
 
-/* Upload ảnh thumbnail */
+/* ===== UPLOAD THUMBNAIL ===== */
 async function uploadToCloudinary(file) {
-  const formData = new FormData();
-  formData.append("file", file);
-  formData.append("upload_preset", UPLOAD_PRESET);
+  console.group("🖼️ UPLOAD THUMBNAIL");
+  try {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", UPLOAD_PRESET);
 
-  const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
-    method: "POST",
-    body: formData
-  });
+    console.log("📤 Uploading file:", file.name, file.size, "bytes");
+    
+    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
+      method: "POST",
+      body: formData
+    });
 
-  if (!res.ok) throw new Error("Upload hình ảnh thất bại!");
-  return await res.json();
+    console.log("📨 Thumbnail Response:", res.status);
+    
+    if (!res.ok) {
+      const errorText = await res.text();
+      console.error("❌ Thumbnail Upload Error:", errorText);
+      throw new Error(`Upload ảnh thất bại: ${res.status}`);
+    }
+
+    const result = await res.json();
+    console.log("✅ Thumbnail Upload Success:", result.secure_url);
+    console.groupEnd();
+    return result;
+    
+  } catch (error) {
+    console.error("💥 Thumbnail Upload Failed:", error);
+    console.groupEnd();
+    throw error;
+  }
 }
 
-/* Upload JSON - LUÔN dùng public_id mới */
+/* ===== UPLOAD JSON ===== */
 async function uploadJSONToCloudinary(jsonData) {
-  console.log("🚀 Bắt đầu upload JSON...");
-  
-  const formData = new FormData();
-  const jsonString = JSON.stringify(jsonData, null, 2);
-  const blob = new Blob([jsonString], { type: "application/json" });
-  
-  // SỬA: LUÔN dùng public_id mới
-  formData.append("file", blob);
-  formData.append("upload_preset", UPLOAD_PRESET);
-  formData.append("public_id", CURRENT_POSTS_ID);
-  
+  console.group("📄 UPLOAD JSON");
   try {
+    const formData = new FormData();
+    const jsonString = JSON.stringify(jsonData, null, 2);
+    const blob = new Blob([jsonString], { type: "application/json" });
+    
+    formData.append("file", blob);
+    formData.append("upload_preset", UPLOAD_PRESET);
+    formData.append("public_id", CURRENT_POSTS_ID);
+    
+    console.log("📤 JSON Data:", jsonData);
+    console.log("🔗 Public ID:", CURRENT_POSTS_ID);
+    
     const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/raw/upload`, {
       method: "POST",
       body: formData
     });
 
-    console.log("📨 Response status:", response.status);
+    console.log("📨 JSON Response Status:", response.status);
     
     if (!response.ok) {
       const errorText = await response.text();
-      console.error("❌ Response error:", errorText);
-      throw new Error(`Upload failed: ${response.status}`);
+      console.error("❌ JSON Upload Error:", errorText);
+      throw new Error(`Upload JSON thất bại: ${response.status}`);
     }
 
     const result = await response.json();
-    console.log("✅ Upload JSON thành công!", result);
-    
+    console.log("✅ JSON Upload Success:", result);
+    console.log("🔗 File URL:", `https://res.cloudinary.com/${CLOUD_NAME}/raw/upload/${CURRENT_POSTS_ID}.json`);
+    console.groupEnd();
     return result;
     
   } catch (error) {
-    console.error("💥 Upload error:", error);
+    console.error("💥 JSON Upload Failed:", error);
+    console.groupEnd();
     throw error;
   }
 }
 
-/* Xử lý submit */
-document.getElementById("postForm").onsubmit = async function(e){
+/* ===== FORM SUBMIT HANDLER ===== */
+document.getElementById("postForm").onsubmit = async function(e) {
   e.preventDefault();
+  console.group("🚀 FORM SUBMIT");
+  
   const title = document.getElementById("title").value.trim();
   const link = document.getElementById("link").value.trim();
   const file = document.getElementById("thumbnail").files[0];
   
-  if(!title || !link || !file) {
-    alert("Vui lòng nhập đầy đủ thông tin và chọn ảnh!");
+  // Validation
+  if (!title || !link || !file) {
+    alert("❌ Vui lòng nhập đầy đủ thông tin và chọn ảnh!");
+    console.groupEnd();
     return;
   }
 
@@ -533,120 +596,157 @@ document.getElementById("postForm").onsubmit = async function(e){
   const originalText = submitBtn.textContent;
   
   try {
+    // Disable button
     submitBtn.disabled = true;
-    submitBtn.textContent = "Đang đăng...";
+    submitBtn.textContent = "⏳ Đang đăng...";
+    submitBtn.style.opacity = "0.7";
+
+    console.log("1. 📝 Form Data:", { title, link, file: file.name });
 
     // 1. Upload thumbnail
-    console.log("1. Đang upload thumbnail...");
+    console.log("2. 🖼️ Uploading thumbnail...");
     const uploadResult = await uploadToCloudinary(file);
     const thumbnailUrl = uploadResult.secure_url;
     console.log("✅ Thumbnail URL:", thumbnailUrl);
 
-    // 2. Tạo bài viết mới
-    const id = posts.length === 0 ? 1 : Math.max(...posts.map(p => p.id)) + 1;
+    // 2. Create new post
+    const newId = posts.length === 0 ? 1 : Math.max(...posts.map(p => p.id)) + 1;
     const newPost = { 
-      id, 
+      id: newId, 
       title, 
       link, 
       thumbnail: thumbnailUrl, 
       date: new Date().toISOString() 
     };
     
-    console.log("2. Bài viết mới:", newPost);
+    console.log("3. 📄 New Post:", newPost);
     
-    // 3. Cập nhật mảng posts
+    // 3. Update posts array
     const updatedPosts = [...posts, newPost];
-    console.log("3. Tổng số bài viết:", updatedPosts.length);
+    console.log("4. 📊 Total Posts:", updatedPosts.length);
 
-    // 4. Upload JSON - GHI ĐÈ file mới
-    console.log("4. Đang upload JSON...");
+    // 4. Upload JSON
+    console.log("5. 📤 Uploading JSON...");
     await uploadJSONToCloudinary(updatedPosts);
     
-    // 5. Cập nhật state và render NGAY LẬP TỨC
+    // 5. Update state and render
     posts = updatedPosts;
+    console.log("6. 🎨 Rendering...");
     renderPosts();
 
     // 6. Reset form
     this.reset();
     document.getElementById("preview").style.display = "none";
 
-    // 7. Thông báo thành công
-    alert("✅ Đăng bài thành công!");
+    // 7. Success message
+    alert("✅ Đăng bài thành công!\n\nBài viết đã được lưu và sẽ hiển thị trên trang tin tức.");
 
-    // 8. Load lại sau 2 giây để kiểm tra
+    // 8. Verify from server after delay
+    console.log("7. 🔄 Scheduling verification...");
     setTimeout(() => {
-      console.log("🔄 Kiểm tra từ server...");
+      console.log("🔄 Verifying from server...");
       loadPosts();
-    }, 2000);
+    }, 3000);
 
-  } catch(err) {
-    console.error("💥 Lỗi toàn bộ:", err);
-    alert("❌ Upload thất bại: " + err.message);
+  } catch (error) {
+    console.error("💥 Submit Error:", error);
+    alert(`❌ Đăng bài thất bại!\n\nLỗi: ${error.message}\n\nVui lòng thử lại.`);
   } finally {
+    // Re-enable button
     submitBtn.disabled = false;
     submitBtn.textContent = originalText;
+    submitBtn.style.opacity = "1";
+    console.groupEnd();
   }
 };
 
-/* Preview ảnh */
-document.getElementById("thumbnail").onchange = function(){
+/* ===== PREVIEW IMAGE ===== */
+document.getElementById("thumbnail").onchange = function() {
   const img = document.getElementById("preview");
   if (this.files && this.files[0]) {
-    img.src = URL.createObjectURL(this.files[0]);
+    const file = this.files[0];
+    console.log("🖼️ Selected file:", file.name, file.size, "bytes");
+    
+    // Validate image file
+    if (!file.type.startsWith('image/')) {
+      alert('❌ Vui lòng chọn file ảnh!');
+      this.value = '';
+      return;
+    }
+    
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert('❌ File ảnh quá lớn! Vui lòng chọn file nhỏ hơn 5MB.');
+      this.value = '';
+      return;
+    }
+    
+    img.src = URL.createObjectURL(file);
     img.style.display = "block";
+    console.log("✅ Preview image loaded");
   }
 };
 
-// Hàm kiểm tra file hiện tại
+/* ===== DEBUG FUNCTIONS ===== */
+
+// Kiểm tra file hiện tại
 window.checkCurrentFile = async function() {
+  console.group("🔍 CHECK CURRENT FILE");
   try {
-    const url = `https://res.cloudinary.com/dlfuhehxg/raw/upload/${CURRENT_POSTS_ID}.json?ts=${Date.now()}`;
-    console.log("🔍 Kiểm tra file:", url);
+    const url = `https://res.cloudinary.com/${CLOUD_NAME}/raw/upload/${CURRENT_POSTS_ID}.json?ts=${Date.now()}`;
+    console.log("📡 Checking:", url);
     
     const res = await fetch(url);
+    console.log("📊 Status:", res.status, res.statusText);
+    
     if (res.ok) {
       const data = await res.json();
-      console.log("📄 Dữ liệu hiện tại:", data);
-      console.log("📊 Số bài viết:", data.length);
+      console.log("✅ File exists:", data);
+      console.log("📊 Posts count:", data.length);
       return data;
     } else {
-      console.error("❌ Không thể tải file");
+      console.error("❌ File not found or error");
       return null;
     }
-  } catch (err) {
-    console.error("💥 Lỗi kiểm tra:", err);
+  } catch (error) {
+    console.error("💥 Check failed:", error);
     return null;
   }
+  console.groupEnd();
 }
 
-// Hàm test với file mới
+// Test upload
 window.testUpload = async function() {
-  const testData = [
-    {
-      "id": 1,
-      "title": "Bài test từ file mới - " + new Date().toLocaleTimeString(),
-      "link": "https://facebook.com/YumeAcademyBienHoa",
-      "thumbnail": "https://res.cloudinary.com/dlfuhehxg/image/upload/v1/IMG/YUME_FANPAGE.PNG",
-      "date": new Date().toISOString()
-    }
-  ];
-  
+  console.group("🧪 TEST UPLOAD");
   try {
-    console.log("🧪 Test upload JSON đến file mới...");
+    const testData = [
+      {
+        "id": 999,
+        "title": "Bài test - " + new Date().toLocaleTimeString('vi-VN'),
+        "link": "https://facebook.com/YumeAcademyBienHoa",
+        "thumbnail": "https://res.cloudinary.com/dlfuhehxg/image/upload/v1/IMG/YUME_FANPAGE.PNG",
+        "date": new Date().toISOString()
+      }
+    ];
+    
+    console.log("📤 Test data:", testData);
     const result = await uploadJSONToCloudinary(testData);
-    console.log("✅ Test thành công:", result);
+    console.log("✅ Test success:", result);
     
-    // Load lại sau test
-    setTimeout(() => loadPosts(), 2000);
+    setTimeout(() => {
+      console.log("🔄 Reloading after test...");
+      loadPosts();
+    }, 2000);
     
-  } catch (err) {
-    console.error("❌ Test thất bại:", err);
+  } catch (error) {
+    console.error("❌ Test failed:", error);
   }
+  console.groupEnd();
 }
 
-// Hàm xóa tất cả bài viết
+// Reset all posts
 window.clearAllPosts = async function() {
-  if (!confirm("Bạn có chắc muốn xóa TẤT CẢ bài viết?")) return;
+  if (!confirm("⚠️ Bạn có CHẮC CHẮN muốn xóa TẤT CẢ bài viết?\n\nHành động này không thể hoàn tác.")) return;
   
   try {
     await uploadJSONToCloudinary([]);
@@ -654,19 +754,49 @@ window.clearAllPosts = async function() {
     renderPosts();
     alert("✅ Đã xóa tất cả bài viết");
     loadPosts();
-  } catch (err) {
-    alert("❌ Lỗi khi xóa: " + err.message);
+  } catch (error) {
+    alert("❌ Lỗi khi xóa: " + error.message);
   }
 }
 
-// Khởi chạy
+// Check all possible files
+window.checkAllFiles = async function() {
+  console.group("🔍 CHECK ALL FILES");
+  const files = ["posts_mjgjdr", "posts_1763961885574", "posts_1763961256"];
+  
+  for (const file of files) {
+    try {
+      const url = `https://res.cloudinary.com/${CLOUD_NAME}/raw/upload/${file}.json`;
+      const res = await fetch(url);
+      console.log(`${file}.json: ${res.ok ? '✅ EXISTS' : '❌ NOT FOUND'}`);
+      
+      if (res.ok) {
+        const data = await res.json();
+        console.log(`   Posts: ${data.length} | Sample:`, data[0]?.title);
+      }
+    } catch (error) {
+      console.log(`${file}.json: ❌ ERROR`);
+    }
+  }
+  console.groupEnd();
+}
+
+/* ===== INITIALIZATION ===== */
+console.log("🚀 Admin System Initializing...");
+console.log("📁 Current Posts ID:", CURRENT_POSTS_ID);
+console.log("☁️ Cloud Name:", CLOUD_NAME);
+console.log("⚙️ Upload Preset:", UPLOAD_PRESET);
+
+// Load posts on startup
 loadPosts();
 
-// Test ngay sau khi load
+// Auto-check after 3 seconds
 setTimeout(() => {
-  console.log("🧪 Tự động kiểm tra file mới...");
+  console.log("🔄 Auto-checking file status...");
   checkCurrentFile();
-}, 1000);
+}, 3000);
+
+console.log("✅ Admin System Ready!");
 </script>
 
 </body>
