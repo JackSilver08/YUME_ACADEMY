@@ -79,32 +79,36 @@
   </div>
 </footer>
 <script>
-const POSTS_JSON_URL = "https://res.cloudinary.com/dlfuhehxg/raw/upload/posts_mjgjdr.json?ts=" + Date.now();
+const POSTS_JSON_URL = "https://res.cloudinary.com/dlfuhehxg/raw/upload/posts_mjgjdr.json";
 
 async function loadNews() {
   const container = document.getElementById("news");
   try {
-    // Thêm cache busting
-    const url = POSTS_JSON_URL + "&timestamp=" + new Date().getTime();
-    console.log("Fetching from:", url);
+    // FORCE RELOAD - thêm random parameter
+    const random = Math.random().toString(36).substring(7);
+    const url = `${POSTS_JSON_URL}?nocache=${random}&ts=${Date.now()}`;
     
-    const res = await fetch(url);
+    console.log("🔄 Fetching from:", url);
     
-    if (!res.ok) {
-      throw new Error(`HTTP error! status: ${res.status}`);
-    }
+    const res = await fetch(url, {
+      cache: 'no-store', // Không cache
+      headers: {
+        'Cache-Control': 'no-cache'
+      }
+    });
+    
+    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
     
     const posts = await res.json();
-    console.log("Dữ liệu nhận được:", posts);
+    console.log("✅ Dữ liệu nhận được:", posts);
+    console.log("📊 Số bài viết:", posts.length);
 
     if (!posts || !posts.length) {
       container.innerHTML = "<p>Hiện chưa có bài viết nào.</p>";
       return;
     }
 
-    // Sắp xếp mới nhất lên đầu
     posts.sort((a, b) => new Date(b.date) - new Date(a.date));
-    
     container.innerHTML = '';
     
     posts.forEach(p => {
@@ -119,7 +123,7 @@ async function loadNews() {
     });
     
   } catch(err) {
-    console.error("Lỗi load news:", err);
+    console.error("❌ Lỗi load news:", err);
     container.innerHTML = `<p>Không thể tải tin tức. Vui lòng thử lại sau.</p>`;
   }
 }
