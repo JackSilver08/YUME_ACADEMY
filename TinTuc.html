@@ -1,141 +1,107 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Yume Academy | Tin Tức</title>
-    <link rel="icon" href="IMG/LOGOYUME2.jpg" type="image/x-icon" />
-    <link rel="stylesheet" href="CSS/index.css" />
-    <link rel="stylesheet" href="CSS/tintuc.css" />
-  </head>
-<body>
-    
-    <header class="main-header">
-   <div class="logo-section">
-  <a href="index.html" class="logo-link">
-    <img src="IMG/LOGOYUME2.jpg" alt="Logo" class="logo-img" />
-    <span class="logo-text">Trung Tâm Nhật Ngữ </span>
-  </a>
-</div> 
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Tin tức – Yume Academy</title>
+<style>
+  body { font-family: Arial; margin: 0; padding: 0; background: #f7f7f7; }
+  .news-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 0 20px;
+  }
+  .post-card {
+    background: white;
+    margin-bottom: 25px;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  .post-thumb {
+    width: 100%;
+    border-radius: 10px;
+  }
+  .post-title {
+    font-size: 22px;
+    font-weight: bold;
+    color: #333;
+    margin: 10px 0 5px 0;
+  }
+  .post-date {
+    color: #777;
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+  a.read-more {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: #ff2e63;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: bold;
+  }
+  a.read-more:hover {
+    background: #e02655;
+  }
+</style>
+</head>
 
-      <nav class="nav-menu">
-        <a href="index.html">Trang Chủ</a>
-        <a href="GioiThieu.html">Giới Thiệu</a>
-        <a href="KhoaHoc.html">Khóa Học</a>
-        <a href="TinTuc.html">Tin tức</a>
-        <a href="TuVan.html">Tư Vấn</a>
-      </nav>
-<div class="hamburger-menu">
-    <span></span>
-    <span></span>
-    <span></span>
-</div>
-<div class="menu-overlay"></div>
-      <div id="sakura-container"></div>
-    </header>
-<div id="posts">
-  <p>Đang tải bài viết...</p>
+<body>
+
+<div class="news-container">
+  <h1>Tin tức Yume Academy</h1>
+  <div id="news">Đang tải bài viết...</div>
 </div>
 
 <script>
 const repo = "JackSilver08/YUME_ACADEMY";
-const folder = "posts";
 const branch = "main";
+const postsFile = "posts.json";
 
-// Nếu repo private, khách hàng nhập token, nếu public bỏ trống
-let token = prompt("Nếu repo private, nhập GitHub token (bỏ trống nếu public)") || "";
+async function loadNews() {
+  const container = document.getElementById("news");
 
-async function loadPosts() {
   try {
-    const res = await fetch(`https://api.github.com/repos/${repo}/contents/${folder}?ref=${branch}`, {
-      headers: token ? { Authorization: `Bearer ${token}` } : {}
-    });
-    if(!res.ok) throw new Error(`GitHub API error: ${res.status} ${res.statusText}`);
-    const files = await res.json();
+    const res = await fetch(`https://raw.githubusercontent.com/${repo}/${branch}/${postsFile}`);
+    const posts = await res.json();
 
-    const posts = [];
-    for(const file of files){
-      if(file.name.endsWith(".json")){
-        const r = await fetch(file.download_url);
-        const post = await r.json();
-        posts.push(post);
-      }
-    }
-
-    posts.sort((a,b) => new Date(b.date) - new Date(a.date));
-
-    const container = document.getElementById("posts");
-    if(posts.length === 0){
-      container.innerHTML = "<p>Chưa có bài viết nào.</p>";
+    if (!posts.length) {
+      container.innerHTML = "<p>Hiện chưa có bài viết nào.</p>";
       return;
     }
 
+    // Sắp xếp: mới → cũ
+    posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+
     container.innerHTML = "";
+
     posts.forEach(p => {
       container.innerHTML += `
-        <div class="post">
-          <h2>${p.title}</h2>
-          <p><em>${new Date(p.date).toLocaleDateString()}</em></p>
-          ${p.thumbnail ? `<img src="${p.thumbnail}" alt="${p.title}">` : ''}
-          ${p.video ? `<iframe width="560" height="315" src="${p.video}" frameborder="0" allowfullscreen></iframe>` : ''}
-          <div>${p.body}</div>
+        <div class="post-card">
+          <img src="${p.thumbnail}" class="post-thumb">
+
+          <div class="post-title">${p.title}</div>
+
+          <div class="post-date">
+            ${new Date(p.date).toLocaleDateString("vi-VN")}
+          </div>
+
+          <a class="read-more" href="${p.link}" target="_blank">
+            Xem chi tiết →
+          </a>
         </div>
       `;
     });
 
-  } catch(err) {
-    console.error(err);
-    document.getElementById("posts").innerHTML = `
-      <p>Không thể tải bài viết. Kiểm tra token hoặc repo public/private.</p>
-      <p>Lỗi: ${err.message}</p>
-    `;
+  } catch (err) {
+    container.innerHTML = "<p>Không thể tải tin tức.</p>";
   }
 }
 
-loadPosts();
+loadNews();
 </script>
 
-
 </body>
-<footer class="main-footer">
-  <div class="footer-container">
-    <!-- Logo + Giới thiệu -->
-    <div class="footer-about">
-        <img src="IMG/YUME_LOGO_KONEN.png" alt="Yume Academy" class="footer-logo">
-      <p>
-        Yume Academy-Trung Tâm Nhật Ngữ  tại tp Biên Hòa, 
-        cam kết mang đến chương trình học tập chất lượng, 
-        hiện đại và thân thiện cho học viên ở mọi độ tuổi.
-      </p>
-    </div>
-
-    <!-- Điều hướng nhanh -->
-    <div class="footer-links">
-      <h3>Liên kết nhanh</h3>
-      <ul>
-        <li><a href="index.html">Trang Chủ</a></li>
-        <li><a href="GioiThieu.html">Giới thiệu</a></li>
-        <li><a href="KhoaHoc.html">Khóa học</a></li>
-        <li><a href="TinTuc.html">Tin Tức</a></li>
-        <li><a href="TuVan.html">Tư Vấn</a></li>
-      </ul>
-    </div>
-
-    <!-- Liên hệ -->
-    <div class="footer-contact">
-      <h3>Liên hệ</h3>
-      <p>📍 56-58 Đường N3, KP 7-Phường Trấn Biên-Tỉnh Đồng Nai  </p>
-      <p>📞 0908 593 016</p>
-      <p>✉️ yumeacademy.bienhoa@gmail.com</p>
-      <div class="social-icons">
-        <a href="https://www.facebook.com/share/16DhMzh3qw/"><img src="IMG/facebook-logo.png" alt="Facebook"></a>
-        <a href="#"><img src="IMG/zalo-logo.png" alt="Zalo"></a>
-      </div>
-    </div>
-  </div>
-
-  <div class="footer-bottom">
-    <p>© 2025 Yume Academy. All rights reserved.</p>
-  </div>
-</footer>
 </html>

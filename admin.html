@@ -3,158 +3,132 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Yume Academy</title>
+<title>Admin – Quản lý Bài Viết</title>
 <style>
-  body { font-family: Arial; padding: 20px; }
-  input, textarea { width: 300px; margin-bottom: 10px; }
-  button { margin-right: 5px; }
-  .post { border-bottom: 1px solid #ccc; margin-bottom: 10px; padding-bottom: 10px; }
+  body { font-family: Arial; padding: 20px; max-width: 700px; margin: auto; }
+  input, textarea { width: 100%; margin-bottom: 10px; padding: 8px; }
+  button { padding: 10px 15px; margin-top: 5px; }
+  .preview-img { width: 150px; margin-top: 10px; display: none; }
+  .post-item { border-bottom: 1px solid #ccc; padding: 10px 0; }
+  .post-item img { width: 120px; display: block; margin-bottom: 5px; }
 </style>
 </head>
 <body>
 
-<h1>Admin – Quản lý bài viết</h1>
+<h1>Quản Lý Bài Viết</h1>
 
-<h2>Tạo/Sửa bài viết</h2>
+<h2>Tạo Bài Viết Mới</h2>
 <form id="postForm">
-  <input type="text" id="title" placeholder="Tiêu đề" required><br>
-  <input type="date" id="date" required><br>
-  <input type="text" id="thumbnail" placeholder="Đường dẫn ảnh"><br>
-  <input type="text" id="video" placeholder="Link video (YouTube/Cloudinary)"><br>
-  <textarea id="body" placeholder="Nội dung (HTML)" rows="5"></textarea><br>
+  <label>Tiêu đề bài viết</label>
+  <input type="text" id="title" required>
+
+  <label>Link bài viết Facebook</label>
+  <input type="text" id="link" placeholder="https://facebook.com/..." required>
+
+  <label>Thumbnail</label>
+  <input type="file" id="thumbnail" accept="image/*" required>
+  <img id="preview" class="preview-img" />
+
   <button type="submit">Publish</button>
 </form>
+
+<hr>
 
 <h2>Danh sách bài viết</h2>
 <div id="postsList"></div>
 
 <script>
-const repo = "JackSilver08/YUME_ACADEMY";
-const branch = "main";
-const folder = "posts";
-
-let token = prompt("Nhập GitHub Personal Access Token của bạn:");
-if(!token) alert("Bạn chưa nhập token! Không thể tải bài viết.");
-
+const POSTS_FILE = 'posts.json'; // file cục bộ
 let posts = [];
 
-// Load bài viết từ GitHub
-async function loadPosts(){
-  if(!token) return;
+// Load posts từ file JSON local
+async function loadPosts() {
   try {
-    const res = await fetch(`https://api.github.com/repos/${repo}/contents/${folder}?ref=${branch}`, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    if(!res.ok) throw new Error(`${res.status} ${res.statusText}`);
-    const files = await res.json();
-    posts = [];
-    for(const file of files){
-      if(file.name.endsWith(".json")){
-        const r = await fetch(file.download_url);
-        const post = await r.json();
-        post._filename = file.name;
-        posts.push(post);
-      }
-    }
+    const res = await fetch(POSTS_FILE);
+    posts = await res.json();
     renderPosts();
-  } catch(err){
-    console.error(err);
-    alert("Không thể load bài viết. Kiểm tra token và quyền repo.");
+  } catch (e) {
+    console.error(e);
+    posts = [];
+    document.getElementById("postsList").innerHTML = "<p>Chưa có bài viết nào.</p>";
   }
 }
 
 // Render danh sách bài viết
-function renderPosts(){
+function renderPosts() {
   const container = document.getElementById("postsList");
-  container.innerHTML = "";
-  posts.sort((a,b)=> new Date(b.date)-new Date(a.date));
-  posts.forEach((p,i)=>{
+  if(posts.length === 0){
+    container.innerHTML = "<p>Chưa có bài viết nào.</p>";
+    return;
+  }
+
+  // Sắp xếp theo date mới → cũ
+  posts.sort((a,b) => new Date(b.date) - new Date(a.date));
+
+  container.innerHTML = '';
+  posts.forEach(p => {
     const div = document.createElement("div");
-    div.className = "post";
+    div.className = 'post-item';
     div.innerHTML = `
-      <strong>${p.title}</strong> (${p.date}) <br>
-      <button onclick="editPost(${i})">Edit</button>
-      <button onclick="deletePost(${i})">Delete</button>
+      <img src="${p.thumbnail}" alt="${p.title}">
+      <b>${p.title}</b><br>
+      <a href="${p.link}" target="_blank">Xem bài viết</a><br>
+      <small>${new Date(p.date).toLocaleString()}</small>
     `;
     container.appendChild(div);
   });
 }
 
-// Commit bài viết lên GitHub
-async function commitPost(post, filename, message){
-  const url = `https://api.github.com/repos/${repo}/contents/${folder}/${filename}`;
-  let sha = null;
-  const resCheck = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
-  if(resCheck.ok){
-    const data = await resCheck.json();
-    sha = data.sha;
-  }
-  const res = await fetch(url, {
-    method: "PUT",
-    headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      message,
-      content: btoa(JSON.stringify(post,null,2)),
-      branch,
-      sha
-    })
-  });
-  return await res.json();
+// Tạo id mới tự động
+function getNextId() {
+  return posts.length === 0 ? 1 : Math.max(...posts.map(p=>p.id)) + 1;
+}
+
+// Preview ảnh
+document.getElementById("thumbnail").onchange = function() {
+  const img = document.getElementById("preview");
+  img.src = URL.createObjectURL(this.files[0]);
+  img.style.display = "block";
 }
 
 // Submit form
-document.getElementById("postForm").onsubmit = async function(e){
+document.getElementById("postForm").onsubmit = function(e){
   e.preventDefault();
+
   const title = document.getElementById("title").value.trim();
-  const date = document.getElementById("date").value;
-  const thumbnail = document.getElementById("thumbnail").value.trim();
-  const video = document.getElementById("video").value.trim();
-  const body = document.getElementById("body").value.trim();
-  if(!title || !date) return alert("Tiêu đề và ngày không được để trống.");
-  const filename = `${date}-${title.replace(/\s+/g,"-")}.json`;
-  const post = {title,date,thumbnail,video,body};
-  try{
-    await commitPost(post, filename, `Add/Update post: ${title}`);
-    alert("Bài viết đã được publish!");
-    this.reset();
-    loadPosts();
-  }catch(err){
-    console.error(err);
-    alert("Không thể publish. Kiểm tra token và repo.");
-  }
+  const link = document.getElementById("link").value.trim();
+  const fileInput = document.getElementById("thumbnail");
+  const file = fileInput.files[0];
+
+  if(!title || !link || !file) return alert("Vui lòng nhập đủ thông tin và chọn ảnh!");
+
+  // Tạo URL tạm thời cho thumbnail (local preview)
+  const thumbnailUrl = URL.createObjectURL(file);
+
+  const newPost = {
+    id: getNextId(),
+    title,
+    link,
+    thumbnail: thumbnailUrl,
+    date: new Date().toISOString()
+  };
+
+  posts.push(newPost);
+  renderPosts();
+
+  // Reset form
+  this.reset();
+  document.getElementById("preview").style.display = "none";
+
+  alert("Đã thêm bài viết mới (local)!");
+  
+  // Lưu vào posts.json: cần server local để ghi file (Live Server)
+  // fetch + PUT/POST không được trên file local do browser chặn
+  console.log("Posts hiện tại:", posts);
 }
 
-// Edit bài viết
-window.editPost = function(i){
-  const p = posts[i];
-  document.getElementById("title").value = p.title;
-  document.getElementById("date").value = p.date;
-  document.getElementById("thumbnail").value = p.thumbnail;
-  document.getElementById("video").value = p.video;
-  document.getElementById("body").value = p.body;
-}
-
-// Delete bài viết
-window.deletePost = async function(i){
-  if(!confirm("Bạn có chắc muốn xóa bài này?")) return;
-  const post = posts[i];
-  const url = `https://api.github.com/repos/${repo}/contents/${folder}/${post._filename}`;
-  const resCheck = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
-  if(resCheck.ok){
-    const data = await resCheck.json();
-    await fetch(url,{
-      method:"DELETE",
-      headers:{ "Authorization": `Bearer ${token}`, "Content-Type":"application/json" },
-      body: JSON.stringify({ message:`Delete post: ${post.title}`, sha: data.sha, branch })
-    });
-    alert("Bài viết đã bị xóa!");
-    loadPosts();
-  } else alert("Không tìm thấy bài viết trên repo.");
-}
-
-// Load danh sách khi mở admin
 loadPosts();
-
 </script>
+
 </body>
 </html>
