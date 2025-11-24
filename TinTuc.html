@@ -81,25 +81,26 @@
 <script>
 const POSTS_JSON_URL = "https://res.cloudinary.com/dlfuhehxg/raw/upload/posts_mjgjdr.json";
 
-// Trong TinTuc.html
 async function loadNews() {
   const container = document.getElementById("news");
   try {
-    // Lấy public_id mới nhất từ localStorage
-    const publicId = localStorage.getItem('latestPostsId') || "posts_mjgjdr";
-    const url = `https://res.cloudinary.com/dlfuhehxg/raw/upload/${publicId}.json?ts=${Date.now()}`;
+    // Cache busting mạnh
+    const url = `${POSTS_JSON_URL}?ts=${Date.now()}&rand=${Math.random().toString(36).substring(2)}`;
     
     console.log("🔄 Fetching from:", url);
     
     const res = await fetch(url, {
-      cache: 'no-store'
+      cache: 'no-store',
+      headers: {
+        'Cache-Control': 'no-cache',
+        'Pragma': 'no-cache'
+      }
     });
     
     if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
     
     const posts = await res.json();
-    console.log("✅ Dữ liệu nhận được:", posts);
-    console.log("📊 Số bài viết:", posts.length);
+    console.log("✅ Dữ liệu nhận được:", posts.length, "bài viết");
 
     if (!posts || !posts.length) {
       container.innerHTML = "<p>Hiện chưa có bài viết nào.</p>";
