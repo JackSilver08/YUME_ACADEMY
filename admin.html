@@ -40,15 +40,14 @@
 <script>
 /* CONFIG */
 const CLOUD_NAME = "dlfuhehxg";
-const UPLOAD_PRESET = "Thumbnail_YUME"; // Unsigned
-const POSTS_JSON_URL = "https://raw.githubusercontent.com/JackSilver08/YUME_ACADEMY/main/posts.json";
-
+const UPLOAD_PRESET = "Thumbnail_YUME"; // Unsigned preset for images
+const POSTS_JSON_PUBLIC_ID = "posts_m1mcaf"; // Public ID JSON đã có trên Cloudinary
 let posts = [];
 
-/* Load posts hiện tại */
+/* Load posts hiện tại từ Cloudinary */
 async function loadPosts() {
   try {
-    const res = await fetch(POSTS_JSON_URL);
+    const res = await fetch(`https://res.cloudinary.com/${CLOUD_NAME}/raw/upload/${POSTS_JSON_PUBLIC_ID}.json`);
     posts = await res.json();
     renderPosts();
   } catch (e) {
@@ -84,36 +83,50 @@ function renderPosts() {
 async function uploadToCloudinary(file) {
   const formData = new FormData();
   formData.append("file", file);
-  formData.append("upload_preset", UPLOAD_PRESET); // Unsigned
+  formData.append("upload_preset", UPLOAD_PRESET);
   const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
     method: "POST",
     body: formData
   });
-  if (!res.ok) throw new Error("Upload thất bại!");
+  if (!res.ok) throw new Error("Upload ảnh thất bại!");
   return await res.json();
 }
 
+/* Upload JSON online lên Cloudinary (overwrite) */
+async function uploadJSONToCloudinary(jsonData) {
+  const formData = new FormData();
+  const blob = new Blob([JSON.stringify(jsonData, null, 2)], { type: "application/json" });
+  formData.append("file", blob, "posts.json");
+  formData.append("upload_preset", "unsigned_json"); // bạn tạo preset unsigned cho raw JSON
+  formData.append("public_id", POSTS_JSON_PUBLIC_ID); // overwrite file cũ
+  const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/raw/upload`, {
+    method: "POST",
+    body: formData
+  });
+  if (!res.ok) throw new Error("Upload JSON thất bại!");
+  return await res.json();
+}
+
+/* Submit form */
 document.getElementById("postForm").onsubmit = async function(e){
   e.preventDefault();
   const title = document.getElementById("title").value.trim();
   const link = document.getElementById("link").value.trim();
   const file = document.getElementById("thumbnail").files[0];
-
   if(!title || !link || !file) return alert("Vui lòng nhập đầy đủ thông tin và chọn ảnh!");
 
   try {
-    // 1️⃣ Upload thumbnail
+    // Upload thumbnail
     const upload = await uploadToCloudinary(file);
     const thumbnailUrl = upload.secure_url;
 
-    // 2️⃣ Tạo bài viết mới
+    // Thêm bài viết mới
     const id = posts.length===0 ? 1 : Math.max(...posts.map(p=>p.id))+1;
     const newPost = { id, title, link, thumbnail: thumbnailUrl, date: new Date().toISOString() };
     posts.push(newPost);
 
-    // 3️⃣ Upload JSON online
-    const jsonUpload = await uploadJSONToCloudinary(posts);
-    console.log("URL JSON mới:", jsonUpload.secure_url);
+    // Upload JSON online
+    await uploadJSONToCloudinary(posts);
 
     renderPosts();
     this.reset();
@@ -126,7 +139,6 @@ document.getElementById("postForm").onsubmit = async function(e){
   }
 };
 
-
 /* Preview ảnh */
 document.getElementById("thumbnail").onchange = function(){
   const img = document.getElementById("preview");
@@ -136,7 +148,6 @@ document.getElementById("thumbnail").onchange = function(){
 
 loadPosts();
 </script>
-
 
 </body>
 </html>
