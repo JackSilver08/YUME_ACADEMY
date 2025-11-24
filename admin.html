@@ -404,17 +404,17 @@ const POSTS_JSON_PUBLIC_ID = "posts_mjgjdr";
 let posts = [];
 
 
-// Hàm load posts với version mới nhất
+// Hàm load posts với public_id động
 async function loadPosts() {
   try {
-    // CÁCH 1: Dùng version cụ thể từ kết quả upload
-    const version = "v1763961256"; // Lấy từ version trong kết quả upload
-    const url = `https://res.cloudinary.com/dlfuhehxg/raw/upload/${version}/posts_mjgjdr.json?ts=${Date.now()}`;
+    // Ưu tiên dùng public_id mới nhất, fallback về public_id cũ
+    const publicId = window.CURRENT_JSON_ID || "posts_mjgjdr";
+    const url = `https://res.cloudinary.com/dlfuhehxg/raw/upload/${publicId}.json?ts=${Date.now()}`;
     
     console.log("🔄 Loading posts from:", url);
     
     const res = await fetch(url);
-    if (!res.ok) throw new Error(`HTTP ${res.status}: Không thể tải danh sách bài viết`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}: Không thể tải danh sách`);
     
     const data = await res.json();
     posts = Array.isArray(data) ? data : [];
@@ -423,23 +423,6 @@ async function loadPosts() {
     renderPosts();
   } catch (e) {
     console.error("❌ Lỗi load posts:", e);
-    
-    // CÁCH 2: Fallback - thử URL không version
-    try {
-      console.log("🔄 Thử load không version...");
-      const fallbackUrl = `https://res.cloudinary.com/dlfuhehxg/raw/upload/posts_mjgjdr.json?ts=${Date.now()}`;
-      const res = await fetch(fallbackUrl);
-      if (res.ok) {
-        const data = await res.json();
-        posts = Array.isArray(data) ? data : [];
-        console.log("✅ Loaded posts (fallback):", posts);
-        renderPosts();
-        return;
-      }
-    } catch (e2) {
-      console.error("❌ Fallback cũng thất bại:", e2);
-    }
-    
     posts = [];
     document.getElementById("postsList").innerHTML = "<p>Chưa có bài viết nào.</p>";
   }
@@ -484,64 +467,47 @@ async function uploadToCloudinary(file) {
   return await res.json();
 }
 
-/* Upload JSON với phương pháp đơn giản và reliable */
+/* Upload JSON - FORCE NEW VERSION */
 async function uploadJSONToCloudinary(jsonData) {
+  console.log("🚀 Bắt đầu upload JSON...");
+  
+  // Tạo public_id DUY NHẤT mỗi lần upload
+  const uniquePublicId = `posts_mjgjdr_${Date.now()}`;
+  
+  const formData = new FormData();
+  const jsonString = JSON.stringify(jsonData, null, 2);
+  const blob = new Blob([jsonString], { type: "application/json" });
+  
+  formData.append("file", blob);
+  formData.append("upload_preset", "Thumbnail_YUME");
+  formData.append("public_id", uniquePublicId); // Dùng public_id duy nhất
+  
   try {
-    console.log("📤 Bắt đầu upload JSON...", jsonData);
-    
-    // Tạo FormData
-    const formData = new FormData();
-    const jsonString = JSON.stringify(jsonData, null, 2);
-    const blob = new Blob([jsonString], { type: "application/json" });
-    
-    formData.append("file", blob);
-    formData.append("upload_preset", UPLOAD_PRESET);
-    formData.append("public_id", POSTS_JSON_PUBLIC_ID);
-    
-    // QUAN TRỌNG: Thử cả hai endpoint
-    const endpoints = [
-      `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/raw/upload`,
-      `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/auto/upload`
-    ];
-    
-    let lastError = null;
-    
-    for (let endpoint of endpoints) {
-      try {
-        console.log(`🔄 Thử upload đến: ${endpoint}`);
-        
-        const res = await fetch(endpoint, {
-          method: "POST",
-          body: formData
-        });
+    const response = await fetch(`https://api.cloudinary.com/v1_1/dlfuhehxg/raw/upload`, {
+      method: "POST",
+      body: formData
+    });
 
-        console.log("📨 Response status:", res.status, res.statusText);
-        
-        if (res.ok) {
-          const result = await res.json();
-          console.log("✅ Upload JSON thành công!", result);
-          
-          // In URL để test
-          const testUrl = `https://res.cloudinary.com/${CLOUD_NAME}/raw/upload/${POSTS_JSON_PUBLIC_ID}.json`;
-          console.log("🔗 URL test:", testUrl);
-          
-          return result;
-        } else {
-          const errorText = await res.text();
-          lastError = new Error(`HTTP ${res.status}: ${errorText}`);
-          console.error(`❌ Endpoint ${endpoint} failed:`, errorText);
-        }
-      } catch (err) {
-        lastError = err;
-        console.error(`❌ Endpoint ${endpoint} error:`, err);
-      }
+    console.log("📨 Response status:", response.status);
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("❌ Response error:", errorText);
+      throw new Error(`Upload failed: ${response.status}`);
     }
+
+    const result = await response.json();
+    console.log("✅ Upload thành công!", result);
     
-    throw lastError || new Error("Tất cả endpoint đều thất bại");
+    // CẬP NHẬT BIẾN GLOBAL với public_id mới
+    window.CURRENT_JSON_ID = uniquePublicId;
+    console.log("🔗 Public ID mới:", uniquePublicId);
     
-  } catch (err) {
-    console.error("💥 Lỗi upload JSON:", err);
-    throw err;
+    return result;
+    
+  } catch (error) {
+    console.error("💥 Upload error:", error);
+    throw error;
   }
 }
 /* Test hàm - chạy trong console để kiểm tra */
