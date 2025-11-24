@@ -68,43 +68,36 @@
 </div>
 
 <script>
-const postsUrl = "https://raw.githubusercontent.com/JackSilver08/YUME_ACADEMY/main/posts.json";
+const repo = "JackSilver08/YUME_ACADEMY";
+const branch = "main";
+const postsFile = "posts.json";
 
 async function loadNews() {
   const container = document.getElementById("news");
-
   try {
-    const res = await fetch(postsUrl);
-    if (!res.ok) throw new Error("Không thể tải posts.json");
-    const posts = await res.json();
+    const res = await fetch(`https://raw.githubusercontent.com/${repo}/${branch}/${postsFile}`);
+    const posts = await res.json(); // đây là "chuỗi" JSON từ database online
+    if (!posts.length) { container.innerHTML = "<p>Hiện chưa có bài viết nào.</p>"; return; }
 
-    if (!posts || posts.length === 0) {
-      container.innerHTML = "<p>Hiện chưa có bài viết nào.</p>";
-      return;
-    }
-
-    // Sắp xếp theo ngày mới → cũ
-    posts.sort((a,b) => new Date(b.date) - new Date(a.date));
-
-    container.innerHTML = posts.map(p => `
-      <div class="post-card">
-        <img src="${p.thumbnail}" class="post-thumb" alt="${p.title}">
-        <div class="post-content">
+    posts.sort((a,b)=> new Date(b.date) - new Date(a.date));
+    container.innerHTML = '';
+    posts.forEach(p=>{
+      container.innerHTML += `
+        <div class="post-card">
+          <img src="${p.thumbnail}" class="post-thumb">
           <div class="post-title">${p.title}</div>
           <div class="post-date">${new Date(p.date).toLocaleDateString("vi-VN")}</div>
           <a class="read-more" href="${p.link}" target="_blank">Xem chi tiết →</a>
         </div>
-      </div>
-    `).join("");
-
-  } catch (err) {
-    console.error(err);
+      `;
+    });
+  } catch(err) {
     container.innerHTML = "<p>Không thể tải tin tức.</p>";
   }
 }
 
-loadNews();
 </script>
 
 </body>
 </html>
+
