@@ -15,14 +15,25 @@ body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: 
     linear-gradient(135deg, #667eea 0%, #764ba2 100%),
-    linear-gradient(90deg, rgba(255,255,255,0.15) 1px, transparent 1px),
-    linear-gradient(0deg, rgba(255,255,255,0.15) 1px, transparent 1px);
+    /* Lưới ô vuông với màu gradient */
+    linear-gradient(90deg, 
+      rgba(255,255,255,0.3) 1px, 
+      transparent 1px,
+      transparent calc(25px - 1px),
+      rgba(255,255,255,0.3) calc(25px - 1px),
+      rgba(255,255,255,0.3) 25px
+    ),
+    linear-gradient(0deg, 
+      rgba(255,255,255,0.3) 1px, 
+      transparent 1px,
+      transparent calc(25px - 1px),
+      rgba(255,255,255,0.3) calc(25px - 1px),
+      rgba(255,255,255,0.3) 25px
+    );
   background-size: auto, 25px 25px, 25px 25px;
   min-height: 100vh;
   padding: 20px;
 }
-
-
 
 /* Tiêu đề */
 h1 {
