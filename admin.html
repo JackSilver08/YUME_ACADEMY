@@ -433,22 +433,6 @@ function renderPosts() {
   });
 }
 
-/* Upload ảnh lên Cloudinary */
-async function uploadJSONToCloudinary(posts){
-  const formData = new FormData();
-  const blob = new Blob([JSON.stringify(posts, null, 2)], { type: "application/json" });
-  formData.append("file", blob, "posts.json");
-  formData.append("upload_preset", "YOUR_UNSIGNED_RAW_PRESET");
-
-  const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/raw/upload`, {
-    method: "POST",
-    body: formData
-  });
-
-  if(!res.ok) throw new Error("Upload JSON thất bại!");
-  return await res.json(); // res.secure_url là URL mới cho JSON
-}
-
 /* Upload ảnh thumbnail lên Cloudinary */
 async function uploadToCloudinary(file) {
   const formData = new FormData();
