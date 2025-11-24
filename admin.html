@@ -392,117 +392,30 @@ hr {
 <h2>Danh sách bài viết</h2>
 <div id="postsList">Đang tải...</div>
 
-
 <script>
 /* ===== CONFIG ===== */
-const CLOUD_NAME = "dlfuhehxg";
-const UPLOAD_PRESET = "Thumbnail_YUME";
-// Tạo public_id mới mỗi lần chạy để tránh cache
-const CURRENT_POSTS_ID = `posts_${Date.now()}`;
+const API_URL = 'https://script.google.com/macros/s/AKfycbychOqM6wTryZhB8XcU17trNc-IhnoUFN5uvsYTvWREnELdQ14m6_qpcEm8c9vhXYHx/exec';
 let posts = [];
 
-/* ===== HÀM TẠO FILE MỚI ===== */
-async function createNewFile() {
-  console.group("🆕 CREATE NEW FILE");
-  try {
-    const initialData = [];
-    const formData = new FormData();
-    const jsonString = JSON.stringify(initialData, null, 2);
-    const blob = new Blob([jsonString], { type: "application/json" });
-    
-    formData.append("file", blob);
-    formData.append("upload_preset", UPLOAD_PRESET);
-    formData.append("public_id", CURRENT_POSTS_ID);
-    
-    console.log("📤 Creating file:", CURRENT_POSTS_ID);
-    
-    const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/raw/upload`, {
-      method: "POST",
-      body: formData
-    });
-
-    console.log("📨 Create Response:", response.status);
-    
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Create failed: ${response.status} - ${errorText}`);
-    }
-
-    const result = await response.json();
-    console.log("✅ File created successfully:", result);
-    
-    // Lưu public_id vào localStorage để TinTuc.html có thể dùng
-    localStorage.setItem('current_posts_id', CURRENT_POSTS_ID);
-    console.log("💾 Saved to localStorage:", CURRENT_POSTS_ID);
-    
-    return result;
-    
-  } catch (error) {
-    console.error("💥 Create file failed:", error);
-    throw error;
-  }
-  console.groupEnd();
-}
-
-/* ===== HÀM LOAD POSTS ===== */
+/* ===== LOAD POSTS ===== */
 async function loadPosts() {
-  console.group("🔄 LOAD POSTS");
   try {
-    const url = `https://res.cloudinary.com/${CLOUD_NAME}/raw/upload/${CURRENT_POSTS_ID}.json?ts=${Date.now()}&rand=${Math.random().toString(36).substring(2, 15)}`;
+    console.log("🔄 Loading posts from Google Sheets...");
+    const res = await fetch(API_URL);
+    const result = await res.json();
     
-    console.log("📡 Fetching from:", url);
-    
-    const res = await fetch(url, {
-      method: 'GET',
-      cache: 'no-cache'
-    });
-    
-    console.log("📊 Response Status:", res.status, res.statusText);
-    
-    if (!res.ok) {
-      if (res.status === 404) {
-        console.warn("⚠️ File không tồn tại, đang tạo file mới...");
-        
-        // Tạo file mới
-        await createNewFile();
-        console.log("✅ File mới đã được tạo");
-        
-        posts = [];
-        renderPosts();
-        return;
-      }
-      throw new Error(`HTTP ${res.status}: ${res.statusText}`);
-    }
-    
-    const data = await res.json();
-    console.log("📦 Data received:", data);
-    
-    // Validate data
-    if (!Array.isArray(data)) {
-      console.error("❌ Data không phải array");
-      posts = [];
-    } else {
-      posts = data;
-    }
-    
-    console.log("✅ Loaded:", posts.length, "bài viết");
-    renderPosts();
-    
-  } catch (error) {
-    console.error("💥 Load posts error:", error);
-    
-    // Thử tạo file mới nếu có lỗi
-    try {
-      console.log("🔄 Thử tạo file mới...");
-      await createNewFile();
-      posts = [];
+    if (result.success) {
+      posts = result.data;
+      console.log("✅ Loaded:", posts.length, "posts from Google Sheets");
       renderPosts();
-    } catch (createError) {
-      console.error("💥 Không thể tạo file:", createError);
-      showError("Không thể kết nối đến server. Vui lòng thử lại sau.");
+    } else {
+      console.error("❌ API Error:", result.error);
+      showError("Lỗi tải bài viết: " + result.error);
     }
+  } catch (error) {
+    console.error("💥 Load error:", error);
+    showError("Lỗi kết nối: " + error.message);
   }
-  console.groupEnd();
 }
 
 /* ===== RENDER POSTS ===== */
@@ -511,12 +424,11 @@ function renderPosts() {
   
   if (!posts.length) {
     container.innerHTML = `
-      <div style="text-align: center; padding: 40px; color: #666; background: #f9f9f9; border-radius: 8px;">
+      <div style="text-align: center; padding: 40px; color: #666; background: #f9f9f9; border-radius: 8px; border: 2px dashed #ddd;">
         <p style="font-size: 1.2em; margin-bottom: 10px;">📭 Chưa có bài viết nào</p>
-        <p style="margin: 0;">Hãy tạo bài viết đầu tiên bằng form bên trên</p>
-        <div style="margin-top: 15px; font-size: 0.9em; color: #888;">
-          <div>File ID: <code>${CURRENT_POSTS_ID}</code></div>
-          <button onclick="checkCurrentFile()" style="margin-top: 10px; padding: 5px 10px; font-size: 0.8em;">Kiểm tra file</button>
+        <p style="margin: 0 0 15px 0;">Hãy tạo bài viết đầu tiên bằng form bên trên</p>
+        <div style="background: #e8f5e8; padding: 10px; border-radius: 4px; display: inline-block;">
+          <strong>🗃️ Database:</strong> Google Sheets
         </div>
       </div>
     `;
@@ -527,107 +439,71 @@ function renderPosts() {
   const sortedPosts = [...posts].sort((a, b) => new Date(b.date) - new Date(a.date));
   
   container.innerHTML = '';
-  sortedPosts.forEach((post) => {
+  
+  sortedPosts.forEach(post => {
     const div = document.createElement("div");
     div.className = "post-item";
     div.innerHTML = `
       <div style="display: flex; gap: 15px; align-items: start;">
         <img src="${post.thumbnail}" alt="${post.title}" 
-             style="width: 80px; height: 60px; object-fit: cover; border-radius: 4px; border: 1px solid #ddd;">
+             style="width: 100px; height: 60px; object-fit: cover; border-radius: 4px; border: 1px solid #dee2e6;">
         <div style="flex: 1;">
-          <b>${post.title}</b>
+          <b style="color: #2c3e50; font-size: 1.1rem; display: block; margin-bottom: 8px;">${post.title}</b>
           <div style="margin-top: 5px;">
-            <a href="${post.link}" target="_blank" style="font-size: 0.9em; color: #667eea;">📎 Xem bài viết</a>
+            <a href="${post.link}" target="_blank" 
+               style="color: #667eea; text-decoration: none; font-weight: 500;">📎 Xem bài viết</a>
           </div>
-          <small style="color: #888;">${new Date(post.date).toLocaleString('vi-VN')}</small>
-          <small style="display: block; color: #666; font-family: monospace;">ID: ${post.id}</small>
+          <small style="color: #6c757d; display: block; margin-top: 8px;">
+            🕒 ${new Date(post.date).toLocaleString('vi-VN')}
+          </small>
+          <small style="display: block; color: #888; font-family: monospace; font-size: 0.8em;">
+            ID: ${post.id} | 🗃️ Google Sheets
+          </small>
         </div>
       </div>
     `;
     container.appendChild(div);
   });
-  
-  console.log("🎨 Rendered:", sortedPosts.length, "bài viết");
 }
 
-/* ===== HIỂN THỊ LỖI ===== */
-function showError(message) {
-  const container = document.getElementById("postsList");
-  container.innerHTML = `
-    <div style="background: #fee; padding: 20px; border-radius: 8px; border: 1px solid #fcc;">
-      <p style="color: #c33; margin: 0 0 10px 0;">❌ ${message}</p>
-      <button onclick="loadPosts()" style="padding: 8px 16px; background: #e74c3c; color: white; border: none; border-radius: 4px; cursor: pointer;">
-        🔄 Thử lại
-      </button>
-      <button onclick="createNewFile()" style="margin-left: 10px; padding: 8px 16px; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer;">
-        🆕 Tạo file mới
-      </button>
-    </div>
-  `;
+/* ===== ADD POST ===== */
+async function addPost(postData) {
+  try {
+    console.log("📤 Adding post to Google Sheets:", postData);
+    
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      body: JSON.stringify(postData)
+    });
+    
+    const result = await res.json();
+    console.log("📨 API Response:", result);
+    
+    if (result.success) {
+      console.log("✅ Post added successfully, ID:", result.id);
+      return result;
+    } else {
+      throw new Error(result.error || 'Unknown error');
+    }
+  } catch (error) {
+    console.error("💥 Add post error:", error);
+    throw error;
+  }
 }
 
 /* ===== UPLOAD THUMBNAIL ===== */
 async function uploadToCloudinary(file) {
-  console.group("🖼️ UPLOAD THUMBNAIL");
-  try {
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("upload_preset", UPLOAD_PRESET);
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", "Thumbnail_YUME");
 
-    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
-      method: "POST",
-      body: formData
-    });
+  const res = await fetch(`https://api.cloudinary.com/v1_1/dlfuhehxg/image/upload`, {
+    method: "POST",
+    body: formData
+  });
 
-    if (!res.ok) {
-      const errorText = await res.text();
-      throw new Error(`Upload ảnh thất bại: ${res.status}`);
-    }
-
-    const result = await res.json();
-    console.log("✅ Thumbnail uploaded:", result.secure_url);
-    console.groupEnd();
-    return result;
-    
-  } catch (error) {
-    console.error("💥 Thumbnail upload failed:", error);
-    console.groupEnd();
-    throw error;
-  }
-}
-
-/* ===== UPLOAD JSON ===== */
-async function uploadJSONToCloudinary(jsonData) {
-  console.group("📄 UPLOAD JSON");
-  try {
-    const formData = new FormData();
-    const jsonString = JSON.stringify(jsonData, null, 2);
-    const blob = new Blob([jsonString], { type: "application/json" });
-    
-    formData.append("file", blob);
-    formData.append("upload_preset", UPLOAD_PRESET);
-    formData.append("public_id", CURRENT_POSTS_ID);
-    
-    const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/raw/upload`, {
-      method: "POST",
-      body: formData
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Upload JSON thất bại: ${response.status}`);
-    }
-
-    const result = await response.json();
-    console.log("✅ JSON uploaded successfully");
-    console.groupEnd();
-    return result;
-    
-  } catch (error) {
-    console.error("💥 JSON upload failed:", error);
-    console.groupEnd();
-    throw error;
-  }
+  if (!res.ok) throw new Error("Upload hình ảnh thất bại!");
+  return await res.json();
 }
 
 /* ===== FORM SUBMIT ===== */
@@ -650,35 +526,31 @@ document.getElementById("postForm").onsubmit = async function(e) {
     submitBtn.disabled = true;
     submitBtn.textContent = "⏳ Đang đăng...";
 
-    // 1. Upload thumbnail
+    console.log("1. 📤 Uploading thumbnail to Cloudinary...");
     const uploadResult = await uploadToCloudinary(file);
     const thumbnailUrl = uploadResult.secure_url;
+    console.log("✅ Thumbnail URL:", thumbnailUrl);
 
-    // 2. Create new post
-    const newId = posts.length === 0 ? 1 : Math.max(...posts.map(p => p.id)) + 1;
-    const newPost = { 
-      id: newId, 
-      title, 
-      link, 
-      thumbnail: thumbnailUrl, 
-      date: new Date().toISOString() 
+    console.log("2. 📝 Preparing post data...");
+    const postData = {
+      title: title,
+      link: link,
+      thumbnail: thumbnailUrl
     };
-    
-    // 3. Update posts array
-    const updatedPosts = [...posts, newPost];
 
-    // 4. Upload JSON
-    await uploadJSONToCloudinary(updatedPosts);
-    
-    // 5. Update state and render
-    posts = updatedPosts;
-    renderPosts();
+    console.log("3. 🗃️ Saving to Google Sheets...");
+    await addPost(postData);
 
-    // 6. Reset form
+    console.log("4. ✅ Success! Reloading posts...");
+    
+    // Reset form
     this.reset();
     document.getElementById("preview").style.display = "none";
 
-    alert("✅ Đăng bài thành công!\n\nFile: " + CURRENT_POSTS_ID);
+    // Reload danh sách
+    await loadPosts();
+
+    alert("✅ Đăng bài thành công!\n\n📊 Dữ liệu đã được lưu vào Google Sheets");
 
   } catch (error) {
     console.error("💥 Submit error:", error);
@@ -698,36 +570,35 @@ document.getElementById("thumbnail").onchange = function() {
   }
 };
 
+/* ===== SHOW ERROR ===== */
+function showError(message) {
+  const container = document.getElementById("postsList");
+  container.innerHTML = `
+    <div style="background: #fee; padding: 20px; border-radius: 8px; border: 1px solid #fcc; text-align: center;">
+      <p style="color: #c33; margin: 0 0 10px 0;">❌ ${message}</p>
+      <button onclick="loadPosts()" style="padding: 8px 16px; background: #e74c3c; color: white; border: none; border-radius: 4px; cursor: pointer;">
+        🔄 Thử lại
+      </button>
+    </div>
+  `;
+}
+
 /* ===== DEBUG FUNCTIONS ===== */
-window.checkCurrentFile = async function() {
+window.testAPI = async function() {
   try {
-    const url = `https://res.cloudinary.com/${CLOUD_NAME}/raw/upload/${CURRENT_POSTS_ID}.json`;
-    const res = await fetch(url);
-    
-    if (res.ok) {
-      const data = await res.json();
-      alert(`✅ File tồn tại\nBài viết: ${data.length}\nFile: ${CURRENT_POSTS_ID}`);
-    } else {
-      alert(`❌ File không tồn tại\nFile: ${CURRENT_POSTS_ID}\nStatus: ${res.status}`);
-    }
+    const res = await fetch(API_URL);
+    const data = await res.json();
+    console.log("🔍 API Test:", data);
+    alert(`API Status: ${data.success ? '✅ OK' : '❌ ERROR'}\nPosts: ${data.data.length}`);
   } catch (error) {
-    alert(`💥 Lỗi kiểm tra: ${error.message}`);
+    console.error("❌ API Test failed:", error);
+    alert("❌ API Test failed: " + error.message);
   }
 }
 
-window.getCurrentFileInfo = function() {
-  return {
-    fileId: CURRENT_POSTS_ID,
-    postsCount: posts.length,
-    localStorage: localStorage.getItem('current_posts_id')
-  };
-}
-
 /* ===== INIT ===== */
-console.log("🚀 Admin System Starting...");
-console.log("📁 File ID:", CURRENT_POSTS_ID);
+console.log("🚀 Admin System with Google Sheets API");
 loadPosts();
 </script>
-
 </body>
 </html>
