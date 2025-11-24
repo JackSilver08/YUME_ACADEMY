@@ -465,37 +465,101 @@ async function uploadToCloudinary(file) {
   return await res.json();
 }
 
-/* Upload JSON với overwrite */
+/* Upload JSON với phương pháp đơn giản và reliable */
 async function uploadJSONToCloudinary(jsonData) {
-  const formData = new FormData();
-  const blob = new Blob([JSON.stringify(jsonData, null, 2)], { 
-    type: "application/json" 
-  });
-  
-  formData.append("file", blob);
-  formData.append("upload_preset", UPLOAD_PRESET);
-  formData.append("public_id", POSTS_JSON_PUBLIC_ID);
-  formData.append("overwrite", "true"); // QUAN TRỌNG: ghi đè file cũ
+  try {
+    console.log("📤 Bắt đầu upload JSON...", jsonData);
+    
+    // Tạo FormData
+    const formData = new FormData();
+    const jsonString = JSON.stringify(jsonData, null, 2);
+    const blob = new Blob([jsonString], { type: "application/json" });
+    
+    formData.append("file", blob);
+    formData.append("upload_preset", UPLOAD_PRESET);
+    formData.append("public_id", POSTS_JSON_PUBLIC_ID);
+    
+    // QUAN TRỌNG: Thử cả hai endpoint
+    const endpoints = [
+      `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/raw/upload`,
+      `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/auto/upload`
+    ];
+    
+    let lastError = null;
+    
+    for (let endpoint of endpoints) {
+      try {
+        console.log(`🔄 Thử upload đến: ${endpoint}`);
+        
+        const res = await fetch(endpoint, {
+          method: "POST",
+          body: formData
+        });
 
-  console.log("Uploading JSON data:", jsonData);
-
-  const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/raw/upload`, {
-    method: "POST",
-    body: formData
-  });
-
-  if (!res.ok) {
-    const errorText = await res.text();
-    console.error("Upload JSON error:", errorText);
-    throw new Error("Upload JSON thất bại!");
+        console.log("📨 Response status:", res.status, res.statusText);
+        
+        if (res.ok) {
+          const result = await res.json();
+          console.log("✅ Upload JSON thành công!", result);
+          
+          // In URL để test
+          const testUrl = `https://res.cloudinary.com/${CLOUD_NAME}/raw/upload/${POSTS_JSON_PUBLIC_ID}.json`;
+          console.log("🔗 URL test:", testUrl);
+          
+          return result;
+        } else {
+          const errorText = await res.text();
+          lastError = new Error(`HTTP ${res.status}: ${errorText}`);
+          console.error(`❌ Endpoint ${endpoint} failed:`, errorText);
+        }
+      } catch (err) {
+        lastError = err;
+        console.error(`❌ Endpoint ${endpoint} error:`, err);
+      }
+    }
+    
+    throw lastError || new Error("Tất cả endpoint đều thất bại");
+    
+  } catch (err) {
+    console.error("💥 Lỗi upload JSON:", err);
+    throw err;
   }
-
-  const result = await res.json();
-  console.log("Upload JSON thành công:", result);
-  return result;
+}
+/* Test hàm - chạy trong console để kiểm tra */
+async function testUpload() {
+  const testData = [
+    {
+      "id": 1,
+      "title": "Bài test mới",
+      "link": "https://facebook.com/test",
+      "thumbnail": "https://res.cloudinary.com/dlfuhehxg/image/upload/test.jpg",
+      "date": new Date().toISOString()
+    },
+    {
+      "id": 2, 
+      "title": "Bài test thứ hai",
+      "link": "https://facebook.com/test2",
+      "thumbnail": "https://res.cloudinary.com/dlfuhehxg/image/upload/test2.jpg",
+      "date": new Date().toISOString()
+    }
+  ];
+  
+  try {
+    console.log("🧪 Bắt đầu test upload...");
+    const result = await uploadJSONToCloudinary(testData);
+    console.log("✅ Test thành công:", result);
+    
+    // Test load lại sau 2 giây
+    setTimeout(() => {
+      console.log("🔄 Testing reload...");
+      loadPosts();
+    }, 2000);
+    
+  } catch (err) {
+    console.error("❌ Test thất bại:", err);
+  }
 }
 
-/* Xử lý submit form */
 document.getElementById("postForm").onsubmit = async function(e){
   e.preventDefault();
   const title = document.getElementById("title").value.trim();
@@ -511,17 +575,15 @@ document.getElementById("postForm").onsubmit = async function(e){
   const originalText = submitBtn.textContent;
   
   try {
-    // Disable nút submit
     submitBtn.disabled = true;
     submitBtn.textContent = "Đang đăng...";
 
-    // 1. Upload thumbnail
-    console.log("Đang upload thumbnail...");
+    console.log("1. Đang upload thumbnail...");
     const uploadResult = await uploadToCloudinary(file);
     const thumbnailUrl = uploadResult.secure_url;
-    console.log("Thumbnail URL:", thumbnailUrl);
+    console.log("✅ Thumbnail URL:", thumbnailUrl);
 
-    // 2. Tạo bài viết mới
+    // Tạo bài viết mới
     const id = posts.length === 0 ? 1 : Math.max(...posts.map(p => p.id)) + 1;
     const newPost = { 
       id, 
@@ -531,37 +593,38 @@ document.getElementById("postForm").onsubmit = async function(e){
       date: new Date().toISOString() 
     };
     
-    console.log("Bài viết mới:", newPost);
+    console.log("2. Bài viết mới:", newPost);
     
-    // 3. Thêm vào mảng posts
+    // Tạo mảng posts mới (KHÔNG dùng push)
     const updatedPosts = [...posts, newPost];
-    console.log("Tất cả bài viết sau khi thêm:", updatedPosts);
+    console.log("3. Tổng số bài viết:", updatedPosts.length);
 
-    // 4. Upload JSON mới
-    console.log("Đang upload JSON...");
+    // Upload JSON
+    console.log("4. Đang upload JSON...");
     await uploadJSONToCloudinary(updatedPosts);
     
-    // 5. CẬP NHẬT STATE và RENDER LẠI
-    posts = updatedPosts; // Cập nhật mảng posts
-    renderPosts(); // Render lại danh sách
+    // CẬP NHẬT STATE
+    posts = updatedPosts;
     
-    // 6. Reset form
+    console.log("5. Đang render...");
+    renderPosts();
+
+    // Reset form
     this.reset();
     document.getElementById("preview").style.display = "none";
 
-    // 7. Load lại để verify (quan trọng)
-    console.log("Đang load lại từ Cloudinary để verify...");
+    // Load lại từ server để verify
+    console.log("6. Đang verify từ server...");
     setTimeout(() => {
-      loadPosts(); // Load lại từ server để xác nhận
-    }, 1000);
+      loadPosts();
+    }, 1500);
 
-    alert("✅ Đăng bài thành công! Bài viết đã được cập nhật.");
+    alert("✅ Đăng bài thành công!");
 
   } catch(err) {
-    console.error("Lỗi toàn bộ:", err);
+    console.error("💥 Lỗi toàn bộ:", err);
     alert("❌ Upload thất bại: " + err.message);
   } finally {
-    // Re-enable nút submit
     submitBtn.disabled = false;
     submitBtn.textContent = originalText;
   }
