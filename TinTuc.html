@@ -79,38 +79,50 @@
   </div>
 </footer>
 <script>
-const POSTS_JSON_URL = "https://res.cloudinary.com/dlfuhehxg/raw/upload/posts_mjgjdr.json?ts=" + new Date().getTime();
-
+const POSTS_JSON_URL = "https://res.cloudinary.com/dlfuhehxg/raw/upload/posts_mjgjdr.json?ts=" + Date.now();
 
 async function loadNews() {
   const container = document.getElementById("news");
   try {
-    const res = await fetch(POSTS_JSON_URL);
+    // Thêm cache busting
+    const url = POSTS_JSON_URL + "&timestamp=" + new Date().getTime();
+    console.log("Fetching from:", url);
+    
+    const res = await fetch(url);
+    
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+    
     const posts = await res.json();
+    console.log("Dữ liệu nhận được:", posts);
 
-    if (!posts.length) {
+    if (!posts || !posts.length) {
       container.innerHTML = "<p>Hiện chưa có bài viết nào.</p>";
       return;
     }
 
-    posts.sort((a,b)=> new Date(b.date) - new Date(a.date));
+    // Sắp xếp mới nhất lên đầu
+    posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+    
     container.innerHTML = '';
+    
     posts.forEach(p => {
       container.innerHTML += `
         <div class="post-card">
-          <img src="${p.thumbnail}" class="post-thumb">
+          <img src="${p.thumbnail}" class="post-thumb" alt="${p.title}">
           <div class="post-title">${p.title}</div>
           <div class="post-date">${new Date(p.date).toLocaleDateString("vi-VN")}</div>
           <a class="read-more" href="${p.link}" target="_blank">Xem chi tiết →</a>
         </div>
       `;
     });
+    
   } catch(err) {
-    console.error(err);
-    container.innerHTML = "<p>Không thể tải tin tức.</p>";
+    console.error("Lỗi load news:", err);
+    container.innerHTML = `<p>Không thể tải tin tức. Vui lòng thử lại sau.</p>`;
   }
 }
-
 loadNews();
 
 </script>
