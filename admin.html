@@ -403,28 +403,47 @@ const UPLOAD_PRESET = "Thumbnail_YUME";
 const POSTS_JSON_PUBLIC_ID = "posts_mjgjdr";
 let posts = [];
 
-// Hàm load posts với cache busting
+
+// Hàm load posts với version mới nhất
 async function loadPosts() {
   try {
-    // Thêm timestamp để tránh cache
-    const url = `https://res.cloudinary.com/${CLOUD_NAME}/raw/upload/${POSTS_JSON_PUBLIC_ID}.json?ts=${Date.now()}`;
-    console.log("Loading posts from:", url);
+    // CÁCH 1: Dùng version cụ thể từ kết quả upload
+    const version = "v1763961256"; // Lấy từ version trong kết quả upload
+    const url = `https://res.cloudinary.com/dlfuhehxg/raw/upload/${version}/posts_mjgjdr.json?ts=${Date.now()}`;
+    
+    console.log("🔄 Loading posts from:", url);
     
     const res = await fetch(url);
-    if (!res.ok) throw new Error("Không thể tải danh sách bài viết");
+    if (!res.ok) throw new Error(`HTTP ${res.status}: Không thể tải danh sách bài viết`);
     
     const data = await res.json();
     posts = Array.isArray(data) ? data : [];
-    console.log("Loaded posts:", posts);
+    console.log("✅ Loaded posts:", posts);
     
     renderPosts();
   } catch (e) {
-    console.error("Lỗi load posts:", e);
+    console.error("❌ Lỗi load posts:", e);
+    
+    // CÁCH 2: Fallback - thử URL không version
+    try {
+      console.log("🔄 Thử load không version...");
+      const fallbackUrl = `https://res.cloudinary.com/dlfuhehxg/raw/upload/posts_mjgjdr.json?ts=${Date.now()}`;
+      const res = await fetch(fallbackUrl);
+      if (res.ok) {
+        const data = await res.json();
+        posts = Array.isArray(data) ? data : [];
+        console.log("✅ Loaded posts (fallback):", posts);
+        renderPosts();
+        return;
+      }
+    } catch (e2) {
+      console.error("❌ Fallback cũng thất bại:", e2);
+    }
+    
     posts = [];
     document.getElementById("postsList").innerHTML = "<p>Chưa có bài viết nào.</p>";
   }
 }
-
 /* Render danh sách bài viết */
 function renderPosts() {
   const container = document.getElementById("postsList");
