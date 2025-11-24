@@ -54,7 +54,7 @@
 </div>
 
 <script>
-const POSTS_JSON_URL = "https://raw.githubusercontent.com/JackSilver08/YUME_ACADEMY/main/posts.json";
+const POSTS_JSON_URL = "https://res.cloudinary.com/dlfuhehxg/raw/upload/posts_m1mcaf.json";
 
 async function loadNews() {
   const container = document.getElementById("news");
@@ -62,40 +62,33 @@ async function loadNews() {
     const res = await fetch(POSTS_JSON_URL);
     const posts = await res.json();
 
-    // Nếu posts không phải mảng hoặc rỗng
-    if (!Array.isArray(posts) || posts.length === 0) {
+    if (!posts.length) {
       container.innerHTML = "<p>Hiện chưa có bài viết nào.</p>";
       return;
     }
 
-    // Sắp xếp theo ngày mới nhất
-    posts.sort((a,b) => new Date(b.date) - new Date(a.date));
+    posts.sort((a,b)=> new Date(b.date) - new Date(a.date));
     container.innerHTML = '';
-
     posts.forEach(p => {
-      const thumbnail = p.thumbnail || "https://via.placeholder.com/800x400?text=No+Image";
-      const link = p.link || "#";
-      const title = p.title || "Bài viết không có tiêu đề";
-      const date = p.date ? new Date(p.date).toLocaleDateString("vi-VN") : "";
-
       container.innerHTML += `
         <div class="post-card">
-          <img src="${thumbnail}" class="post-thumb" alt="${title}">
-          <div class="post-title">${title}</div>
-          <div class="post-date">${date}</div>
-          <a class="read-more" href="${link}" target="_blank">Xem chi tiết →</a>
+          <img src="${p.thumbnail}" class="post-thumb">
+          <div class="post-title">${p.title}</div>
+          <div class="post-date">${new Date(p.date).toLocaleDateString("vi-VN")}</div>
+          <a class="read-more" href="${p.link}" target="_blank">Xem chi tiết →</a>
         </div>
       `;
     });
-
   } catch(err) {
-    console.error("Lỗi tải bài viết:", err);
+    console.error(err);
     container.innerHTML = "<p>Không thể tải tin tức.</p>";
   }
 }
 
 loadNews();
+
 </script>
 
 </body>
 </html>
+
