@@ -402,14 +402,15 @@ let posts = [];
 async function loadPosts() {
   try {
     const res = await fetch(`https://res.cloudinary.com/${CLOUD_NAME}/raw/upload/${POSTS_JSON_PUBLIC_ID}.json`);
-    posts = await res.json();
+    posts = await res.json(); // posts giờ là toàn bộ bài cũ
     renderPosts();
   } catch (e) {
     console.error(e);
-    posts = [];
+    posts = []; // nếu file cũ không tồn tại
     document.getElementById("postsList").innerHTML = "<p>Chưa có bài viết nào.</p>";
   }
 }
+
 
 /* Render danh sách bài viết */
 function renderPosts() {
@@ -468,8 +469,6 @@ async function uploadJSONToCloudinary(jsonData) {
 }
 
 
-
-/* Submit form */
 document.getElementById("postForm").onsubmit = async function(e){
   e.preventDefault();
   const title = document.getElementById("title").value.trim();
@@ -482,12 +481,12 @@ document.getElementById("postForm").onsubmit = async function(e){
     const upload = await uploadToCloudinary(file);
     const thumbnailUrl = upload.secure_url;
 
-    // Thêm bài viết mới
+    // Thêm bài viết mới vào posts (bài cũ đã có)
     const id = posts.length===0 ? 1 : Math.max(...posts.map(p=>p.id))+1;
     const newPost = { id, title, link, thumbnail: thumbnailUrl, date: new Date().toISOString() };
     posts.push(newPost);
 
-    // Upload JSON online
+    // Upload JSON online (toàn bộ bài viết, cũ + mới)
     await uploadJSONToCloudinary(posts);
 
     renderPosts();
@@ -500,7 +499,6 @@ document.getElementById("postForm").onsubmit = async function(e){
     alert("Upload thất bại!");
   }
 };
-
 /* Preview ảnh */
 document.getElementById("thumbnail").onchange = function(){
   const img = document.getElementById("preview");
