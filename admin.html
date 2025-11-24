@@ -40,7 +40,8 @@
 <script>
 /* ------------- CONFIG ------------- */
 const CLOUD_NAME = "dlfuhehxg";
-const UPLOAD_PRESET = "Thumbnail_YUME";
+const UPLOAD_PRESET = "Thumbnail_YUME"; // Unsigned
+
 const POSTS_JSON_URL = "https://raw.githubusercontent.com/JackSilver08/YUME_ACADEMY/main/posts.json"; // JSON online
 
 let posts = [];
@@ -83,13 +84,14 @@ function renderPosts() {
 async function uploadToCloudinary(file) {
   const formData = new FormData();
   formData.append("file", file);
-  formData.append("upload_preset", UPLOAD_PRESET);
+  formData.append("upload_preset", UPLOAD_PRESET); // Unsigned preset
   const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
     method: "POST",
     body: formData
   });
-  return await res.json();
+  return await res.json(); // trả về JSON gồm secure_url
 }
+
 
 /* ------------- Submit form ------------- */
 document.getElementById("postForm").onsubmit = async function(e){
