@@ -639,6 +639,67 @@ document.getElementById("thumbnail").onchange = function(){
   }
 };
 
+/* Test hàm - chạy trong console để kiểm tra */
+window.testUpload = async function() {
+  console.log("🧪 Bắt đầu test upload JSON...");
+  
+  const testData = [
+    {
+      "id": 1,
+      "title": "Bài test từ console - " + new Date().toLocaleTimeString(),
+      "link": "https://facebook.com/YumeAcademyBienHoa",
+      "thumbnail": "https://res.cloudinary.com/dlfuhehxg/image/upload/v1/IMG/YUME_FANPAGE.PNG",
+      "date": new Date().toISOString()
+    },
+    {
+      "id": 2, 
+      "title": "Bài test thứ hai - " + new Date().toLocaleTimeString(),
+      "link": "https://facebook.com/YumeAcademyBienHoa",
+      "thumbnail": "https://res.cloudinary.com/dlfuhehxg/image/upload/v1/IMG/YUME_FANPAGE.PNG",
+      "date": new Date().toISOString()
+    }
+  ];
+  
+  try {
+    console.log("📤 Dữ liệu test:", testData);
+    const result = await uploadJSONToCloudinary(testData);
+    console.log("✅ Test upload thành công:", result);
+    
+    // Test load lại sau 2 giây
+    setTimeout(() => {
+      console.log("🔄 Testing reload từ server...");
+      loadPosts();
+    }, 2000);
+    
+    return result;
+  } catch (err) {
+    console.error("❌ Test thất bại:", err);
+    return err;
+  }
+}
+
+// Hàm kiểm tra JSON hiện tại trên server
+window.checkCurrentJSON = async function() {
+  try {
+    const url = `https://res.cloudinary.com/dlfuhehxg/raw/upload/posts_mjgjdr.json?ts=${Date.now()}`;
+    console.log("🔍 Kiểm tra JSON hiện tại:", url);
+    
+    const res = await fetch(url);
+    if (res.ok) {
+      const data = await res.json();
+      console.log("📄 JSON hiện tại trên server:", data);
+      console.log("📊 Số lượng bài viết:", data.length);
+      return data;
+    } else {
+      console.error("❌ Không thể tải JSON");
+      return null;
+    }
+  } catch (err) {
+    console.error("💥 Lỗi kiểm tra JSON:", err);
+    return null;
+  }
+}
+
 // Khởi chạy
 loadPosts();
 </script>
