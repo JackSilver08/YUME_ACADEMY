@@ -448,18 +448,24 @@ async function uploadToCloudinary(file) {
   return await res.json(); // res.secure_url là URL hình ảnh
 }
 
-/* Upload JSON online lên Cloudinary (overwrite) */
 async function uploadJSONToCloudinary(jsonData) {
   const formData = new FormData();
   const blob = new Blob([JSON.stringify(jsonData, null, 2)], { type: "application/json" });
   formData.append("file", blob, "posts.json");
-  formData.append("upload_preset", "unsigned_json"); // bạn tạo preset unsigned cho raw JSON
+  formData.append("upload_preset", "unsigned_json"); // preset phải đúng tên trên Cloudinary
   formData.append("public_id", POSTS_JSON_PUBLIC_ID); // overwrite file cũ
+
   const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/raw/upload`, {
     method: "POST",
     body: formData
   });
-  if (!res.ok) throw new Error("Upload JSON thất bại!");
+
+  if (!res.ok) {
+    const text = await res.text();
+    console.error("Cloudinary raw upload error:", text);
+    throw new Error("Upload JSON thất bại!");
+  }
+
   return await res.json();
 }
 
