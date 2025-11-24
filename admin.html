@@ -399,8 +399,8 @@ const UPLOAD_PRESET = "Thumbnail_YUME";
 const POSTS_JSON_PUBLIC_ID = "posts_mjgjdr";
 let posts = [];
 
-// Hàm load posts với public_id mới nhất
-async function loadPosts() {
+// Hàm load posts với retry
+async function loadPosts(maxRetries = 3) {
   try {
     // Lấy public_id mới nhất từ localStorage, fallback về public_id cũ
     const publicId = localStorage.getItem('latestPostsId') || "posts_mjgjdr";
@@ -408,10 +408,41 @@ async function loadPosts() {
     
     console.log("🔄 Loading posts from:", url);
     
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(`HTTP ${res.status}: Không thể tải danh sách`);
+    let retries = 0;
+    let data = null;
     
-    const data = await res.json();
+    // Thử nhiều lần nếu bị 404
+    while (retries < maxRetries) {
+      try {
+        const res = await fetch(url);
+        if (res.ok) {
+          data = await res.json();
+          console.log(`✅ Load thành công sau ${retries + 1} lần thử`);
+          break;
+        } else if (res.status === 404) {
+          console.log(`⏳ File chưa sẵn sàng, thử lại... (${retries + 1}/${maxRetries})`);
+          retries++;
+          // Chờ 1 giây trước khi thử lại
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          continue;
+        } else {
+          throw new Error(`HTTP ${res.status}: Không thể tải danh sách`);
+        }
+      } catch (fetchError) {
+        if (retries < maxRetries - 1) {
+          console.log(`⏳ Lỗi fetch, thử lại... (${retries + 1}/${maxRetries})`);
+          retries++;
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        } else {
+          throw fetchError;
+        }
+      }
+    }
+    
+    if (!data) {
+      throw new Error("Không thể tải dữ liệu sau nhiều lần thử");
+    }
+    
     posts = Array.isArray(data) ? data : [];
     console.log("✅ Loaded posts:", posts);
     
@@ -540,7 +571,6 @@ async function testUpload() {
     console.error("❌ Test thất bại:", err);
   }
 }
-
 document.getElementById("postForm").onsubmit = async function(e){
   e.preventDefault();
   const title = document.getElementById("title").value.trim();
@@ -576,7 +606,7 @@ document.getElementById("postForm").onsubmit = async function(e){
     
     console.log("2. Bài viết mới:", newPost);
     
-    // Tạo mảng posts mới (KHÔNG dùng push)
+    // Tạo mảng posts mới
     const updatedPosts = [...posts, newPost];
     console.log("3. Tổng số bài viết:", updatedPosts.length);
 
@@ -584,23 +614,24 @@ document.getElementById("postForm").onsubmit = async function(e){
     console.log("4. Đang upload JSON...");
     await uploadJSONToCloudinary(updatedPosts);
     
-    // CẬP NHẬT STATE
+    // CẬP NHẬT STATE và render ngay lập tức
     posts = updatedPosts;
     
-    console.log("5. Đang render...");
+    console.log("5. Đang render từ local data...");
     renderPosts();
 
     // Reset form
     this.reset();
     document.getElementById("preview").style.display = "none";
 
-    // Load lại từ server để verify
-    console.log("6. Đang verify từ server...");
+    // Load lại từ server để verify - CHỜ LÂU HƠN
+    console.log("6. Đang verify từ server... (chờ 3 giây)");
     setTimeout(() => {
-      loadPosts();
-    }, 1500);
+      console.log("🔄 Bắt đầu load từ server...");
+      loadPosts(5); // Thử 5 lần
+    }, 3000); // Tăng lên 3 giây
 
-    alert("✅ Đăng bài thành công!");
+    alert("✅ Đăng bài thành công! Dữ liệu đang được cập nhật...");
 
   } catch(err) {
     console.error("💥 Lỗi toàn bộ:", err);
