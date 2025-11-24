@@ -399,12 +399,11 @@ const UPLOAD_PRESET = "Thumbnail_YUME";
 const POSTS_JSON_PUBLIC_ID = "posts_mjgjdr";
 let posts = [];
 
-
-// Hàm load posts với public_id động
+// Hàm load posts với public_id mới nhất
 async function loadPosts() {
   try {
-    // Ưu tiên dùng public_id mới nhất, fallback về public_id cũ
-    const publicId = window.CURRENT_JSON_ID || "posts_mjgjdr";
+    // Lấy public_id mới nhất từ localStorage, fallback về public_id cũ
+    const publicId = localStorage.getItem('latestPostsId') || "posts_mjgjdr";
     const url = `https://res.cloudinary.com/dlfuhehxg/raw/upload/${publicId}.json?ts=${Date.now()}`;
     
     console.log("🔄 Loading posts from:", url);
@@ -463,19 +462,21 @@ async function uploadToCloudinary(file) {
   return await res.json();
 }
 
-/* Upload JSON - DÙNG CÙNG PUBLIC_ID NHƯNG FORCE UPDATE */
+/* Upload JSON - Dùng public_id duy nhất */
 async function uploadJSONToCloudinary(jsonData) {
   console.log("🚀 Bắt đầu upload JSON...");
+  
+  // Tạo public_id mới mỗi lần upload
+  const timestamp = Date.now();
+  const newPublicId = `posts_${timestamp}`;
   
   const formData = new FormData();
   const jsonString = JSON.stringify(jsonData, null, 2);
   const blob = new Blob([jsonString], { type: "application/json" });
   
-  // QUAN TRỌNG: Dùng CÙNG public_id nhưng thêm timestamp để force update
   formData.append("file", blob);
   formData.append("upload_preset", "Thumbnail_YUME");
-  formData.append("public_id", "posts_mjgjdr"); // GIỮ NGUYÊN public_id
-  formData.append("overwrite", "true"); // QUAN TRỌNG: ghi đè file cũ
+  formData.append("public_id", newPublicId); // Public_id mới
   
   try {
     const response = await fetch(`https://api.cloudinary.com/v1_1/dlfuhehxg/raw/upload`, {
@@ -493,6 +494,10 @@ async function uploadJSONToCloudinary(jsonData) {
 
     const result = await response.json();
     console.log("✅ Upload thành công!", result);
+    
+    // Lưu public_id mới nhất
+    localStorage.setItem('latestPostsId', newPublicId);
+    console.log("🔗 Public ID mới:", newPublicId);
     
     return result;
     

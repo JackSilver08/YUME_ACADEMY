@@ -81,20 +81,18 @@
 <script>
 const POSTS_JSON_URL = "https://res.cloudinary.com/dlfuhehxg/raw/upload/posts_mjgjdr.json";
 
+// Trong TinTuc.html
 async function loadNews() {
   const container = document.getElementById("news");
   try {
-    // FORCE RELOAD - thêm random parameter
-    const random = Math.random().toString(36).substring(7);
-    const url = `${POSTS_JSON_URL}?nocache=${random}&ts=${Date.now()}`;
+    // Lấy public_id mới nhất từ localStorage
+    const publicId = localStorage.getItem('latestPostsId') || "posts_mjgjdr";
+    const url = `https://res.cloudinary.com/dlfuhehxg/raw/upload/${publicId}.json?ts=${Date.now()}`;
     
     console.log("🔄 Fetching from:", url);
     
     const res = await fetch(url, {
-      cache: 'no-store', // Không cache
-      headers: {
-        'Cache-Control': 'no-cache'
-      }
+      cache: 'no-store'
     });
     
     if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
