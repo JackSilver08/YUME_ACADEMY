@@ -38,30 +38,10 @@
 <div id="postsList"></div>
 
 <script>
-/* ------------- CONFIG ------------- */
-const repo = "JackSilver08/YUME_ACADEMY"; 
-const branch = "main";
-const postsFile = "posts.json";
-const TOKEN = "YOUR_PERSONAL_ACCESS_TOKEN"; // <- điền token ở đây
-
-// Cloudinary config
 const CLOUD_NAME = "dlfuhehxg";
 const UPLOAD_PRESET = "Thumbnail_YUME";
 
-let posts = [];
-
-/* ------------- Load posts hiện tại ------------- */
-async function loadPosts() {
-  try {
-    const res = await fetch(`https://raw.githubusercontent.com/${repo}/${branch}/${postsFile}`);
-    posts = await res.json();
-    renderPosts();
-  } catch(e) {
-    console.error(e);
-    posts = [];
-    document.getElementById("postsList").innerHTML = "<p>Chưa có bài viết nào.</p>";
-  }
-}
+let posts = []; // danh sách bài viết cục bộ
 
 function renderPosts() {
   const container = document.getElementById("postsList");
@@ -84,7 +64,6 @@ function renderPosts() {
   });
 }
 
-/* ------------- Upload ảnh lên Cloudinary ------------- */
 async function uploadToCloudinary(file) {
   const formData = new FormData();
   formData.append("file", file);
@@ -93,28 +72,10 @@ async function uploadToCloudinary(file) {
     method: "POST",
     body: formData
   });
-  return await res.json();
+  const data = await res.json();
+  return data.secure_url;
 }
 
-/* ------------- Commit posts.json lên GitHub ------------- */
-async function updatePostsOnGitHub(newPosts){
-  const url = `https://api.github.com/repos/${repo}/contents/${postsFile}`;
-  const check = await fetch(url, { headers:{ Authorization:`Bearer ${TOKEN}` } });
-  const old = await check.json();
-  const res = await fetch(url, {
-    method:"PUT",
-    headers: { "Authorization": `Bearer ${TOKEN}`, "Content-Type":"application/json" },
-    body: JSON.stringify({
-      message: "Update posts.json",
-      content: btoa(JSON.stringify(newPosts,null,2)),
-      sha: old.sha,
-      branch
-    })
-  });
-  return await res.json();
-}
-
-/* ------------- Submit form ------------- */
 document.getElementById("postForm").onsubmit = async function(e){
   e.preventDefault();
   const title = document.getElementById("title").value.trim();
@@ -122,29 +83,23 @@ document.getElementById("postForm").onsubmit = async function(e){
   const file = document.getElementById("thumbnail").files[0];
   if(!title || !link || !file) return alert("Vui lòng nhập đầy đủ thông tin và chọn ảnh!");
 
-  const upload = await uploadToCloudinary(file);
-  const thumbnailUrl = upload.secure_url;
-
+  const thumbnailUrl = await uploadToCloudinary(file);
   const id = posts.length===0 ? 1 : Math.max(...posts.map(p=>p.id))+1;
-  const newPost = { id, title, link, thumbnail: thumbnailUrl, date: new Date().toISOString() };
-  posts.push(newPost);
+  posts.push({ id, title, link, thumbnail: thumbnailUrl, date: new Date().toISOString() });
 
-  await updatePostsOnGitHub(posts);
-
-  alert("Đăng bài thành công!");
   renderPosts();
   this.reset();
   document.getElementById("preview").style.display="none";
+  alert("Đã thêm bài viết mới!");
 }
 
-/* ------------- Preview ảnh ------------- */
 document.getElementById("thumbnail").onchange = function(){
   const img = document.getElementById("preview");
   img.src = URL.createObjectURL(this.files[0]);
   img.style.display="block";
 }
 
-loadPosts();
+renderPosts(); // render lúc đầu
 </script>
 
 </body>
