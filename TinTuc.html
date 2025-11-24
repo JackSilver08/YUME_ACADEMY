@@ -81,68 +81,272 @@
 <script>
 /* ===== CONFIG ===== */
 const CLOUD_NAME = "dlfuhehxg";
+let CURRENT_FILE_ID = "posts_1763964043884"; // File đã tạo thành công
 
-// Lấy file ID từ localStorage hoặc dùng mặc định
-function getCurrentPostsId() {
-  return localStorage.getItem('current_posts_id') || "posts_mjgjdr";
+/* ===== HÀM ĐỒNG BỘ FILE TỪ ADMIN ===== */
+async function syncWithAdmin() {
+  console.group("🔄 SYNC WITH ADMIN");
+  try {
+    // Thử các file ID có thể có
+    const possibleFiles = [
+      "posts_1763964043884", // File hiện tại
+      "posts_mjgjdr",        // File cũ
+      "posts_1763961885574"  // File test trước
+    ];
+    
+    for (const fileId of possibleFiles) {
+      try {
+        const url = `https://res.cloudinary.com/${CLOUD_NAME}/raw/upload/${fileId}.json?ts=${Date.now()}`;
+        console.log(`🔍 Checking: ${fileId}`);
+        
+        const res = await fetch(url);
+        if (res.ok) {
+          const data = await res.json();
+          console.log(`✅ Found: ${fileId} (${data.length} posts)`);
+          CURRENT_FILE_ID = fileId;
+          
+          // Hiển thị thông báo
+          showFileInfo(fileId, data.length);
+          return fileId;
+        }
+      } catch (err) {
+        console.log(`❌ Not found: ${fileId}`);
+      }
+    }
+    
+    // Nếu không tìm thấy file nào
+    showError("Không tìm thấy file bài viết nào");
+    return null;
+    
+  } catch (error) {
+    console.error("💥 Sync error:", error);
+    return null;
+  }
+  console.groupEnd();
 }
 
+/* ===== HIỂN THỊ THÔNG TIN FILE ===== */
+function showFileInfo(fileId, postCount) {
+  const infoDiv = document.createElement('div');
+  infoDiv.style.cssText = `
+    background: #e8f5e8; 
+    padding: 10px 15px; 
+    border-radius: 6px; 
+    margin-bottom: 15px; 
+    border: 1px solid #4caf50;
+    font-size: 0.9em;
+  `;
+  infoDiv.innerHTML = `
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <strong>📁 File:</strong> <code>${fileId}</code> 
+        | <strong>📊 Bài viết:</strong> ${postCount}
+      </div>
+      <button onclick="syncWithAdmin()" style="padding: 4px 8px; font-size: 0.8em;">
+        🔄 Đồng bộ
+      </button>
+    </div>
+  `;
+  
+  const container = document.querySelector('.news-container');
+  const existingInfo = container.querySelector('.file-info');
+  if (existingInfo) {
+    existingInfo.remove();
+  }
+  infoDiv.className = 'file-info';
+  container.insertBefore(infoDiv, container.querySelector('h1'));
+}
+
+/* ===== LOAD NEWS ===== */
 async function loadNews() {
   const container = document.getElementById("news");
-  const currentFileId = getCurrentPostsId();
+  container.innerHTML = `
+    <div style="text-align: center; padding: 20px; color: #666;">
+      <div class="loading-spinner" style="font-size: 2em; margin-bottom: 10px;">⏳</div>
+      <p>Đang tải tin tức...</p>
+      <small>File: ${CURRENT_FILE_ID}</small>
+    </div>
+  `;
   
   try {
-    const url = `https://res.cloudinary.com/${CLOUD_NAME}/raw/upload/${currentFileId}.json?ts=${Date.now()}`;
+    const url = `https://res.cloudinary.com/${CLOUD_NAME}/raw/upload/${CURRENT_FILE_ID}.json?ts=${Date.now()}&rand=${Math.random().toString(36).substring(2)}`;
     
     console.log("📰 Loading news from:", url);
     
-    const res = await fetch(url);
+    const res = await fetch(url, {
+      cache: 'no-store',
+      headers: {
+        'Cache-Control': 'no-cache'
+      }
+    });
+    
+    console.log("📊 Response:", res.status);
     
     if (!res.ok) {
-      throw new Error(`HTTP ${res.status}`);
+      if (res.status === 404) {
+        console.log("📄 File không tồn tại, đang đồng bộ...");
+        await syncWithAdmin();
+        return;
+      }
+      throw new Error(`HTTP ${res.status}: Không thể tải dữ liệu`);
     }
     
     const posts = await res.json();
-    
+    console.log("✅ Data received:", posts);
+
     if (!posts || !posts.length) {
       container.innerHTML = `
-        <div style="text-align: center; padding: 40px; color: #666;">
-          <p>📭 Hiện chưa có bài viết nào</p>
-          <small>File: ${currentFileId}</small>
+        <div style="text-align: center; padding: 40px; color: #666; background: #f9f9f9; border-radius: 8px;">
+          <p style="font-size: 1.2em; margin-bottom: 10px;">📭 Chưa có bài viết nào</p>
+          <p style="margin: 0 0 15px 0;">Hãy quay lại sau để xem tin tức mới</p>
+          <div style="font-size: 0.9em; color: #888;">
+            <div>File: <code>${CURRENT_FILE_ID}</code></div>
+            <button onclick="syncWithAdmin()" style="margin-top: 10px; padding: 8px 16px;">🔄 Đồng bộ file mới</button>
+          </div>
         </div>
       `;
       return;
     }
 
+    // Sắp xếp và hiển thị
     const sortedPosts = posts.sort((a, b) => new Date(b.date) - new Date(a.date));
     container.innerHTML = '';
     
     sortedPosts.forEach(post => {
-      container.innerHTML += `
-        <div class="post-card">
-          <img src="${post.thumbnail}" class="post-thumb" alt="${post.title}">
+      const postElement = document.createElement('div');
+      postElement.className = 'post-card';
+      postElement.innerHTML = `
+        <img src="${post.thumbnail}" class="post-thumb" alt="${post.title}" 
+             onerror="this.src='https://via.placeholder.com/300x200/667eea/ffffff?text=Yume+Academy'">
+        <div class="post-content">
           <div class="post-title">${post.title}</div>
-          <div class="post-date">${new Date(post.date).toLocaleDateString("vi-VN")}</div>
-          <a class="read-more" href="${post.link}" target="_blank">Xem chi tiết →</a>
+          <div class="post-date">📅 ${new Date(post.date).toLocaleDateString("vi-VN")}</div>
+          <a class="read-more" href="${post.link}" target="_blank">🔗 Xem chi tiết →</a>
         </div>
       `;
+      container.appendChild(postElement);
     });
     
+    console.log("🎨 Rendered:", sortedPosts.length, "posts");
+    showFileInfo(CURRENT_FILE_ID, sortedPosts.length);
+    
   } catch(error) {
-    console.error("❌ Load news error:", error);
+    console.error("💥 Load news error:", error);
     container.innerHTML = `
-      <div style="text-align: center; padding: 40px; color: #666;">
-        <p>❌ Không thể tải tin tức</p>
-        <small>File: ${currentFileId}</small>
-        <br>
-        <button onclick="loadNews()" style="margin-top: 10px; padding: 5px 10px;">Thử lại</button>
+      <div style="background: #fee; padding: 20px; border-radius: 8px; border: 1px solid #fcc; text-align: center;">
+        <p style="color: #c33; margin: 0 0 10px 0;">❌ Không thể tải tin tức</p>
+        <p style="color: #666; font-size: 0.9em; margin: 0 0 15px 0;">${error.message}</p>
+        <div style="display: flex; gap: 10px; justify-content: center;">
+          <button onclick="loadNews()" style="padding: 8px 16px; background: #e74c3c; color: white; border: none; border-radius: 4px; cursor: pointer;">
+            🔄 Thử lại
+          </button>
+          <button onclick="syncWithAdmin()" style="padding: 8px 16px; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer;">
+            🔍 Tìm file mới
+          </button>
+        </div>
+        <div style="margin-top: 10px; font-size: 0.8em; color: #888;">
+          File hiện tại: <code>${CURRENT_FILE_ID}</code>
+        </div>
       </div>
     `;
   }
 }
 
+/* ===== HIỂN THỊ LỖI ===== */
+function showError(message) {
+  const container = document.getElementById("news");
+  container.innerHTML = `
+    <div style="text-align: center; padding: 40px; color: #666;">
+      <p style="font-size: 1.1em; margin-bottom: 10px;">❌ ${message}</p>
+      <button onclick="syncWithAdmin()" style="padding: 8px 16px; margin: 5px;">🔍 Quét file</button>
+      <button onclick="loadNews()" style="padding: 8px 16px; margin: 5px;">🔄 Thử lại</button>
+    </div>
+  `;
+}
+
+/* ===== DEBUG FUNCTIONS ===== */
+window.checkAllFiles = async function() {
+  console.group("🔍 CHECK ALL FILES");
+  const files = [
+    "posts_1763964043884",
+    "posts_mjgjdr", 
+    "posts_1763961885574",
+    "posts_1763961256"
+  ];
+  
+  for (const file of files) {
+    try {
+      const url = `https://res.cloudinary.com/${CLOUD_NAME}/raw/upload/${file}.json`;
+      const res = await fetch(url);
+      console.log(`${file}.json: ${res.ok ? '✅ EXISTS' : '❌ NOT FOUND'}`);
+      
+      if (res.ok) {
+        const data = await res.json();
+        console.log(`   📊 Posts: ${data.length}`);
+      }
+    } catch (error) {
+      console.log(`${file}.json: ❌ ERROR`);
+    }
+  }
+  console.groupEnd();
+}
+
+window.setManualFile = function(fileId) {
+  if (fileId && fileId.trim()) {
+    CURRENT_FILE_ID = fileId.trim();
+    console.log("📁 Manual file set:", CURRENT_FILE_ID);
+    loadNews();
+  } else {
+    alert("Vui lòng nhập file ID");
+  }
+}
+
+/* ===== INIT ===== */
+console.log("📰 News System Starting...");
+
+// Thêm nút điều khiển manual
+const controlDiv = document.createElement('div');
+controlDiv.style.cssText = `
+  text-align: center; 
+  margin-bottom: 20px; 
+  padding: 15px; 
+  background: #f5f5f5; 
+  border-radius: 8px;
+  border: 1px solid #ddd;
+`;
+controlDiv.innerHTML = `
+  <div style="margin-bottom: 10px;">
+    <strong>🎯 File Control</strong>
+  </div>
+  <div style="display: flex; gap: 10px; justify-content: center; align-items: center; flex-wrap: wrap;">
+    <input type="text" id="manualFileInput" placeholder="Nhập file ID" 
+           style="padding: 5px 10px; border: 1px solid #ccc; border-radius: 4px; min-width: 200px;">
+    <button onclick="setManualFile(document.getElementById('manualFileInput').value)" 
+            style="padding: 5px 10px; background: #667eea; color: white; border: none; border-radius: 4px; cursor: pointer;">
+      📁 Set File
+    </button>
+    <button onclick="checkAllFiles()" 
+            style="padding: 5px 10px; background: #27ae60; color: white; border: none; border-radius: 4px; cursor: pointer;">
+      🔍 Scan Files
+    </button>
+    <button onclick="syncWithAdmin()" 
+            style="padding: 5px 10px; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer;">
+      🔄 Auto Sync
+    </button>
+  </div>
+`;
+
+const newsContainer = document.querySelector('.news-container');
+newsContainer.insertBefore(controlDiv, newsContainer.firstChild);
+
 // Khởi chạy
 loadNews();
+
+// Auto-refresh
+setInterval(() => {
+  console.log("🔄 Auto-refreshing news...");
+  loadNews();
+}, 30000);
 </script>
 </body>
 </html>
