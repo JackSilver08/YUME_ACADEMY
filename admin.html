@@ -93,32 +93,39 @@ async function uploadToCloudinary(file) {
   return await res.json();
 }
 
-/* Submit form */
 document.getElementById("postForm").onsubmit = async function(e){
   e.preventDefault();
   const title = document.getElementById("title").value.trim();
   const link = document.getElementById("link").value.trim();
   const file = document.getElementById("thumbnail").files[0];
+
   if(!title || !link || !file) return alert("Vui lòng nhập đầy đủ thông tin và chọn ảnh!");
 
   try {
+    // 1️⃣ Upload thumbnail
     const upload = await uploadToCloudinary(file);
     const thumbnailUrl = upload.secure_url;
 
+    // 2️⃣ Tạo bài viết mới
     const id = posts.length===0 ? 1 : Math.max(...posts.map(p=>p.id))+1;
     const newPost = { id, title, link, thumbnail: thumbnailUrl, date: new Date().toISOString() };
     posts.push(newPost);
+
+    // 3️⃣ Upload JSON online
+    const jsonUpload = await uploadJSONToCloudinary(posts);
+    console.log("URL JSON mới:", jsonUpload.secure_url);
 
     renderPosts();
     this.reset();
     document.getElementById("preview").style.display="none";
 
-    alert("Đăng bài thành công! (Hiện tại chỉ lưu local; posts.json online chưa thay đổi)");
+    alert("Đăng bài thành công! JSON online đã được cập nhật.");
   } catch(err) {
     console.error(err);
-    alert("Upload ảnh thất bại!");
+    alert("Upload thất bại!");
   }
 };
+
 
 /* Preview ảnh */
 document.getElementById("thumbnail").onchange = function(){
