@@ -79,7 +79,8 @@
   </div>
 </footer>
 <script>
-const POSTS_JSON_URL = "https://res.cloudinary.com/dlfuhehxg/raw/upload/posts_mjgjdr.json";
+const POSTS_JSON_URL = "https://res.cloudinary.com/dlfuhehxg/raw/upload/posts_mjgjdr.json?ts=" + new Date().getTime();
+
 
 async function loadNews() {
   const container = document.getElementById("news");
