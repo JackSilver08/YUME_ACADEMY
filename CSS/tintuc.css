@@ -1,23 +1,25 @@
-/* CSS cho trang tin tức - Phiên bản nhỏ gọn */
+/* CSS cho trang tin tức - Phiên bản responsive hoàn chỉnh */
 .news-container {
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 30px 20px;
   min-height: 60vh;
+  box-sizing: border-box;
 }
 
 .news-container h1 {
   text-align: center;
   color: #2c3e50;
-  font-size: 2rem;
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
   margin-bottom: 30px;
   font-weight: 600;
+  line-height: 1.2;
 }
 
 .news-container h1::after {
   content: '';
   display: block;
-  width: 60px;
+  width: min(60px, 10vw);
   height: 2px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   margin: 10px auto 0;
@@ -26,12 +28,12 @@
 
 #news {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 25px;
+  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+  gap: clamp(15px, 3vw, 25px);
   margin-top: 20px;
 }
 
-/* Card bài viết - Nhỏ gọn hơn */
+/* Card bài viết - Responsive */
 .post-card {
   background: white;
   border-radius: 8px;
@@ -42,6 +44,7 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+  min-height: 320px;
 }
 
 .post-card:hover {
@@ -49,51 +52,56 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
-/* Ảnh thumbnail - Nhỏ hơn */
+/* Ảnh thumbnail - Responsive */
 .post-thumb {
   width: 100%;
-  height: 160px;
+  height: clamp(140px, 25vw, 200px);
   object-fit: cover;
   border-bottom: 2px solid #f8f9fa;
 }
 
-/* Nội dung card - Nhỏ gọn */
+/* Nội dung card - Responsive */
 .post-card > div {
-  padding: 15px;
+  padding: clamp(12px, 3vw, 20px);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .post-title {
-  font-size: 1.1rem;
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
   font-weight: 600;
   color: #2c3e50;
   line-height: 1.4;
   margin-bottom: 8px;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  flex: 1;
 }
 
 .post-date {
   color: #6c757d;
-  font-size: 0.85rem;
+  font-size: clamp(0.8rem, 2vw, 0.9rem);
   margin-bottom: 12px;
 }
 
-/* Nút đọc thêm - Nhỏ hơn */
+/* Nút đọc thêm - Responsive */
 .read-more {
   display: inline-block;
-  padding: 8px 16px;
+  padding: clamp(6px, 2vw, 8px) clamp(12px, 3vw, 16px);
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   text-decoration: none;
   border-radius: 4px;
   font-weight: 500;
-  font-size: 0.9rem;
+  font-size: clamp(0.8rem, 2vw, 0.9rem);
   transition: all 0.3s ease;
   text-align: center;
-  margin: 15px;
-  width: calc(100% - 30px);
+  margin: clamp(10px, 2vw, 15px);
+  width: calc(100% - clamp(20px, 4vw, 30px));
+  align-self: center;
 }
 
 .read-more:hover {
@@ -109,29 +117,64 @@
   color: #6c757d;
   font-style: italic;
   padding: 30px;
+  font-size: clamp(0.9rem, 3vw, 1.1rem);
 }
 
 #news p {
   text-align: center;
   padding: 30px;
   color: #6c757d;
-  font-size: 1rem;
+  font-size: clamp(0.9rem, 3vw, 1.1rem);
 }
 
-/* Responsive */
+/* Responsive Breakpoints Chi Tiết */
+
+/* Tablet - Màn hình trung bình */
+@media (max-width: 1024px) {
+  .news-container {
+    padding: 25px 15px;
+  }
+  
+  #news {
+    grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+    gap: 20px;
+  }
+}
+
+/* Tablet nhỏ */
 @media (max-width: 768px) {
   .news-container {
     padding: 20px 15px;
   }
   
   .news-container h1 {
-    font-size: 1.8rem;
     margin-bottom: 25px;
   }
   
   #news {
+    grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr));
+    gap: 18px;
+  }
+  
+  .post-card {
+    min-height: 280px;
+  }
+}
+
+/* Mobile L - Điện thoại lớn */
+@media (max-width: 600px) {
+  .news-container {
+    padding: 15px 12px;
+  }
+  
+  #news {
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: 16px;
+  }
+  
+  .post-card {
+    min-height: 260px;
+    border-radius: 6px;
   }
   
   .post-thumb {
@@ -139,29 +182,114 @@
   }
 }
 
+/* Mobile M - Điện thoại trung bình */
 @media (max-width: 480px) {
   .news-container {
-    padding: 15px 10px;
+    padding: 12px 10px;
   }
   
   .news-container h1 {
-    font-size: 1.6rem;
+    margin-bottom: 20px;
   }
   
   #news {
-    grid-template-columns: 1fr;
-    gap: 15px;
+    gap: 14px;
+  }
+  
+  .post-card {
+    min-height: 240px;
   }
   
   .post-card > div {
-    padding: 12px;
+    padding: 10px;
   }
   
   .read-more {
-    margin: 12px;
-    width: calc(100% - 24px);
-    padding: 7px 14px;
-    font-size: 0.85rem;
+    margin: 10px;
+    width: calc(100% - 20px);
+    padding: 6px 12px;
+  }
+  
+  .post-thumb {
+    height: 120px;
+  }
+}
+
+/* Mobile S - Điện thoại nhỏ */
+@media (max-width: 360px) {
+  .news-container {
+    padding: 10px 8px;
+  }
+  
+  #news {
+    gap: 12px;
+  }
+  
+  .post-card {
+    min-height: 220px;
+    border-radius: 4px;
+  }
+  
+  .post-thumb {
+    height: 100px;
+  }
+  
+  .post-card > div {
+    padding: 8px;
+  }
+  
+  .read-more {
+    margin: 8px;
+    width: calc(100% - 16px);
+    padding: 5px 10px;
+    font-size: 0.8rem;
+  }
+}
+
+/* Hỗ trợ màn hình rất nhỏ */
+@media (max-width: 320px) {
+  .news-container {
+    padding: 8px 6px;
+  }
+  
+  .post-card {
+    min-height: 200px;
+  }
+  
+  .post-thumb {
+    height: 90px;
+  }
+}
+
+/* Hỗ trợ màn hình rất lớn */
+@media (min-width: 1440px) {
+  .news-container {
+    max-width: 1400px;
+    padding: 40px 30px;
+  }
+  
+  #news {
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 30px;
+  }
+  
+  .post-thumb {
+    height: 220px;
+  }
+}
+
+/* Đảm bảo responsive cho landscape mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+  .news-container {
+    min-height: 80vh;
+  }
+  
+  .post-thumb {
+    height: 120px;
+  }
+  
+  .post-card {
+    min-height: 200px;
   }
 }
 
@@ -179,4 +307,34 @@
 
 .post-card {
   animation: fadeIn 0.4s ease forwards;
+}
+
+/* Cải thiện khả năng truy cập */
+@media (prefers-reduced-motion: reduce) {
+  .post-card {
+    animation: none;
+    transition: none;
+  }
+  
+  .read-more:hover {
+    transform: none;
+  }
+}
+
+/* Đảm bảo không bị tràn ngang trên mobile */
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+/* Hỗ trợ touch devices tốt hơn */
+@media (hover: none) {
+  .post-card:hover {
+    transform: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+  
+  .read-more:hover {
+    transform: none;
+  }
 }
