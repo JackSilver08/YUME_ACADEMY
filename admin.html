@@ -369,6 +369,17 @@ hr {
 <link rel="icon" href="IMG/LOGOYUME2.jpg" type="image/x-icon" />
 </head>
 <body>
+<div id="otp-login" style="padding:20px; border:1px solid #ddd; border-radius:10px; margin-bottom:30px;">
+  <h2>Đăng nhập Admin</h2>
+  <div id="step-email">
+    <input type="email" id="admin-email" placeholder="Nhập email admin" required>
+    <button id="send-otp">Gửi OTP</button>
+  </div>
+  <div id="step-otp" style="display:none;">
+    <input type="text" id="otp-input" placeholder="Nhập OTP" required>
+    <button id="verify-otp">Xác thực</button>
+  </div>
+</div>
 
 <h1>Quản Lý Bài Viết</h1>
 
@@ -595,6 +606,85 @@ window.testAPI = async function() {
     alert("❌ API Test failed: " + error.message);
   }
 }
+
+// Login Admin 
+// ===== OTP LOGIN =====
+const ADMIN_EMAIL = "yumeacademy.bienhoa@gmail.com"; // chỉ cho phép email này
+const formspreeURL = "https://formspree.io/f/xovzjkwz"; // Formspree URL
+const otpLoginDiv = document.getElementById("otp-login");
+const adminPanelForms = document.getElementById("postForm");
+const postsContainer = document.getElementById("postsList");
+
+// Ẩn admin panel nếu chưa login
+if (sessionStorage.getItem("isAdmin") !== "true") {
+  adminPanelForms.style.display = "none";
+  postsContainer.style.display = "none";
+  otpLoginDiv.style.display = "block";
+} else {
+  otpLoginDiv.style.display = "none";
+}
+
+// ===== Gửi OTP =====
+document.getElementById("send-otp").addEventListener("click", async () => {
+  const email = document.getElementById("admin-email").value.trim();
+
+  if (!email) return alert("Nhập email admin");
+
+  // kiểm tra email hợp lệ
+  if (email !== ADMIN_EMAIL) return alert("❌ Email không hợp lệ");
+
+  // Sinh OTP
+  const otp = Math.floor(100000 + Math.random() * 900000);
+  sessionStorage.setItem("otp", otp);
+  sessionStorage.setItem("otpTime", Date.now());
+
+  // Gửi OTP qua Formspree
+  const formData = new FormData();
+  formData.append("email", email);
+  formData.append("message", `Mã OTP đăng nhập admin: ${otp}`);
+
+  try {
+    const res = await fetch(formspreeURL, { 
+      method: "POST", 
+      body: formData, 
+      headers: { 'Accept': 'application/json' } 
+    });
+    if (res.ok) {
+      alert("OTP đã gửi vào email, kiểm tra hộp thư!");
+      document.getElementById("step-email").style.display = "none";
+      document.getElementById("step-otp").style.display = "block";
+    } else {
+      alert("Gửi OTP thất bại, thử lại.");
+    }
+  } catch(err) {
+    alert("Lỗi gửi OTP: " + err);
+  }
+});
+
+// ===== Xác thực OTP =====
+document.getElementById("verify-otp").addEventListener("click", () => {
+  const inputOtp = document.getElementById("otp-input").value.trim();
+  const storedOtp = sessionStorage.getItem("otp");
+  const otpTime = sessionStorage.getItem("otpTime");
+
+  if (Date.now() - otpTime > 5 * 60 * 1000) {
+    alert("OTP đã hết hạn, gửi lại");
+    location.reload();
+    return;
+  }
+
+  if (inputOtp === storedOtp) {
+    sessionStorage.setItem("isAdmin","true");
+    alert("Đăng nhập thành công!");
+    otpLoginDiv.style.display = "none";
+    adminPanelForms.style.display = "block";
+    postsContainer.style.display = "block";
+    loadPosts(); // Load bài viết sau khi login
+  } else {
+    alert("OTP không đúng, thử lại");
+  }
+});
+
 
 /* ===== INIT ===== */
 console.log("🚀 Admin System with Google Sheets API");
