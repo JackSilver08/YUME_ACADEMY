@@ -41,10 +41,9 @@
 /* CONFIG */
 const CLOUD_NAME = "dlfuhehxg";
 const UPLOAD_PRESET = "Thumbnail_YUME"; // Unsigned preset for images
-const POSTS_JSON_PUBLIC_ID = "posts_m1mcaf"; // Public ID JSON đã có trên Cloudinary
+const POSTS_JSON_PUBLIC_ID = "posts_mjgjdr"; // cập nhật Public ID mới
 let posts = [];
 
-/* Load posts hiện tại từ Cloudinary */
 async function loadPosts() {
   try {
     const res = await fetch(`https://res.cloudinary.com/${CLOUD_NAME}/raw/upload/${POSTS_JSON_PUBLIC_ID}.json`);
