@@ -2,36 +2,38 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<title>Tin tức – Yume Academy</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Yume Academy | Tin Tức</title>
 <link rel="icon" href="IMG/LOGOYUME2.jpg" type="image/x-icon" />
-<link rel="stylesheet" href="CSS/tintuc.css" />
-<link rel="stylesheet" href="CSS/index.css" />
+    <link rel="stylesheet" href="CSS/index.css" />
+    <link rel="stylesheet" href="CSS/tintuc.css" />  
 </head>
 <body>
 
-
+  <!-- Header giống các trang khác -->
     <header class="main-header">
-   <div class="logo-section">
-  <a href="index.html" class="logo-link">
-    <img src="IMG/LOGOYUME2.jpg" alt="Logo" class="logo-img" />
-    <span class="logo-text">Trung Tâm Nhật Ngữ </span>
-  </a>
-</div> 
-
-      <nav class="nav-menu">
-        <a href="index.html">Trang Chủ</a>
-        <a href="GioiThieu.html">Giới Thiệu</a>
-        <a href="KhoaHoc.html">Khóa Học</a>
-        <a href="TinTuc.html">Tin tức</a>
-        <a href="TuVan.html">Tư Vấn</a>
-      </nav>
-<div class="hamburger-menu">
-    <span></span>
-    <span></span>
-    <span></span>
-</div>
-<div class="menu-overlay"></div>
-      <div id="sakura-container"></div>
+        <div class="logo-section">
+            <a href="index.html" class="logo-link">
+                <img src="IMG/LOGOYUME2.jpg" alt="Logo" class="logo-img" />
+                <span class="logo-text">Trung Tâm Nhật Ngữ</span>
+            </a>
+        </div> 
+        
+        <nav class="nav-menu">
+            <a href="index.html">Trang Chủ</a>
+            <a href="GioiThieu.html">Giới Thiệu</a>
+            <a href="KhoaHoc.html">Khóa Học</a>
+            <a href="TinTuc.html">Tin tức</a>
+            <a href="TuVan.html">Tư Vấn</a>
+        </nav>
+        
+        <div class="hamburger-menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="menu-overlay"></div>
+        <div id="sakura-container"></div>
     </header>
 <div class="news-container">
   <h1>Tin tức Yume Academy</h1>
@@ -78,6 +80,7 @@
     <p>© 2025 Yume Academy. All rights reserved.</p>
   </div>
 </footer>
+<script src="JS/main.js"></script>
 <script>
 const API_URL = 'https://script.google.com/macros/s/AKfycbychOqM6wTryZhB8XcU17trNc-IhnoUFN5uvsYTvWREnELdQ14m6_qpcEm8c9vhXYHx/exec';
 
@@ -120,14 +123,19 @@ async function loadNews() {
       container.innerHTML = '';
       
       sortedPosts.forEach(post => {
-        container.innerHTML += `
-          <div class="post-card">
-            <img src="${post.thumbnail}" class="post-thumb" alt="${post.title}">
-            <div class="post-title">${post.title}</div>
-            <div class="post-date">${new Date(post.date).toLocaleDateString("vi-VN")}</div>
-            <a class="read-more" href="${post.link}" target="_blank">Xem chi tiết →</a>
-          </div>
-        `;
+       
+container.innerHTML += `
+  <div class="post-card">
+    <img src="${post.thumbnail}" class="post-thumb" alt="${post.title}">
+    <div class="post-thumb-overlay"></div>
+    <div>
+      <div class="post-title">${post.title}</div>
+      <div class="post-date">${new Date(post.date).toLocaleDateString("vi-VN")}</div>
+      
+      <a class="read-more" href="${post.link}" target="_blank">Xem chi tiết </a>
+    </div>
+  </div>
+`;
       });
       
       console.log("✅ Rendered:", sortedPosts.length, "posts");
@@ -156,6 +164,7 @@ setInterval(loadNews, 30000);
 // Khởi chạy
 loadNews();
 </script>
+
 </body>
 </html>
 
