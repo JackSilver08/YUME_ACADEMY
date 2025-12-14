@@ -128,7 +128,7 @@ body {
 .main-header {
   position: relative;
   height: 80px;
-  background: rgb(255, 255, 255);
+  background-filter: blur(10px);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -181,12 +181,14 @@ body {
 
 /* ================= Menu chính giữa ================= */
 .nav-menu {
-  display: flex;
+ display: flex;
   gap: 40px;
-  justify-content: center;
   align-items: center;
-  flex: 1;
-  transform: translateX(-80px);
+
+  width: 100%;              /* chiếm hết ngang */
+  justify-content: flex-end;/* dồn menu sang phải */
+
+  font-style: italic;
 }
 
 .nav-menu a {
