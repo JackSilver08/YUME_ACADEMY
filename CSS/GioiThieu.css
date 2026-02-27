@@ -1,4 +1,11 @@
-/* === BỐ CỤC CHÍNH NÂNG CẤP === */
+/* ============================================================
+   YUME ACADEMY — GioiThieu.css
+   Phong cách Nhật Bản: Tinh tế · Nhẹ nhàng · Iki
+   ============================================================ */
+
+/* ============================================================
+   SHARED SECTION LAYOUT
+   ============================================================ */
 .intro-section,
 .philosophy-section,
 .core-values,
@@ -6,58 +13,72 @@
 .commit-section,
 .mission-section,
 .cta-section {
-    padding: 100px 8%;
-    background: #fff;
-    line-height: 1.7;
+    padding: clamp(3rem, 8vw, 6rem) clamp(1.5rem, 8%, 5rem);
+    line-height: 1.85;
     position: relative;
     overflow: hidden;
 }
 
 .philosophy-section,
 .people-section {
-    background: linear-gradient(135deg, #f8fcff 0%, #f0f9ff 100%);
+    background: #F8F5F0;
 }
 
-/* Hiệu ứng nền động */
-.philosophy-section::before,
-.people-section::before {
+.intro-section,
+.core-values,
+.commit-section {
+    background: #FDFCF9;
+}
+
+/* Trang trí nền mờ nhạt các section xen kẽ */
+.philosophy-section::after,
+.people-section::after {
     content: '';
     position: absolute;
-    top: -50%;
-    right: -10%;
-    width: 600px;
-    height: 600px;
-    background: radial-gradient(circle, rgba(0, 70, 88, 0.03) 0%, transparent 70%);
+    top: -20%;
+    right: -5%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(196, 115, 138, 0.05) 0%, transparent 70%);
     border-radius: 50%;
-    z-index: 0;
+    pointer-events: none;
 }
 
-/* === TIÊU ĐỀ CHUNG NÂNG CẤP === */
-h1, h2, h3 {
-    color: #004658;
-    font-weight: 800;
-    margin-bottom: 30px;
-    line-height: 1.2;
-    position: relative;
+/* ============================================================
+   HEADINGS
+   ============================================================ */
+h1,
+h2,
+h3 {
+    color: #1F3A5F;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    line-height: 1.3;
 }
 
 h1 {
-    font-size: 3.2em;
+    font-family: 'Shippori Mincho', 'Noto Serif JP', Georgia, serif;
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
     text-align: center;
-    margin-bottom: 50px;
-    background: linear-gradient(135deg, #004658, #00a8cc);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    margin-bottom: 2rem;
+    color: #1F3A5F;
+    letter-spacing: 0.04em;
+    font-weight: 600;
+    /* Loại bỏ gradient text — dùng màu đơn giản, thanh lịch hơn */
+    background: none;
+    -webkit-text-fill-color: unset;
 }
 
 h2 {
-    font-size: 2.5em;
-    text-transform: uppercase;
-    letter-spacing: 2px;
+    font-family: 'Shippori Mincho', 'Noto Serif JP', Georgia, serif;
+    font-size: clamp(1.3rem, 3vw, 2rem);
+    text-transform: none;
+    /* Không uppercase — thuần Nhật */
+    letter-spacing: 0.04em;
     text-align: center;
     position: relative;
-    padding-bottom: 20px;
+    padding-bottom: 1rem;
+    font-weight: 600;
 }
 
 h2::after {
@@ -66,96 +87,88 @@ h2::after {
     bottom: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 80px;
-    height: 4px;
-    background: linear-gradient(90deg, #004658, #00a8cc);
-    border-radius: 2px;
+    width: 32px;
+    height: 1px;
+    background: #C4738A;
+    border-radius: 1px;
 }
 
 h3 {
-    font-size: 1.6em;
-    margin-top: 15px;
+    font-family: 'Shippori Mincho', 'Noto Serif JP', Georgia, serif;
+    font-size: clamp(1rem, 2.2vw, 1.3rem);
+    margin-top: 1rem;
+    letter-spacing: 0.03em;
+    font-weight: 600;
 }
 
 .philosophy-section h3,
 .mission-section h3 {
-    margin-top: 10px;
     text-align: center;
 }
 
-/* === GIỚI THIỆU NÂNG CẤP === */
+/* ============================================================
+   INTRO SECTION
+   ============================================================ */
 .intro-section {
     display: flex;
-    gap: 60px;
+    gap: clamp(2rem, 6vw, 4rem);
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
-    padding-top: 120px;
+    padding-top: clamp(3rem, 8vw, 5rem);
 }
 
 .intro-content {
     flex: 1;
-    min-width: 300px;
+    min-width: 280px;
     position: relative;
     z-index: 1;
 }
 
 .intro-section h1 {
-    text-align: center;
-    margin-bottom: 40px;
+    text-align: left;
+    margin-bottom: 1.8rem;
 }
 
-/* === NỘI DUNG GIỚI THIỆU NÂNG CẤP === */
 .intro-content p {
     text-align: justify;
-    line-height: 1.8;
-    font-size: 1.1em;
-    color: #2c3e50;
-    margin-bottom: 25px;
+    line-height: 1.95;
+    font-size: 0.93rem;
+    color: #4A4845;
+    margin-bottom: 1.5rem;
 }
 
 .intro-content blockquote {
     text-align: justify;
-    margin: 30px 0;
-    padding: 25px 30px;
-    border-left: 5px solid #00a8cc;
-    color: #555;
-    max-width: 700px;
-    display: inline-block;
-    background: linear-gradient(135deg, #f8fcff, #f0f9ff);
-    border-radius: 12px;
-    box-shadow: 0 5px 20px rgba(0, 70, 88, 0.08);
-    font-size: 1.1em;
-    line-height: 1.6;
+    margin: 1.8rem 0;
+    padding: 1.4rem 1.8rem;
+    border-left: 2px solid #C4738A;
+    color: #4A4845;
+    background: #FBF0F2;
+    border-radius: 0 4px 4px 0;
+    font-family: 'Shippori Mincho', 'Noto Serif JP', Georgia, serif;
+    font-style: italic;
+    font-size: 0.93rem;
+    line-height: 1.9;
     position: relative;
-    overflow: hidden;
 }
 
 .intro-content blockquote::before {
-    content: '"';
+    content: '\201C';
     position: absolute;
-    top: 10px;
-    left: 20px;
-    font-size: 4em;
-    color: rgba(0, 168, 204, 0.1);
-    font-family: serif;
+    top: 0.4rem;
+    left: 1.2rem;
+    font-size: 3rem;
+    color: rgba(196, 115, 138, 0.12);
+    font-family: Georgia, serif;
     line-height: 1;
+    pointer-events: none;
 }
 
 .intro-image {
     flex: 1;
-    min-width: 300px;
+    min-width: 280px;
     position: relative;
-}
-
-.intro-section img {
-    width: 100%;
-    max-width: 500px;
-    border-radius: 20px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-    transition: all 0.5s ease;
-    position: relative;
-    z-index: 2;
 }
 
 .intro-image::before {
@@ -163,189 +176,246 @@ h3 {
     position: absolute;
     width: 100%;
     height: 100%;
-    border: 3px solid #00a8cc;
-    border-radius: 25px;
-    top: 20px;
-    left: 20px;
-    z-index: 1;
+    border: 1px solid rgba(196, 115, 138, 0.25);
+    border-radius: 4px;
+    top: 14px;
+    left: 14px;
+    z-index: 0;
     transition: all 0.5s ease;
 }
 
 .intro-image:hover::before {
-    top: 15px;
-    left: 15px;
+    top: 8px;
+    left: 8px;
+}
+
+.intro-section img {
+    width: 100%;
+    max-width: 500px;
+    border-radius: 2px;
+    box-shadow: 0 8px 30px rgba(28, 28, 26, 0.10);
+    transition: all 0.5s ease;
+    position: relative;
+    z-index: 1;
+    filter: saturate(0.85);
 }
 
 .intro-section img:hover {
-    transform: translateY(-10px) scale(1.02);
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
+    transform: translateY(-4px) scale(1.01);
+    box-shadow: 0 16px 50px rgba(28, 28, 26, 0.14);
+    filter: saturate(1);
 }
 
-/* === CHỮ NHẬT BẢN NÂNG CẤP === */
+/* ============================================================
+   CHỮ NHẬT BẢN
+   ============================================================ */
 .jp-text {
-    font-family: "Noto Sans JP", sans-serif;
+    font-family: 'Noto Serif JP', Georgia, serif;
     display: block;
-    font-size: 1.2em;
-    color: #00a8cc;
-    margin-top: 10px;
-    font-weight: 600;
-    letter-spacing: 1px;
+    font-size: 1rem;
+    color: #C4738A;
+    margin-top: 0.6rem;
+    font-weight: 400;
+    letter-spacing: 0.15em;
+    font-style: normal;
 }
 
-/* === BẢNG GIÁ TRỊ CỐT LÕI NÂNG CẤP === */
+/* ============================================================
+   BẢNG GIÁ TRỊ CỐT LÕI
+   ============================================================ */
 .values-table {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
-    margin-top: 30px;
-    font-size: 1em;
-    border-radius: 15px;
+    margin-top: 1.8rem;
+    font-size: 0.9rem;
+    border-radius: 2px;
     overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0, 70, 88, 0.1);
+    box-shadow: 0 2px 12px rgba(28, 28, 26, 0.06);
+    border: 1px solid #EDE8DF;
 }
 
 .values-table th,
 .values-table td {
     border: none;
-    padding: 20px 25px;
+    padding: 1rem 1.5rem;
     text-align: left;
     transition: all 0.3s ease;
 }
 
 .values-table th {
-    background: linear-gradient(135deg, #004658, #00a8cc);
-    color: white;
-    font-weight: 700;
-    font-size: 1.1em;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    background: #1F3A5F;
+    color: rgba(240, 235, 225, 0.9);
+    font-family: 'Shippori Mincho', 'Noto Serif JP', serif;
+    font-weight: 500;
+    font-size: 0.85rem;
+    text-transform: none;
+    letter-spacing: 0.06em;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .values-table tr:nth-child(even) {
-    background-color: #f8fcff;
+    background-color: #F8F5F0;
 }
 
-.values-table tr:nth-child(odd) {
-    background-color: white;
+.values-table tr:nth-child(odd) td {
+    background-color: #FDFCF9;
 }
 
 .values-table tr:hover td {
-    background-color: #f0f9ff;
-    transform: translateX(5px);
+    background-color: #FBF0F2;
 }
 
 .values-table td:first-child {
-    font-weight: 600;
-    color: #004658;
-    border-right: 2px solid #f0f0f0;
+    font-family: 'Shippori Mincho', 'Noto Serif JP', serif;
+    font-weight: 500;
+    color: #1F3A5F;
+    border-right: 1px solid #EDE8DF;
+    font-size: 0.9rem;
+    letter-spacing: 0.02em;
 }
 
-/* === BLOCKQUOTE NÂNG CẤP === */
+.values-table td {
+    color: #4A4845;
+    line-height: 1.8;
+}
+
+/* ============================================================
+   BLOCKQUOTE CHUNG
+   ============================================================ */
 blockquote {
+    font-family: 'Shippori Mincho', 'Noto Serif JP', Georgia, serif;
     font-style: italic;
-    border-left: 5px solid #00a8cc;
-    padding: 25px 30px;
-    margin: 30px auto;
-    color: #555;
-    background: linear-gradient(135deg, #f8fcff, #f0f9ff);
-    border-radius: 12px;
-    box-shadow: 0 5px 20px rgba(0, 70, 88, 0.08);
-    max-width: 800px;
-    display: inline-block;
+    border-left: 2px solid #C4738A;
+    padding: 1.4rem 1.8rem;
+    margin: 1.8rem auto;
+    color: #4A4845;
+    background: #FBF0F2;
+    border-radius: 0 4px 4px 0;
+    max-width: 780px;
+    display: block;
     text-align: left;
     position: relative;
-    overflow: hidden;
-    font-size: 1.1em;
-    line-height: 1.6;
+    font-size: 0.93rem;
+    line-height: 1.9;
 }
 
 blockquote::before {
-    content: '"';
+    content: '\201C';
     position: absolute;
-    top: 10px;
-    left: 20px;
-    font-size: 4em;
-    color: rgba(0, 168, 204, 0.1);
-    font-family: serif;
+    top: 0.4rem;
+    left: 1.2rem;
+    font-size: 3rem;
+    color: rgba(196, 115, 138, 0.1);
+    font-family: Georgia, serif;
     line-height: 1;
+    pointer-events: none;
 }
 
-/* === NÚT NÂNG CẤP === */
+/* ============================================================
+   NÚT (Button)
+   ============================================================ */
 .btn-about {
-    display: inline-block;
-    background: linear-gradient(135deg, #004658, #00a8cc);
-    color: #fff;
-    padding: 16px 40px;
-    border-radius: 50px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #1F3A5F;
+    color: #F5EFE6;
+    padding: 0.9rem 2.2rem;
+    border-radius: 2px;
     text-decoration: none;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    margin-top: 30px;
-    font-weight: 600;
-    font-size: 1.1em;
-    letter-spacing: 0.5px;
-    box-shadow: 0 8px 25px rgba(0, 70, 88, 0.3);
+    transition: all 0.35s ease;
+    margin-top: 2rem;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 500;
+    font-size: 0.9rem;
+    letter-spacing: 0.08em;
+    box-shadow: 0 4px 16px rgba(31, 58, 95, 0.2);
     position: relative;
     overflow: hidden;
 }
 
-.btn-about::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    transition: left 0.5s;
+.btn-about::after {
+    content: '→';
+    font-size: 0.9em;
+    transition: transform 0.3s ease;
 }
 
 .btn-about:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 35px rgba(0, 70, 88, 0.4);
+    background: #C4738A;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(196, 115, 138, 0.3);
+    color: white;
 }
 
-.btn-about:hover::before {
-    left: 100%;
+.btn-about:hover::after {
+    transform: translateX(4px);
 }
 
-/* === KÊU GỌI HÀNH ĐỘNG NÂNG CẤP === */
+/* ============================================================
+   KÊU GỌI HÀNH ĐỘNG (CTA)
+   ============================================================ */
 .cta-section {
     text-align: center;
-    background: linear-gradient(135deg, #f2fbff 0%, #e8f7ff 100%);
-    border-top: 3px solid #00a8cc;
+    background: #1F3A5F;
+    border-top: none;
     position: relative;
     overflow: hidden;
 }
 
+/* Trang trí chữ Nhật nền */
 .cta-section::before {
-    content: '';
+    content: '夢';
     position: absolute;
-    top: -50%;
-    right: -10%;
-    width: 500px;
-    height: 500px;
-    background: radial-gradient(circle, rgba(0, 168, 204, 0.05) 0%, transparent 70%);
-    border-radius: 50%;
-    z-index: 0;
+    top: 50%;
+    right: 5%;
+    transform: translateY(-50%);
+    font-family: 'Shippori Mincho', serif;
+    font-size: 16rem;
+    color: rgba(255, 255, 255, 0.03);
+    pointer-events: none;
+    line-height: 1;
 }
 
 .cta-section h2 {
-    margin-bottom: 25px;
+    color: #F5EFE6;
+    margin-bottom: 1.2rem;
     position: relative;
     z-index: 1;
+    font-size: clamp(1.3rem, 3vw, 1.9rem);
+}
+
+.cta-section h2::after {
+    background: rgba(196, 115, 138, 0.6);
 }
 
 .cta-section p {
-    max-width: 700px;
-    margin: 0 auto 35px auto;
-    color: #444;
-    font-size: 1.1em;
-    line-height: 1.7;
+    max-width: 680px;
+    margin: 0 auto 2.2rem auto;
+    color: rgba(240, 235, 225, 0.75);
+    font-size: 0.93rem;
+    line-height: 1.9;
     position: relative;
     z-index: 1;
 }
 
-/* === CĂN GIỮA CÁC PHẦN === */
+.cta-section .btn-about {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(196, 115, 138, 0.4);
+    color: #F5EFE6;
+    position: relative;
+    z-index: 1;
+}
+
+.cta-section .btn-about:hover {
+    background: #C4738A;
+    border-color: #C4738A;
+    color: white;
+}
+
+/* ============================================================
+   CĂN GIỮA COMPACT
+   ============================================================ */
 .philosophy-section,
 .core-values,
 .people-section,
@@ -360,297 +430,165 @@ blockquote::before {
 .commit-section ul {
     display: inline-block;
     text-align: left;
-    margin-top: 25px;
-    max-width: 800px;
+    margin-top: 1.5rem;
+    max-width: 780px;
+    width: 100%;
 }
 
 .core-values table {
-    margin: 30px auto;
+    margin: 2rem auto;
     text-align: left;
     max-width: 1000px;
 }
 
-/* === CAM KẾT ĐÀO TẠO NÂNG CẤP === */
+/* ============================================================
+   CAM KẾT ĐÀO TẠO
+   ============================================================ */
 .commit-section {
     text-align: left;
     width: 100%;
-    padding: 80px 5%;
-    background: linear-gradient(135deg, #f9fcfd 0%, #f0f9ff 100%);
-    border-radius: 20px;
-    box-shadow: 0 10px 40px rgba(0, 70, 88, 0.08);
-    position: relative;
-    overflow: hidden;
+    padding: clamp(3rem, 7vw, 5rem) clamp(1.5rem, 8%, 5rem);
+    background: #F8F5F0;
 }
 
-.commit-section::before {
-    content: '';
-    position: absolute;
-    bottom: -30%;
-    left: -5%;
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(circle, rgba(0, 70, 88, 0.03) 0%, transparent 70%);
-    border-radius: 50%;
-    z-index: 0;
-}
-
-/* === MỖI KHỐI CAM KẾT NÂNG CẤP === */
 .commit-item {
-    background: linear-gradient(135deg, #ffffff 0%, #f8fcff 100%);
-    border-left: 6px solid #00a8cc;
-    border-radius: 15px;
-    padding: 30px 35px;
+    background: #FDFCF9;
+    border-left: 2px solid #C4738A;
+    border-radius: 0 4px 4px 0;
+    padding: clamp(1.4rem, 3vw, 2rem) clamp(1.4rem, 3vw, 2rem);
     width: 100%;
-    margin-bottom: 30px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    margin-bottom: 1.5rem;
+    box-shadow: 0 1px 8px rgba(28, 28, 26, 0.05);
+    transition: all 0.4s ease;
     position: relative;
-    z-index: 1;
     overflow: hidden;
-}
-
-.commit-item::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(0, 168, 204, 0.05), transparent);
-    transition: left 0.6s;
 }
 
 .commit-item:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    transform: translateX(4px);
+    box-shadow: 0 4px 20px rgba(28, 28, 26, 0.07);
+    border-left-color: #1F3A5F;
 }
 
-.commit-item:hover::before {
-    left: 100%;
-}
-
-/* === TIÊU ĐỀ MỖI CAM KẾT NÂNG CẤP === */
 .commit-item h3 {
-    color: #004658;
-    font-size: 1.3em;
-    margin-bottom: 15px;
+    color: #1F3A5F;
+    font-size: 1rem;
+    margin-bottom: 0.8rem;
     display: flex;
     align-items: center;
-    gap: 15px;
-    position: relative;
+    gap: 0.8rem;
+    text-align: left;
 }
 
 .commit-item h3::before {
     content: "✔";
-    background: linear-gradient(135deg, #004658, #00a8cc);
-    color: #fff;
-    font-size: 0.9em;
-    padding: 8px 12px;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 70, 88, 0.3);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    background: #FBF0F2;
+    border: 1px solid rgba(196, 115, 138, 0.3);
+    color: #C4738A;
+    font-size: 0.75rem;
+    border-radius: 50%;
+    flex-shrink: 0;
     transition: all 0.3s ease;
 }
 
 .commit-item:hover h3::before {
-    transform: scale(1.1) rotate(5deg);
+    background: #C4738A;
+    color: white;
+    border-color: #C4738A;
 }
 
-/* === NỘI DUNG NÂNG CẤP === */
 .commit-item p {
-    color: #2c3e50;
-    line-height: 1.8;
-    margin: 15px 0;
+    color: #4A4845;
+    line-height: 1.9;
+    margin: 0.8rem 0;
+    font-size: 0.9rem;
     text-align: justify;
-    font-size: 1.05em;
 }
 
 .commit-item ul {
     list-style: none;
-    padding-left: 25px;
-    margin: 15px 0 15px 15px;
+    padding-left: 1rem;
+    margin: 0.8rem 0;
+    display: block;
+    width: 100%;
 }
 
 .commit-item ul li {
     position: relative;
-    padding-left: 25px;
-    margin-bottom: 10px;
-    line-height: 1.6;
-    color: #444;
+    padding-left: 1.4rem;
+    margin-bottom: 0.5rem;
+    line-height: 1.75;
+    color: #4A4845;
+    font-size: 0.9rem;
 }
 
 .commit-item ul li::before {
-    content: "▶";
+    content: "·";
     position: absolute;
     left: 0;
-    color: #00a8cc;
+    color: #C4738A;
     font-weight: bold;
-    font-size: 0.9em;
-    transition: all 0.3s ease;
+    font-size: 1.4em;
+    line-height: 1.2;
 }
 
-.commit-item ul li:hover::before {
-    transform: translateX(3px);
-    color: #004658;
-}
-
-/* === PHẦN CHÂM NGÔN NÂNG CẤP === */
+/* ============================================================
+   CHÂM NGÔN MOTTO
+   ============================================================ */
 .commit-section .motto {
     text-align: center;
-    font-size: 1.3em;
-    color: #004658;
-    margin-top: 50px;
-    line-height: 1.8;
-    padding: 25px;
-    background: linear-gradient(135deg, #ffffff, #f8fcff);
-    border-radius: 15px;
-    box-shadow: 0 5px 20px rgba(0, 70, 88, 0.08);
-    border: 2px solid rgba(0, 168, 204, 0.1);
-    position: relative;
-    z-index: 1;
+    font-family: 'Shippori Mincho', 'Noto Serif JP', serif;
+    font-size: 1rem;
+    color: #1F3A5F;
+    margin-top: 2.5rem;
+    line-height: 2;
+    padding: 1.8rem 2rem;
+    background: #FDFCF9;
+    border-radius: 2px;
+    border: 1px solid rgba(196, 115, 138, 0.15);
 }
 
+/* ============================================================
+   PHILOSOPHY — DANH SÁCH
+   ============================================================ */
 .philosophy-section ul {
     list-style-type: none;
     padding-left: 0;
+    max-width: 780px;
 }
 
 .philosophy-section ul li {
-    padding: 15px 20px;
-    margin-bottom: 15px;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 70, 88, 0.08);
+    padding: 1rem 1.4rem;
+    margin-bottom: 0.8rem;
+    background: #FDFCF9;
+    border-radius: 2px;
+    border: 1px solid #EDE8DF;
+    border-left: 2px solid #C4738A;
     transition: all 0.3s ease;
-    border-left: 4px solid #00a8cc;
+    font-size: 0.9rem;
+    line-height: 1.8;
+    color: #4A4845;
+    text-align: left;
 }
 
 .philosophy-section ul li:hover {
-    transform: translateX(10px);
-    box-shadow: 0 8px 25px rgba(0, 70, 88, 0.12);
+    transform: translateX(6px);
+    box-shadow: 0 3px 12px rgba(28, 28, 26, 0.06);
+    border-left-color: #1F3A5F;
 }
 
-/* === RESPONSIVE MOBILE & TABLET NÂNG CẤP === */
-@media (max-width: 1024px) {
-    .intro-section {
-        gap: 40px;
-        flex-wrap: wrap;
-    }
-    
-    .intro-section img {
-        max-width: 450px;
-        margin: 0 auto;
-    }
-    
-    h1 {
-        font-size: 2.8em;
-    }
-    
-    h2 {
-        font-size: 2.2em;
-    }
-}
-
-@media (max-width: 768px) {
-    .intro-section,
-    .philosophy-section,
-    .core-values,
-    .people-section,
-    .commit-section,
-    .mission-section,
-    .cta-section {
-        padding: 80px 6%;
-    }
-    
-    .intro-section {
-        flex-direction: column;
-        text-align: center;
-        gap: 40px;
-    }
-    
-    .intro-section img {
-        max-width: 90%;
-    }
-    
-    .values-table th,
-    .values-table td {
-        font-size: 14px;
-        padding: 15px 20px;
-    }
-    
-    h1 {
-        font-size: 2.2em;
-    }
-    
-    h2 {
-        font-size: 1.8em;
-    }
-    
-    h3 {
-        font-size: 1.3em;
-    }
-    
-    .btn-about {
-        padding: 14px 32px;
-        font-size: 1em;
-    }
-    
-    .commit-item {
-        padding: 25px 20px;
-    }
-    
-    .commit-item h3 {
-        font-size: 1.2em;
-    }
-}
-
-@media (max-width: 480px) {
-    .intro-section,
-    .philosophy-section,
-    .core-values,
-    .people-section,
-    .commit-section,
-    .mission-section,
-    .cta-section {
-        padding: 60px 5%;
-    }
-    
-    h1 {
-        font-size: 1.8em;
-    }
-    
-    h2 {
-        font-size: 1.5em;
-    }
-    
-    .values-table {
-        font-size: 12px;
-    }
-    
-    blockquote {
-        font-size: 1em;
-        padding: 20px 25px;
-        margin: 20px 0;
-    }
-    
-    .btn-about {
-        width: 100%;
-        text-align: center;
-        display: block;
-        padding: 16px 20px;
-    }
-    
-    .commit-item h3 {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-    }
-}
-
-/* Hiệu ứng mờ dần nâng cấp */
+/* ============================================================
+   HIỆU ỨNG MỜ DẦN (Fade In)
+   ============================================================ */
 .fade-section {
     opacity: 0;
-    transform: translateY(40px);
-    transition: all 0.8s cubic-bezier(0.215, 0.61, 0.355, 1);
+    transform: translateY(24px);
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .fade-section.show {
@@ -658,10 +596,153 @@ blockquote::before {
     transform: translateY(0);
 }
 
-/* Animation delay cho các phần tử */
-.intro-section { transition-delay: 0.1s; }
-.philosophy-section { transition-delay: 0.2s; }
-.core-values { transition-delay: 0.3s; }
-.people-section { transition-delay: 0.4s; }
-.commit-section { transition-delay: 0.5s; }
-.cta-section { transition-delay: 0.6s; }
+.intro-section {
+    transition-delay: 0.05s;
+}
+
+.philosophy-section {
+    transition-delay: 0.10s;
+}
+
+.core-values {
+    transition-delay: 0.15s;
+}
+
+.people-section {
+    transition-delay: 0.20s;
+}
+
+.commit-section {
+    transition-delay: 0.25s;
+}
+
+.cta-section {
+    transition-delay: 0.30s;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1024px) {
+    .intro-section {
+        gap: 2.5rem;
+        flex-wrap: wrap;
+    }
+
+    .intro-section img {
+        max-width: 420px;
+        margin: 0 auto;
+    }
+
+    h1 {
+        font-size: 1.9rem;
+    }
+
+    h2 {
+        font-size: 1.6rem;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .intro-section,
+    .philosophy-section,
+    .core-values,
+    .people-section,
+    .commit-section,
+    .mission-section,
+    .cta-section {
+        padding: clamp(2.5rem, 6vw, 4rem) 5%;
+    }
+
+    .intro-section {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .intro-section h1 {
+        text-align: center;
+    }
+
+    .intro-section img {
+        max-width: 90%;
+    }
+
+    .values-table th,
+    .values-table td {
+        font-size: 0.82rem;
+        padding: 0.8rem 1rem;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    h2 {
+        font-size: 1.35rem;
+    }
+
+    h3 {
+        font-size: 1rem;
+    }
+
+    .btn-about {
+        padding: 0.85rem 1.8rem;
+        font-size: 0.88rem;
+    }
+
+    .commit-item {
+        padding: 1.2rem 1.4rem;
+    }
+
+    .commit-item h3 {
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .intro-section,
+    .philosophy-section,
+    .core-values,
+    .people-section,
+    .commit-section,
+    .mission-section,
+    .cta-section {
+        padding: 2.5rem 4%;
+    }
+
+    h1 {
+        font-size: 1.3rem;
+    }
+
+    h2 {
+        font-size: 1.2rem;
+    }
+
+    .values-table {
+        font-size: 0.78rem;
+    }
+
+    blockquote {
+        font-size: 0.88rem;
+        padding: 1rem 1.2rem;
+        margin: 1.2rem 0;
+    }
+
+    .btn-about {
+        width: 100%;
+        justify-content: center;
+        padding: 1rem;
+    }
+
+    .commit-item h3 {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .intro-image::before {
+        display: none;
+    }
+}

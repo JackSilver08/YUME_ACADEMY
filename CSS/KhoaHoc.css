@@ -1,246 +1,298 @@
-/* === SECTION INTRO NÂNG CẤP === */
+/* ============================================================
+   YUME ACADEMY — KhoaHoc.css
+   Phong cách Nhật Bản: Tối giản · Thanh lịch · Iki
+   ============================================================ */
+
+/* ============================================================
+   COURSE INTRO SECTION
+   ============================================================ */
 .course-intro {
     text-align: center;
-    padding: 100px 20px 60px;
-    background: linear-gradient(135deg, #ffffff 0%, #f8fcff 100%);
+    padding: clamp(4rem, 9vw, 6.5rem) clamp(1.5rem, 5vw, 3rem) clamp(2rem, 5vw, 3.5rem);
+    background: #FDFCF9;
     position: relative;
     overflow: hidden;
 }
 
+/* Trang trí chữ Nhật nền mờ */
 .course-intro::before {
-    content: '';
+    content: '学';
     position: absolute;
-    top: -50%;
-    right: -10%;
-    width: 600px;
-    height: 600px;
-    background: radial-gradient(circle, rgba(0, 70, 88, 0.03) 0%, transparent 70%);
-    border-radius: 50%;
-    z-index: 0;
+    top: 50%;
+    right: 4%;
+    transform: translateY(-50%);
+    font-family: 'Shippori Mincho', 'Noto Serif JP', serif;
+    font-size: 16rem;
+    color: rgba(31, 58, 95, 0.03);
+    pointer-events: none;
+    line-height: 1;
+    user-select: none;
 }
 
 .course-intro h2 {
-    font-size: 3.2rem;
-    font-weight: 800;
-    margin-bottom: 25px;
-    color: #004658;
+    font-family: 'Shippori Mincho', 'Noto Serif JP', Georgia, serif;
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: #1F3A5F;
     position: relative;
     z-index: 1;
-    background: linear-gradient(135deg, #004658, #00a8cc);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    letter-spacing: 0.04em;
+    line-height: 1.6;
+    text-transform: none;
+    background: none;
+    -webkit-text-fill-color: unset;
+}
+
+.course-intro h2 br+* {
+    display: block;
+    font-size: 0.75em;
+    color: #C4738A;
+    letter-spacing: 0.15em;
+    margin-top: 0.4rem;
+    font-weight: 400;
 }
 
 .course-intro p {
-    font-size: 1.2rem;
-    color: #586e75;
-    max-width: 800px;
-    margin: 0 auto 40px;
-    line-height: 1.8;
+    font-size: 0.93rem;
+    color: #7A7570;
+    max-width: 700px;
+    margin: 0 auto 2.5rem;
+    line-height: 1.9;
     position: relative;
     z-index: 1;
 }
 
-/* === COURSE CARDS NÂNG CẤP === */
+/* ============================================================
+   COURSE CARDS
+   ============================================================ */
 .course-cards {
     display: flex;
     flex-wrap: wrap;
-    gap: 35px;
+    gap: clamp(1.5rem, 3vw, 2rem);
     justify-content: center;
-    padding: 60px 20px;
-    max-width: 1400px;
+    padding: clamp(2rem, 5vw, 3.5rem) clamp(1.5rem, 5vw, 2.5rem);
+    max-width: 1200px;
     margin: 0 auto;
     position: relative;
+    z-index: 1;
 }
 
 .course-card {
-    background: linear-gradient(135deg, #ffffff 0%, #f8fcff 100%);
-    padding: 40px 30px;
-    border-radius: 24px;
-    box-shadow: 
-        0 10px 30px rgba(0, 70, 88, 0.08),
-        0 4px 12px rgba(0, 70, 88, 0.05);
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    width: 320px;
+    background: #FDFCF9;
+    padding: clamp(1.8rem, 4vw, 2.5rem) clamp(1.5rem, 3vw, 2rem);
+    border-radius: 2px;
+    box-shadow: 0 2px 10px rgba(28, 28, 26, 0.06);
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    width: 300px;
     cursor: pointer;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     position: relative;
     overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.8);
+    border: 1px solid #EDE8DF;
+    opacity: 0;
+    animation: cardFadeIn 0.6s ease forwards;
 }
 
+/* Đường viền trên nhẹ kiểu Nhật */
 .course-card::before {
     content: '';
     position: absolute;
     top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border-radius: 24px;
-    padding: 2px;
-    background: linear-gradient(135deg, rgba(0, 70, 88, 0.1), rgba(0, 168, 204, 0.1));
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    pointer-events: none;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 1px;
+    background: #C4738A;
+    transition: width 0.4s ease;
 }
 
-.course-card::after {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-    transform: rotate(45deg);
-    transition: all 0.6s ease;
-    opacity: 0;
+.course-card:hover::before {
+    width: 80%;
 }
 
 .course-card:hover {
-    transform: translateY(-12px) scale(1.02);
-    box-shadow: 
-        0 20px 50px rgba(0, 70, 88, 0.15),
-        0 8px 25px rgba(0, 70, 88, 0.1);
+    transform: translateY(-6px);
+    box-shadow: 0 16px 40px rgba(28, 28, 26, 0.10);
+    border-color: rgba(196, 115, 138, 0.25);
 }
 
-.course-card:hover::after {
-    opacity: 1;
-    animation: shine 1.5s ease;
+@keyframes cardFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-@keyframes shine {
-    0% { transform: rotate(45deg) translateX(-100%); }
-    100% { transform: rotate(45deg) translateX(100%); }
+.course-card:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.course-card:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.course-card:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.course-card:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
+.course-card:nth-child(5) {
+    animation-delay: 0.5s;
+}
+
+.course-card:nth-child(6) {
+    animation-delay: 0.6s;
 }
 
 .course-card h3 {
-    margin: 0 0 20px 0;
-    font-size: 1.5rem;
-    color: #004658;
-    font-weight: 700;
-    line-height: 1.3;
-    position: relative;
-    z-index: 1;
+    margin: 0 0 1rem;
+    font-family: 'Shippori Mincho', 'Noto Serif JP', serif;
+    font-size: 1.05rem;
+    color: #1F3A5F;
+    font-weight: 600;
+    line-height: 1.5;
+    letter-spacing: 0.03em;
 }
 
+.course-card p {
+    font-size: 0.88rem;
+    color: #7A7570;
+    margin: 0 0 1.4rem;
+    line-height: 1.85;
+    flex-grow: 1;
+}
+
+/* Icon tùy chỉnh */
 .course-icon {
-    width: 70px;
-    height: 70px;
-    background: linear-gradient(135deg, #004658, #00a8cc);
-    border-radius: 18px;
+    width: 52px;
+    height: 52px;
+    background: #FBF0F2;
+    border: 1px solid rgba(196, 115, 138, 0.2);
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 25px;
-    color: white;
-    font-size: 1.8rem;
-    box-shadow: 0 8px 20px rgba(0, 70, 88, 0.2);
+    margin-bottom: 1.4rem;
+    color: #C4738A;
+    font-size: 1.4rem;
     transition: all 0.3s ease;
 }
 
 .course-card:hover .course-icon {
-    transform: scale(1.1) rotate(5deg);
+    background: #C4738A;
+    color: white;
+    border-color: #C4738A;
+    transform: scale(1.05);
 }
 
-.course-card p {
-    font-size: 1rem;
-    color: #586e75;
-    margin: 15px 0 25px;
-    line-height: 1.6;
-    flex-grow: 1;
-    position: relative;
-    z-index: 1;
-}
-
+/* Features list */
 .course-features {
     list-style: none;
     padding: 0;
-    margin: 20px 0;
-    position: relative;
-    z-index: 1;
+    margin: 0.8rem 0 1.2rem;
 }
 
 .course-features li {
-    padding: 8px 0;
-    padding-left: 25px;
+    padding: 0.4rem 0 0.4rem 1.2rem;
     position: relative;
-    color: #555;
-    font-size: 0.95rem;
+    color: #7A7570;
+    font-size: 0.85rem;
+    line-height: 1.6;
 }
 
 .course-features li::before {
-    content: '✓';
+    content: '·';
     position: absolute;
     left: 0;
-    color: #00a8cc;
-    font-weight: bold;
-    font-size: 1.1em;
+    color: #C4738A;
+    font-size: 1.4em;
+    line-height: 1;
 }
 
+/* Nút xem chi tiết */
 .course-card .btn-detail {
-    padding: 14px 28px;
-    background: linear-gradient(135deg, #004658, #00a8cc);
-    color: #fff;
-    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    background: #1F3A5F;
+    color: #F5EFE6;
+    font-weight: 500;
     border: none;
-    border-radius: 16px;
+    border-radius: 2px;
     cursor: pointer;
     transition: all 0.3s ease;
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    position: relative;
-    z-index: 1;
-    box-shadow: 0 6px 20px rgba(0, 70, 88, 0.3);
-    letter-spacing: 0.5px;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.06em;
+    box-shadow: 0 2px 8px rgba(31, 58, 95, 0.2);
+    align-self: flex-start;
 }
 
 .course-card .btn-detail:hover {
-    background: linear-gradient(135deg, #003a4e, #0097b8);
-    transform: translateY(-3px);
-    box-shadow: 0 10px 25px rgba(0, 70, 88, 0.4);
+    background: #C4738A;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(196, 115, 138, 0.3);
+    color: white;
 }
 
-/* === MODAL NÂNG CẤP === */
+/* ============================================================
+   MODAL
+   ============================================================ */
 .modal {
     display: none;
     position: fixed;
     z-index: 10000;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    inset: 0;
     overflow-y: auto;
-    background-color: rgba(0, 0, 0, 0.75);
-    backdrop-filter: blur(5px);
-    padding: 40px 20px;
-    animation: fadeIn 0.4s ease;
+    background: rgba(31, 58, 95, 0.55);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    padding: 3rem 1.5rem;
+    animation: modalFadeIn 0.35s ease;
 }
 
 .modal-content {
-    background: linear-gradient(135deg, #ffffff 0%, #f8fcff 100%);
+    background: #FDFCF9;
     margin: auto;
-    padding: 50px 40px;
-    border-radius: 28px;
-    max-width: 1100px;
+    padding: clamp(2rem, 5vw, 3.5rem) clamp(1.5rem, 5vw, 3rem);
+    border-radius: 2px;
+    max-width: 1050px;
     position: relative;
-    box-shadow: 
-        0 25px 60px rgba(0, 0, 0, 0.2),
-        0 10px 30px rgba(0, 0, 0, 0.1);
-    animation: slideUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    border: 1px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 0 20px 60px rgba(28, 28, 26, 0.18);
+    animation: modalSlideUp 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    border-top: 2px solid #C4738A;
 }
 
-@keyframes slideUp {
+@keyframes modalFadeIn {
     from {
         opacity: 0;
-        transform: translateY(30px) scale(0.95);
+        backdrop-filter: blur(0);
     }
+
+    to {
+        opacity: 1;
+        backdrop-filter: blur(6px);
+    }
+}
+
+@keyframes modalSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(24px) scale(0.98);
+    }
+
     to {
         opacity: 1;
         transform: translateY(0) scale(1);
@@ -249,273 +301,247 @@
 
 .modal-content h3 {
     margin-top: 0;
-    font-size: 2.2rem;
-    font-weight: 700;
-    color: #004658;
-    margin-bottom: 15px;
-    background: linear-gradient(135deg, #004658, #00a8cc);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    font-family: 'Shippori Mincho', 'Noto Serif JP', serif;
+    font-size: clamp(1.2rem, 2.5vw, 1.7rem);
+    font-weight: 600;
+    color: #1F3A5F;
+    margin-bottom: 0.8rem;
+    letter-spacing: 0.03em;
+    padding-right: 2.5rem;
+    background: none;
+    -webkit-text-fill-color: unset;
 }
 
 .modal-content p {
-    margin: 15px 0 30px;
-    font-size: 1.1rem;
-    color: #586e75;
-    line-height: 1.7;
+    margin: 0.8rem 0 2rem;
+    font-size: 0.9rem;
+    color: #7A7570;
+    line-height: 1.8;
 }
 
+/* Nút đóng */
 .close {
     position: absolute;
-    top: 25px;
-    right: 30px;
-    font-size: 32px;
+    top: 1.4rem;
+    right: 1.4rem;
+    font-size: 1.4rem;
     font-weight: 300;
-    color: #888;
+    color: #7A7570;
     cursor: pointer;
     transition: all 0.3s ease;
-    width: 45px;
-    height: 45px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(0, 0, 0, 0.05);
+    background: rgba(28, 28, 26, 0.04);
+    border: 1px solid transparent;
 }
 
 .close:hover {
-    color: #004658;
-    background: rgba(0, 70, 88, 0.1);
+    color: #C4738A;
+    background: #FBF0F2;
+    border-color: rgba(196, 115, 138, 0.2);
     transform: rotate(90deg);
 }
 
-/* === TABLES NÂNG CẤP === */
+/* ============================================================
+   TABLES trong MODAL
+   ============================================================ */
 .modal table {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
-    margin-top: 30px;
-    font-size: 1rem;
-    border-radius: 16px;
+    margin-top: 1.5rem;
+    font-size: 0.88rem;
+    border-radius: 2px;
     overflow: hidden;
-    box-shadow: 0 8px 25px rgba(0, 70, 88, 0.1);
+    box-shadow: 0 2px 12px rgba(28, 28, 26, 0.06);
+    border: 1px solid #EDE8DF;
 }
 
-.modal table th, .modal table td {
+.modal table th,
+.modal table td {
     border: none;
-    padding: 18px 15px;
+    padding: 0.9rem 1rem;
     text-align: center;
     word-wrap: break-word;
-    transition: all 0.3s ease;
+    transition: all 0.25s ease;
 }
 
 .modal table th {
-    background: linear-gradient(135deg, #004658, #00a8cc);
-    color: #fff;
-    font-weight: 600;
-    font-size: 1.05rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    background: #1F3A5F;
+    color: rgba(240, 235, 225, 0.9);
+    font-family: 'Shippori Mincho', 'Noto Serif JP', serif;
+    font-weight: 500;
+    font-size: 0.82rem;
+    text-transform: none;
+    letter-spacing: 0.06em;
 }
 
 .modal table tbody tr {
-    background: #fff;
+    background: #FDFCF9;
 }
 
 .modal table tbody tr:nth-child(even) {
-    background: #f8fcff;
-}
-
-.modal table tbody tr:hover {
-    background: #f0f9ff;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0, 70, 88, 0.1);
+    background: #F8F5F0;
 }
 
 .modal table tbody tr:hover td {
-    color: #004658;
+    background: #FBF0F2;
+    color: #1F3A5F;
 }
 
-/* === H4 NÂNG CẤP === */
+/* H4 trong modal */
 .modal h4 {
-    margin-top: 40px;
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: #004658;
-    padding-bottom: 10px;
-    border-bottom: 3px solid #00a8cc;
+    margin-top: 2.5rem;
+    font-family: 'Shippori Mincho', 'Noto Serif JP', serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1F3A5F;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid #EDE8DF;
     display: inline-block;
+    letter-spacing: 0.04em;
 }
 
-/* === RESPONSIVE NÂNG CẤP === */
+/* ============================================================
+   SCROLLBAR modal
+   ============================================================ */
+.modal::-webkit-scrollbar {
+    width: 4px;
+}
+
+.modal::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.modal::-webkit-scrollbar-thumb {
+    background: rgba(196, 115, 138, 0.3);
+    border-radius: 2px;
+}
+
+.modal::-webkit-scrollbar-thumb:hover {
+    background: rgba(196, 115, 138, 0.6);
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
 @media (max-width: 1200px) {
     .course-cards {
-        gap: 30px;
+        gap: 1.5rem;
     }
-    
+
     .course-card {
-        width: 300px;
+        width: 280px;
     }
 }
 
 @media (max-width: 1024px) {
     .modal-content {
-        padding: 40px 30px;
-        max-width: 90%;
+        padding: 2.5rem 2rem;
+        max-width: 92%;
     }
-    
+
     .course-intro h2 {
-        font-size: 2.8rem;
+        font-size: 1.6rem;
     }
 }
 
 @media (max-width: 768px) {
     .course-intro {
-        padding: 80px 20px 50px;
+        padding: 3.5rem 1.5rem 2rem;
     }
-    
+
     .course-intro h2 {
-        font-size: 2.3rem;
+        font-size: 1.35rem;
     }
-    
+
     .course-intro p {
-        font-size: 1.1rem;
+        font-size: 0.9rem;
     }
-    
+
     .course-cards {
         flex-direction: column;
         align-items: center;
-        gap: 25px;
-        padding: 40px 20px;
+        gap: 1.2rem;
+        padding: 2rem 1.5rem;
     }
-    
+
     .course-card {
-        width: 90%;
-        max-width: 400px;
-        padding: 35px 25px;
+        width: 92%;
+        max-width: 420px;
+        padding: 1.8rem 1.5rem;
     }
-    
+
     .modal-content {
-        padding: 35px 25px;
-        margin: 20px auto;
+        padding: 2rem 1.5rem;
+        margin: 1rem auto;
     }
-    
+
     .modal table {
         display: block;
         overflow-x: auto;
         white-space: nowrap;
-        border-radius: 12px;
     }
-    
-    .modal table th, .modal table td {
-        font-size: 0.9rem;
-        padding: 15px 12px;
+
+    .modal table th,
+    .modal table td {
+        font-size: 0.82rem;
+        padding: 0.75rem 0.7rem;
     }
-    
+
     .modal-content h3 {
-        font-size: 1.8rem;
+        font-size: 1.2rem;
     }
-    
+
     .close {
-        top: 15px;
-        right: 20px;
-        width: 40px;
-        height: 40px;
-        font-size: 28px;
+        top: 1rem;
+        right: 1rem;
     }
 }
 
 @media (max-width: 480px) {
     .course-intro h2 {
-        font-size: 2rem;
+        font-size: 1.15rem;
     }
-    
+
     .course-card {
-        width: 95%;
-        padding: 30px 20px;
+        width: 97%;
+        padding: 1.6rem 1.3rem;
     }
-    
+
     .course-card h3 {
-        font-size: 1.3rem;
-    }
-    
-    .course-card p {
         font-size: 0.95rem;
     }
-    
-    .modal-content {
-        padding: 30px 20px;
-    }
-    
-    .modal-content h3 {
-        font-size: 1.5rem;
-    }
-    
-    .modal-content p {
-        font-size: 1rem;
-    }
-    
-    .modal table th, .modal table td {
+
+    .course-card p {
         font-size: 0.85rem;
-        padding: 12px 8px;
     }
-    
+
+    .modal-content {
+        padding: 1.8rem 1.2rem;
+    }
+
+    .modal-content h3 {
+        font-size: 1.05rem;
+    }
+
+    .modal-content p {
+        font-size: 0.88rem;
+    }
+
+    .modal table th,
+    .modal table td {
+        font-size: 0.78rem;
+        padding: 0.65rem 0.55rem;
+    }
+
     .course-icon {
-        width: 60px;
-        height: 60px;
-        font-size: 1.5rem;
+        width: 44px;
+        height: 44px;
+        font-size: 1.2rem;
     }
-}
-
-/* === ANIMATION NÂNG CẤP === */
-@keyframes fadeIn {
-    from { 
-        opacity: 0; 
-        backdrop-filter: blur(0px);
-    }
-    to { 
-        opacity: 1; 
-        backdrop-filter: blur(5px);
-    }
-}
-
-/* Hiệu ứng xuất hiện cho cards */
-.course-card {
-    opacity: 0;
-    transform: translateY(30px);
-    animation: cardAppear 0.6s ease forwards;
-}
-
-@keyframes cardAppear {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Delay cho từng card */
-.course-card:nth-child(1) { animation-delay: 0.1s; }
-.course-card:nth-child(2) { animation-delay: 0.2s; }
-.course-card:nth-child(3) { animation-delay: 0.3s; }
-.course-card:nth-child(4) { animation-delay: 0.4s; }
-.course-card:nth-child(5) { animation-delay: 0.5s; }
-.course-card:nth-child(6) { animation-delay: 0.6s; }
-
-/* Scrollbar tùy chỉnh cho modal */
-.modal::-webkit-scrollbar {
-    width: 8px;
-}
-
-.modal::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.1);
-}
-
-.modal::-webkit-scrollbar-thumb {
-    background: linear-gradient(135deg, #004658, #00a8cc);
-    border-radius: 4px;
-}
-
-.modal::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(135deg, #003a4e, #0097b8);
 }

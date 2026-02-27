@@ -1,0 +1,58 @@
+/* ============================================================
+   YUME ACADEMY — JAPANESE DESIGN SYSTEM
+   Phong cách: Wabi-sabi · Ma (間) · Shibui
+   ============================================================ */
+
+/* Google Fonts — Noto Serif JP + Noto Sans JP */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;600;700&family=Shippori+Mincho:wght@400;500;600;700&display=swap');
+
+:root {
+  /* === Japanese Color Palette === */
+  --jp-white:      #FDFCF9;          /* Shiro — trắng ngà */
+  --jp-cream:      #F7F4EF;          /* Nendo — kem đất sét */
+  --jp-paper:      #EDE8DF;          /* Washi — giấy truyền thống */
+  --jp-mist:       #DDD8CF;          /* Kiri — sương mù */
+  --jp-ink:        #1C1C1A;          /* Sumi — mực tàu */
+  --jp-charcoal:   #2C2C2A;          /* Hai — tro than */
+  --jp-slate:      #4A4845;          /* Koke — rêu đá */
+  --jp-gray:       #7A7570;          /* Nezumi — xám chuột */
+
+  /* Màu nhấn Nhật Bản */
+  --jp-sakura:     #D4889A;          /* Đỏ anh đào — Sakura iro */
+  --jp-sakura-lt:  #F0C8D0;          /* Anh đào nhạt */
+  --jp-sakura-bg:  #FBF0F2;          /* Nền hồng cực nhạt */
+  --jp-indigo:     #1F3A5F;          /* Chàm — Japan indigo (Japan Blue) */
+  --jp-indigo-lt:  #2E5480;          /* Chàm nhạt */
+  --jp-gold:       #B8944A;          /* Vàng kim — Kogane */
+  --jp-gold-lt:    #D4B06A;          /* Vàng nhạt */
+  --jp-matcha:     #5C7A60;          /* Xanh trà — Matcha */
+  --jp-matcha-lt:  #8FAF92;          /* Xanh trà nhạt */
+
+  /* === Typography === */
+  --font-serif:    'Shippori Mincho', 'Noto Serif JP', Georgia, serif;
+  --font-sans:     'Noto Sans JP', 'Segoe UI', sans-serif;
+
+  /* === Spacing System (Ma — 間) === */
+  --space-xs:      0.5rem;
+  --space-sm:      1rem;
+  --space-md:      2rem;
+  --space-lg:      4rem;
+  --space-xl:      7rem;
+  --space-2xl:     10rem;
+
+  /* === Border & Radius === */
+  --radius-sm:     4px;
+  --radius-md:     8px;
+  --radius-lg:     16px;
+  --radius-xl:     24px;
+
+  /* === Shadows (nhẹ nhàng) === */
+  --shadow-xs:     0 1px 3px rgba(28,28,26,0.06);
+  --shadow-sm:     0 2px 8px rgba(28,28,26,0.07);
+  --shadow-md:     0 6px 20px rgba(28,28,26,0.08);
+  --shadow-lg:     0 15px 40px rgba(28,28,26,0.10);
+
+  /* === Transitions === */
+  --ease-gentle:   all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-spring:   all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+}

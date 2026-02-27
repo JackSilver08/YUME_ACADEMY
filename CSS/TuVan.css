@@ -1,6 +1,67 @@
+/* ============================================================
+   YUME ACADEMY — TuVan.css
+   Phong cách Nhật Bản: Hài hòa · Nhẹ nhàng · Tinh tế
+   ============================================================ */
+
 body {
-  background-image: url('../IMG/TuVanbackground.png');
-  background-size: cover;       /* Ảnh phủ kín màn hình */
-  background-repeat: no-repeat; /* Không lặp ảnh */
-  background-attachment: fixed; /* Ảnh cố định khi cuộn */
+  background-color: #F8F5F0;
+  /* Xóa ảnh nền cứng để trang trông thanh lịch hơn */
+  background-image:
+    radial-gradient(ellipse at 15% 20%, rgba(196, 115, 138, 0.06) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 80%, rgba(31, 58, 95, 0.05) 0%, transparent 55%);
+  background-attachment: fixed;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+/* Contact section bao quanh iframe */
+.contact-section {
+  max-width: 900px;
+  margin: clamp(2rem, 6vw, 4rem) auto;
+  padding: clamp(1.5rem, 4vw, 3rem);
+  background: #FDFCF9;
+  border-radius: 2px;
+  box-shadow: 0 4px 24px rgba(28, 28, 26, 0.07);
+  border: 1px solid #EDE8DF;
+  border-top: 2px solid rgba(196, 115, 138, 0.5);
+  overflow: hidden;
+  position: relative;
+}
+
+/* Trang trí nhẹ */
+.contact-section::before {
+  content: '相談';
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
+  font-family: 'Shippori Mincho', 'Noto Serif JP', serif;
+  font-size: 5rem;
+  color: rgba(196, 115, 138, 0.05);
+  pointer-events: none;
+  line-height: 1;
+  user-select: none;
+}
+
+.contact-section iframe {
+  border: none;
+  display: block;
+  border-radius: 1px;
+  width: 100%;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 768px) {
+  .contact-section {
+    margin: 1.5rem;
+    padding: 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .contact-section {
+    margin: 1rem 0.8rem;
+    padding: 1rem;
+  }
 }
